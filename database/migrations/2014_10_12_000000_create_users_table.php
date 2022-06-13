@@ -14,13 +14,25 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
+            $table->engine = 'MyISAM'; // means you can't use foreign key constraints
+
             $table->id();
-            $table->string('name');
+            // distinguishing (0) visitor, (1) potential, (2) member, (3) former member
+            $table->integer('type')->default(0);
+
+            $table->string('username');
+            $table->string('firstname')->index();
+            $table->string('middlename')->nullable();
+            $table->string('lastname')->index();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('approved')->default(false);
+            $table->boolean('verified')->default(false);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->fullText(['firstname', 'middlename', 'lastname']);
         });
     }
 
