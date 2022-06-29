@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->index();
-            $table->integer('year_group_id')->nullable();
+            $table->unsignedBigInteger('user_id')->index();
+            $table->unsignedBigInteger('year_group_id')->nullable();
             $table->integer('region');
             $table->string('initials');
             $table->string('photo_path');
@@ -50,6 +50,9 @@ return new class extends Migration
             $table->boolean('receive_newspaper')->default(0);
 
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('year_group_id')->references('id')->on('year_groups');
         });
     }
 

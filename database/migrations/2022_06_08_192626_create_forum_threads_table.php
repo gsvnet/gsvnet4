@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('forum_threads', function (Blueprint $table) {
             $table->id();
-            $table->integer('author_id');
+            $table->unsignedBigInteger('author_id');
             $table->string('subject');
             $table->text('body');
             $table->string('slug')->unique();
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('author_id')->references('id')->on('users');
             $table->index(['updated_at', 'deleted_at']);
         });
     }

@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('family_relations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('parent_id')->index();
-            $table->unsignedInteger('child_id')->index();
+            $table->unsignedBigInteger('parent_id')->index();
+            $table->unsignedBigInteger('child_id')->index();
+
+            $table->foreign('parent_id')->references('id')->on('users');
+            $table->foreign('child_id')->references('id')->on('users');
         });
     }
 

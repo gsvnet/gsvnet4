@@ -14,13 +14,16 @@ return new class extends Migration
     public function up()
     {
         Schema::create('malfonds_invites', function (Blueprint $table) {
-            $table->unsignedInteger('guest_id');
-            $table->unsignedInteger('host_id');
+            $table->unsignedBigInteger('guest_id');
+            $table->unsignedBigInteger('host_id');
             $table->string('name');
             $table->string('email');
             $table->text('message');
             $table->dateTime('invited_at')->useCurrent();
             $table->string('title');
+
+            $table->foreign('guest_id')->references('id')->on('users');
+            $table->foreign('host_id')->references('id')->on('users');
         });
     }
 

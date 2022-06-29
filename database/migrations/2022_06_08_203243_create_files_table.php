@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('files', function (Blueprint $table) {
-            $table->engine = 'MyISAM'; // means you can't use foreign key constraints
+//            $table->engine = 'MyISAM'; // means you can't use foreign key constraints // Disabled in gsvnet4; could lead to error
 
             $table->id();
             $table->string('file_path');

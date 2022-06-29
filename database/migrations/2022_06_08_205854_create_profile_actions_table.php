@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('profile_actions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('action');
             $table->dateTime('at')->index();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

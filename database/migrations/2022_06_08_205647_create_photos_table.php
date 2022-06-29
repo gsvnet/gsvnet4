@@ -16,9 +16,11 @@ return new class extends Migration
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('album_id');
+            $table->unsignedBigInteger('album_id');
             $table->string('src_path')->default('');
             $table->timestamps();
+
+            $table->foreign('album_id')->references('id')->on('albums');
         });
     }
 

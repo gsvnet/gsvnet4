@@ -15,10 +15,14 @@ return new class extends Migration
     {
         Schema::create('user_senate', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('senate_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('senate_id');
             $table->smallInteger('function');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('senate_id')->references('id')->on('senates');
+
         });
     }
 

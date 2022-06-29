@@ -16,12 +16,14 @@ return new class extends Migration
         Schema::create('forum_replies', function (Blueprint $table) {
             $table->id();
             $table->text('body');
-            $table->integer('author_id');
-            $table->integer('thread_id');
+            $table->unsignedBigInteger('author_id');
+            $table->unsignedBigInteger('thread_id');
             $table->unsignedInteger('like_count');
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('author_id')->references('id')->on('users');
+            $table->foreign('thread_id')->references('id')->on('forum_threads');
             $table->index(['thread_id', 'created_at']);
         });
     }

@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('region_user_profile', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('region_id')->index();
-            $table->unsignedInteger('user_profile_id')->index();
+            $table->unsignedBigInteger('region_id')->index();
+            $table->unsignedBigInteger('user_profile_id')->index();
+
+            $table->foreign('region_id')->references('id')->on('regions');
+            $table->foreign('user_profile_id')->references('id')->on('user_profiles');
         });
     }
 

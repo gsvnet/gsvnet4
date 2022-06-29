@@ -14,9 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('invitation_tokens', function (Blueprint $table) {
-            $table->unsignedInteger('user_id')->index();
+            $table->unsignedBigInteger('user_id')->index();
             $table->string('token', 16)->unique();
             $table->dateTime('expires_on')->index();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

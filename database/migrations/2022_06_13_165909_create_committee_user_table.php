@@ -15,11 +15,14 @@ return new class extends Migration
     {
         Schema::create('committee_user', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('committee_id')->index();
-            $table->unsignedInteger('user_id')->index();
+            $table->unsignedBigInteger('committee_id')->index();
+            $table->unsignedBigInteger('user_id')->index();
             $table->timestamps();
             $table->dateTime('start_date');
             $table->dateTime('end_date')->nullable();
+
+            $table->foreign('committee_id')->references('id')->on('committees');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

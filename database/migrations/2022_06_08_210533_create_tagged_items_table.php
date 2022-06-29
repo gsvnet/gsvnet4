@@ -15,9 +15,12 @@ return new class extends Migration
     {
         Schema::create('tagged_items', function (Blueprint $table) {
             $table->id();
-            $table->integer('thread_id')->index();
-            $table->integer('tag_id')->index();
+            $table->unsignedBigInteger('thread_id')->index();
+            $table->unsignedBigInteger('tag_id')->index();
             $table->timestamps();
+
+            $table->foreign('thread_id')->references('id')->on('forum_threads');
+            $table->foreign( 'tag_id')->references('id')->on('tags');
         });
     }
 
