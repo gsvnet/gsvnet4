@@ -17,9 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
             $table->unsignedBigInteger('year_group_id')->nullable();
-            $table->integer('region');
             $table->string('initials');
-            $table->string('photo_path');
+            $table->string('photo_path')->nullable();
 
             $table->string('phone');
             $table->string('address')->nullable();
@@ -31,7 +30,7 @@ return new class extends Migration
             $table->string('student_number')->nullable();
             $table->date('birthdate')->nullable();
             $table->boolean('gender')->nullable();
-            $table->boolean('reunist')->default(0);
+//            $table->boolean('reunist')->default(0); Redundant because of User type
             $table->boolean('alive')->default(1);
 
             $table->string('parent_address')->nullable();
