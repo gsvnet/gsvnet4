@@ -47,4 +47,28 @@ class UserFactory extends Factory
             ];
         });
     }
+
+    public function profileType(): UserFactory {
+        return $this->state(function (array $attributes) {
+            return [
+                'type' => $this->faker->randomElement([
+                    UserType::POTENTIAL,
+                    UserType::MEMBER,
+                    UserType::REUNIST
+                ])
+            ];
+        });
+    }
+
+    public function noProfileType(): UserFactory {
+        return $this->state(function (array $attributes) {
+            return [
+                'type' => $this->faker->randomElement([
+                    UserType::VISITOR,
+                    UserType::INTERNAL_COMMITTEE,
+                    UserType::EXMEMBER
+                ])
+            ];
+        });
+    }
 }
