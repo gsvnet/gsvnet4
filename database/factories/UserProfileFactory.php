@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class UserProfileFactory extends Factory
 {
     private array $studies = ['Wiskunde', 'Geschiedenis', 'Tandheelkunde', 'IB/IO', 'Bedrijfskunde'];
-    private array $companies = ['Gadero', 'Bo & Co', 'Mevrouw Verhagen', null];
-    private array $professions = ['Schoonmaker', 'Putjesschepper', null];
+    private array $companies = ['Gadero', 'Bo & Co', 'Mevrouw Verhagen', 'Thuisbezorgd', null];
+    private array $professions = ['Schoonmaker', 'Bezorger', 'Putjesschepper', 'Beveiliger', 'Bedrijfsfeut', null];
 
     /**
      * Define the model's default state.
@@ -21,8 +21,7 @@ class UserProfileFactory extends Factory
     public function definition()
     {
         return [
-            // user_id?
-            // year_group_id?
+            // user_id and year_group_id are taken care of in the user seeder
             'initials' => strtoupper($this->faker->lexify('??')),
             'phone' => $this->faker->phoneNumber,
             'address' => $this->faker->streetAddress,
