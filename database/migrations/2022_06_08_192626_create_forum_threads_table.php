@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->integer('most_recent_reply_id');
             $table->integer('reply_count');
-            $table->unsignedTinyInteger('visibility')->default(false); // Enum; formerly public and private
+            $table->unsignedTinyInteger('visibility')->default(0); // Enum; formerly public and private
             $table->unsignedInteger('like_count');
             $table->timestamps();
             $table->softDeletes();
