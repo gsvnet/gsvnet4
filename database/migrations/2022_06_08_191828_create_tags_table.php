@@ -18,8 +18,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('description');
-            $table->boolean('forum');
-            $table->boolean('articles');
             $table->timestamps();
         });
     }
