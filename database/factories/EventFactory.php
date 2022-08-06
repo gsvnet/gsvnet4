@@ -34,6 +34,7 @@ class EventFactory extends Factory
             'type' => $this->faker->randomElement(EventType::cases()),
             'public' => $this->faker->boolean(),
             'start_date' => $startDate->format('Y-m-d'),
+            'start_time' => $startDate->format('h:i'),
             'end_date' => $startDate->addDays(rand(0, 2))->format('Y-m-d'),
             'published' => $this->faker->boolean(70)
         ];
