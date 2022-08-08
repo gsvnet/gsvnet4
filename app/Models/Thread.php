@@ -16,7 +16,6 @@ class Thread extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use LikableTrait;
 
     protected $table = 'forum_threads';
     protected $fillable = ['subject', 'body', 'author_id', 'slug', 'visibility'];

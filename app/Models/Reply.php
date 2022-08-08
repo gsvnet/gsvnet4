@@ -6,12 +6,12 @@ use GSVnet\Forum\LikableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Reply extends Model
 {
     use HasFactory;
-    use LikableTrait;
     use SoftDeletes;
 
     protected $table = 'forum_replies';
@@ -24,5 +24,9 @@ class Reply extends Model
 
     public function thread(): BelongsTo {
         return $this->belongsTo(Thread::class);
+    }
+
+    public function likers(): BelongsToMany {
+        return $this->belongsToMany(User::class, 'likes');
     }
 }

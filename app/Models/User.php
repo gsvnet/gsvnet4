@@ -92,6 +92,10 @@ class User extends Authenticatable
         return $this->hasMany(Reply::class);
     }
 
+    public function likedReplies(): BelongsToMany {
+        return $this->belongsToMany(Reply::class, 'likes');
+    }
+
     public function threads(): HasMany {
         return $this->hasMany(Thread::class);
     }
