@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call([
             TagSeeder::class,
+            LabelSeeder::class,
             CommitteeSeeder::class,
             EventSeeder::class,
             YearGroupSeeder::class,
