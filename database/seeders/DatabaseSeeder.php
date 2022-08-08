@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             EventSeeder::class,
             YearGroupSeeder::class,
             UserSeeder::class,
+            RegionSeeder::class,
             UserCommitteeSeeder::class,
             SenateSeeder::class
         ]);
