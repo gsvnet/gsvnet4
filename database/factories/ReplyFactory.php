@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,13 @@ class ReplyFactory extends Factory
      */
     public function definition()
     {
+        // thread_id and author_id are set externally
+        $now = Carbon::now();
+
         return [
-            //
+            'body' => $this->faker->paragraphs(rand(1, 5), true),
+            'like_count' => 0, // We don't seed likes for now
+            'deleted_at' => $this->faker->boolean(10) ? $now->toDateTimeString() : null
         ];
     }
 }
