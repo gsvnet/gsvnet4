@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
             RegionSeeder::class,
             UserCommitteeSeeder::class,
             SenateSeeder::class,
-            ThreadSeeder::class
+            ThreadSeeder::class,
+            LikeSeeder::class
         ]);
     }
 }

@@ -25,6 +25,7 @@ class UserSeeder extends Seeder
         $yearGroupIds = DB::table('year_groups')->pluck('id');
         $faker = Factory::create(config('app.faker_locale'));
 
+        echo "Seeding admin user...\n";
         // Admin user
         $loran = User::factory()
             ->hasProfile(1, ['year_group_id' => $faker->randomElement($yearGroupIds)])
@@ -41,6 +42,7 @@ class UserSeeder extends Seeder
         $loran->committees()->save($webcie, ['start_date' => Carbon::now()]);
 
         // Fake users with profile
+        echo "Seeding users with profile...\n";
         User::factory()
             ->profileType()
             ->hasProfile(1, function (array $attributes, User $user) use ($faker, $yearGroupIds) {
@@ -50,6 +52,7 @@ class UserSeeder extends Seeder
             ->create();
 
         // Fake users without profile
+        echo "Seeding users without profile...\n";
         User::factory()
             ->noProfileType()
             ->count($this->totalUsers - $this->numUsersWithProfiles)
