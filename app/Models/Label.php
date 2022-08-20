@@ -11,7 +11,7 @@ class Label extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
-    
+
     public $timestamps = false;
 
     public function files(): BelongsToMany {
