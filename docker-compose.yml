@@ -55,6 +55,16 @@ services:
             test: ["CMD", "redis-cli", "ping"]
             retries: 3
             timeout: 5s
+    mailhog_server:
+        image: mailhog/mailhog
+        container_name: cont_mailhog_server
+        tty: true
+        ports:
+        - '1025:1025'
+        - '8025:8025'
+        restart: on-failure
+        networks:
+        - sail
 networks:
     sail:
         driver: bridge
@@ -63,3 +73,4 @@ volumes:
         driver: local
     sail-redis:
         driver: local
+
