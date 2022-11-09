@@ -18,8 +18,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('intern')->group(function () {
-    Route::get('profiel', [UserController::class, 'showProfile']);
+Route::middleware('auth')->group(function () {
+    Route::prefix('intern')->group(function () {
+        Route::get('profiel', [UserController::class, 'showProfile'])
+            ->name('showProfile');
+        Route::get('profiel/bewerken', [UserController::class, 'editProfile']);
+        Route::post('profiel/bewerken', [UserController::class, 'updateProfile'])
+            ->name('updateProfile');
+    });
+
+
+
+
 });
 
 Route::get('/dashboard', function () {
