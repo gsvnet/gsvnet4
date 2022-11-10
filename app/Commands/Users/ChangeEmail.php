@@ -20,9 +20,9 @@ class ChangeEmail extends Command {
         $this->manager = $manager;
     }
 
-    static function fromForm($email, User $user)
+    static function fromForm($email, User $user, User $userReq)
     {
         $email = new Email($email);
-        return new self($user, $email);
+        return new self($user, $userReq, $email);
     }
 }

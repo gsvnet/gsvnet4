@@ -75,7 +75,7 @@ class UserController extends Controller
         $data = $request->only('email', 'password', 'password_confirmation');
 
         if ($user->email != $data['email']) {
-            ChangeEmailHandler::dispatch($request->get('email'), $user);
+            ChangeEmailHandler::dispatch($request->get('email'), $user, $user);
         }
 
         if (!empty($data['password'])) {

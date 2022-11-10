@@ -16,16 +16,18 @@ class ChangeEmailHandler implements ShouldQueue
     private $request;
     private $user;
     private $email;
+    private $userReq;
 
-    public function __construct($email, User $user)
+    public function __construct($email, User $user, User $userReq)
     {
         $this->user = $user;
         $this->email = $email;
+        $this->userReq = $userReq;
     }
 
     public function handle(UsersRepository $users)
     {
-        $command = ChangeEmail::fromForm($this->email, $this->user);
+        $command = ChangeEmail::fromForm($this->email, $this->user, $this->userReq);
         $this->validateUniqueness($command);
 
         $command->user->email = $command->email->getEmail();
