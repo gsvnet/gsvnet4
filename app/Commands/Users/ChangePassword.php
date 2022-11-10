@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Console\Command;
 
 class ChangePassword extends Command {
+   
     public $user;
-
     public $password;
 
     public function __construct(User $user, PasswordDef $password)
@@ -16,9 +16,9 @@ class ChangePassword extends Command {
         $this->password = $password;
     }
 
-    public static function fromForm(Request $request, User $user)
+    public static function fromForm($password, User $user)
     {
-        $password = new PasswordDef($request->get('password'));
+        $password = new PasswordDef($password);
         return new static($user, $password);
     }
 }

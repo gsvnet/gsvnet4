@@ -4,7 +4,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Auth;
 use App\Commands\Users\ChangeEmail;
+use App\Handlers\Users\ChangeEmailHandler;
 use App\Commands\Users\ChangePassword;
+use App\Handlers\Users\ChangePasswordHandler;
 
 
 use GSVnet\Users\UsersRepository;
@@ -63,7 +65,7 @@ class UserController extends Controller
 
         $data = $request->validate([
             'email' => 'required|email:rfc,dns|unique:users,email,' . $user->id,
-            'password' => ['sometimes', 'confirmed', Password::defaults()]
+            'password' => ['nullable', 'confirmed', Password::defaults()]
         ], [
             'password.confirmed' => 'Verschillende wachtwoorden ingevuld',
             'email.required' => 'Email moet ingevuld zijn',
@@ -72,13 +74,12 @@ class UserController extends Controller
         ]);
         $data = $request->only('email', 'password', 'password_confirmation');
 
-        //ADD PASSWORD CHANGE MODULE; THEN THIS ROUTE IS FINISHED
         if ($user->email != $data['email']) {
-            event(ChangeEmail::fromForm($request, $user));
+            ChangeEmailHandler::dispatch($request->get('email'), $user);
         }
 
         if (!empty($data['password'])) {
-            event(ChangePassword::fromForm($request, $user));
+            ChangePasswordHandler::dispatch($request->get('password'), $user);
         }
 
         return redirect()->route('showProfile');    

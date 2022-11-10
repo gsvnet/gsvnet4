@@ -2,18 +2,29 @@
 
 use App\Commands\Users\ChangePassword;
 use GSVnet\Users\UsersRepository;
+use App\Models\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
-class ChangePasswordHandler {
+class ChangePasswordHandler implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $users;
+    private $password;
+    private $user;
 
-    public function __construct(UsersRepository $users){
-        $this->users = $users;
+    public function __construct($password, User $user){
+        $this->password = $password;
+        $this->user = $user;
     }
 
-    public function handle(ChangePassword $command)
+    public function handle(UsersRepository $users)
     {
+        $command = ChangePassword::fromForm($this->password, $this->user);
         $command->user->password = $command->password->getEncryptedPassword();
-        $this->users->save($command->user);
+        $users->save($command->user);
     }
 }

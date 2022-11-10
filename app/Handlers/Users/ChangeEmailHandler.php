@@ -2,25 +2,34 @@
 
 use GSVnet\Users\UsersRepository;
 use App\Commands\Users\ChangeEmail;
+use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
-
-class ChangeEmailHandler
+class ChangeEmailHandler implements ShouldQueue
 {
-    private $users;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    private $request;
+    private $user;
+    private $email;
 
-    public function __construct(UsersRepository $users)
+    public function __construct($email, User $user)
     {
-        $this->users = $users;
+        $this->user = $user;
+        $this->email = $email;
     }
 
-    public function handle(ChangeEmail $command)
+    public function handle(UsersRepository $users)
     {
+        $command = ChangeEmail::fromForm($this->email, $this->user);
         $this->validateUniqueness($command);
 
-       // $oldEmail = $command->user->email; Could be used for something like info report
-
         $command->user->email = $command->email->getEmail();
-        $this->users->save($command->user);
+        $users->save($command->user);
     }
 
     private function validateUniqueness(ChangeEmail $command)
