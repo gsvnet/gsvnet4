@@ -12,6 +12,8 @@ use App\Handlers\Users\ChangePasswordHandler;
 use GSVnet\Users\UsersRepository;
 use GSVnet\Committees\CommitteesRepository;
 use GSVnet\Regions\RegionsRepository;
+use GSVnet\Users\YearGroupRepository;
+use GSVnet\Users\ProfilesRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
 
@@ -20,15 +22,21 @@ class UserController extends Controller
     protected $users;
     protected $committees;
     protected $regions;
+    protected $yearGroups;
+    protected $profiles;
 
     public function __construct(
         UsersRepository $users,
         CommitteesRepository $committees,
-        RegionsRepository $regions
+        RegionsRepository $regions,
+        YearGroupRepository $yearGroups,
+        ProfilesRepository $profiles
     ) {
         $this->users = $users;
         $this->committees = $committees;
         $this->regions = $regions;
+        $this->yearGroups = $yearGroups;
+        $this->profiles = $profiles;
     }
 
 
@@ -75,13 +83,39 @@ class UserController extends Controller
         $data = $request->only('email', 'password', 'password_confirmation');
 
         if ($user->email != $data['email']) {
-            ChangeEmailHandler::dispatch($request->get('email'), $user, $user);
+            ChangeEmailHandler::dispatch($request->input('email'), $user, $user);
         }
 
         if (!empty($data['password'])) {
-            ChangePasswordHandler::dispatch($request->get('password'), $user);
+            ChangePasswordHandler::dispatch($request->input('password'), $user);
         }
 
         return redirect()->route('showProfile');    
+    }
+
+    public function showUsers(Request $request) 
+    {
+        $this->authorize('users.show');
+        $search = $request->input('naam', '');
+        $regions = $this->regions->all();
+        $oudLeden = $request->input('oudleden');
+
+        if (!($region = $request->input('regio') and $this->regions->exists($region)))
+            $region = null;
+
+        if (!($yearGroup = $request->input('jaarverband') and $this->yearGroups->exists($yearGroup)))
+            $yearGroup = null;
+
+        $perPage = 50;
+        $types = $oudLeden == '1' ? [User::MEMBER, User::REUNIST, User::EXMEMBER] : User::MEMBER;
+        $members = $this->profiles->searchAndPaginate($search, $region, $yearGroup, $types, $perPage);
+
+        $yearGroups = $this->yearGroups->all();
+
+        return view('users.index', [
+            'members' => $members,
+            'regions' => $regions,
+            'yearGroups' => $yearGroups,
+        ]);
     }
 }

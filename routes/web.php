@@ -31,9 +31,7 @@ Route::middleware('auth')->group(function () {
         Route::get('sponsorprogramma', [HomeController::class, 'sponsorProgram']);
     });
 
-
-
-
+    Route::get('jaarbundel', [UserController::class, 'showUsers']);
 });
 
 Route::get('/dashboard', function () {
