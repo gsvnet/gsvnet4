@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +20,15 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
+
     Route::prefix('intern')->group(function () {
         Route::get('profiel', [UserController::class, 'showProfile'])
             ->name('showProfile');
         Route::get('profiel/bewerken', [UserController::class, 'editProfile']);
         Route::post('profiel/bewerken', [UserController::class, 'updateProfile'])
             ->name('updateProfile');
+
+        Route::get('sponsorprogramma', [HomeController::class, 'sponsorProgram']);
     });
 
 
