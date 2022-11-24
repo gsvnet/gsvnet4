@@ -95,7 +95,7 @@ class UserController extends Controller
 
     public function showUsers(Request $request) 
     {
-        $this->authorize('users.show');
+       // $this->authorize('users.show');
         $search = $request->input('naam', '');
         $regions = $this->regions->all();
         $oudLeden = $request->input('oudleden');

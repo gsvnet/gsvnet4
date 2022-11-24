@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AboutController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +34,14 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('jaarbundel', [UserController::class, 'showUsers']);
+    
+    Route::get('commissies', [AboutController::class, 'showCommittees']);
+
+
 });
+
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
