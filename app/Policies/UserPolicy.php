@@ -15,6 +15,7 @@ class UserPolicy
         $type = $user->type;
         return $type == UserType::MEMBER or $type == UserType::REUNIST ;
     }
+    
     /**
      * Determine whether the user can view any models.
      *
