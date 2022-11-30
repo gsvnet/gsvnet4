@@ -16,7 +16,8 @@ class AboutController extends Controller
         $this->senates = $senates;
     }
 
-    public function showCommittees() {
+    public function showCommittees() 
+    {
         $allCommittees = $this->committees->all();
 
         return view('committees.index', [
@@ -28,7 +29,7 @@ class AboutController extends Controller
     {
         $committee = $this->committees->bySlug($slug);
         $allCommittees = $this->committees->all();
-        $activeMembers = $committee->activeMembers;
+        $activeMembers = $committee->activeMembers()->get();
 
         return view('committees.show', [
             'committee' => $committee,
@@ -37,11 +38,25 @@ class AboutController extends Controller
         ]);
     }
 
-    public function showSenates() {
+    public function showSenates()
+    {
         $senates = $this->senates->all();
 
         return view('senates.index', [
             'senates' => $senates
+        ]);
+    }
+
+    public function showSenate($id)
+    {
+        $senate = $this->senates->byId($id);
+        $members = $senate->members()->get();
+        $allSenates = $this->senates->all();
+
+        return view('senates.show', [
+            'senate' => $senate,
+            'senates' => $allSenates,
+            'members' => $members
         ]);
     }
 }

@@ -7,6 +7,11 @@ class SenatesRepository
 {
     public function all()
     {
-        return Senate::all();
+        return Senate::orderBy('start_date', 'DESC')->get();
+    }
+
+    public function byId($id)
+    {
+        return Senate::findOrFail($id);
     }
 }

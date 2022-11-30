@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::get('commissies/{id}', [AboutController::class, 'showCommittee']);
 
     Route::get('senaten', [AboutController::class, 'showSenates']);
+    Route::get('senaten/{id}', [AboutController::class, 'showSenate']);
+
 
 
 });
