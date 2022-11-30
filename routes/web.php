@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UsersController;
 
 
 /*
@@ -50,7 +51,15 @@ Route::prefix('admin')
         ->middleware(['auth','can:memberOrReunist,App\Models\User'])
         ->group(function() {
 
+    Route::resource('gebruikers', UsersController::class);
+    
+    
     Route::get('/', [AdminController::class, 'index']);
+    Route::get('/ik', [AdminController::class, 'redirectToMyProfile']);
+
+
+
+
 });
 
 

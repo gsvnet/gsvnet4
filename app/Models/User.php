@@ -72,6 +72,12 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function committeesSorted(): BelongsToMany {
+        return $this->belongsToMany(Committee::class)
+            ->withPivot('start_date', 'end_date')
+            ->orderBy('committee_user.end_date', 'desc');
+    }
+
     public function senates(): BelongsToMany {
         return $this->belongsToMany(Senate::class)
             ->withPivot('function')

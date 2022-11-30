@@ -40,9 +40,9 @@ class UserController extends Controller
     }
 
 
-    public function showProfile()
+    public function showProfile(Request $request)
     {
-        $id = Auth::id();
+        $id = $request->user()->id;
         $member = $this->users->byId($id);
         $committees = $this->committees->byUserOrderByRecent($member);
         $senates = $member->senates;
