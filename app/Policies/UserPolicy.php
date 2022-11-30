@@ -12,6 +12,11 @@ class UserPolicy
 
     public function usersShow(User $user)
     {
+        return memberOrReunist($user);
+    }
+
+    public function memberOrReunist(User $user)
+    {
         $type = $user->type;
         return $type == UserType::MEMBER or $type == UserType::REUNIST ;
     }

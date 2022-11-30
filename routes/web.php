@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
         Route::get('sponsorprogramma', [HomeController::class, 'sponsorProgram']);
     });
 
+
+
     Route::get('jaarbundel', [UserController::class, 'showUsers']);
     
     Route::get('commissies', [AboutController::class, 'showCommittees']);
@@ -40,9 +42,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('senaten', [AboutController::class, 'showSenates']);
     Route::get('senaten/{id}', [AboutController::class, 'showSenate']);
+});
 
 
-
+Route::prefix('admin')
+        ->namespace('App\Http\Controllers\Admin')
+        ->middleware(['auth','can:memberOrReunist,App\Models\User'])
+        ->group(function() {
+    Route::get('/', 'AdminController@index');
 });
 
 
