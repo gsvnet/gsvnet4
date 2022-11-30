@@ -20,5 +20,16 @@ class AboutController extends Controller
         ]);
     }
 
+    public function showCommittee($slug)
+    {
+        $committee = $this->committees->bySlug($slug);
+        $allCommittees = $this->committees->all();
+        $activeMembers = $committee->activeMembers;
 
+        return view('committees.show', [
+            'committee' => $committee,
+            'committees' => $allCommittees,
+            'activeMembers' => $activeMembers
+        ]);
+    }
 }

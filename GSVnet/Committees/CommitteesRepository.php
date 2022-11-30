@@ -15,4 +15,9 @@ class CommitteesRepository
     {
         return Committee::all();
     }
+
+    public function bySlug($slug)
+    {
+        return Committee::where('unique_name', '=', $slug)->firstOrFail();
+    }
 }

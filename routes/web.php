@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::get('jaarbundel', [UserController::class, 'showUsers']);
     
     Route::get('commissies', [AboutController::class, 'showCommittees']);
+    Route::get('commissies/{id}', [AboutController::class, 'showCommittee']);
+
 
 
 });
