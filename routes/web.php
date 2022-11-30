@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Admin\AdminController;
 
 
 /*
@@ -46,10 +47,10 @@ Route::middleware('auth')->group(function () {
 
 
 Route::prefix('admin')
-        ->namespace('App\Http\Controllers\Admin')
         ->middleware(['auth','can:memberOrReunist,App\Models\User'])
         ->group(function() {
-    Route::get('/', 'AdminController@index');
+
+    Route::get('/', [AdminController::class, 'index']);
 });
 
 
