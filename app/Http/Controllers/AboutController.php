@@ -1,15 +1,19 @@
 <?php namespace App\Http\Controllers;
 
 use GSVnet\Committees\CommitteesRepository;
+use GSVnet\Senates\SenatesRepository;
 
 class AboutController extends Controller 
 {
     private $committees;
+    private $senates;
 
     public function __construct(
-        CommitteesRepository $committees
-    ) {
+        CommitteesRepository $committees,
+        SenatesRepository $senates
+        ) {
         $this->committees = $committees;
+        $this->senates = $senates;
     }
 
     public function showCommittees() {
@@ -30,6 +34,14 @@ class AboutController extends Controller
             'committee' => $committee,
             'committees' => $allCommittees,
             'activeMembers' => $activeMembers
+        ]);
+    }
+
+    public function showSenates() {
+        $senates = $this->senates->all();
+
+        return view('senates.index', [
+            'senates' => $senates
         ]);
     }
 }
