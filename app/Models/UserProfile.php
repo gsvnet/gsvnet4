@@ -15,7 +15,7 @@ class UserProfile extends Model
     // Mass assignment should be done carefully because of this
     protected $guarded = [];
 
-    public function scopeSearchNameAndPhone($query, $words) {
+    public function scopeSearchName($query, $words) {
         foreach ($words as $key) {
             $query = $query->where(function($q) use ($key) {
                 $q->orwhere('firstname', 'like', $key . '%')

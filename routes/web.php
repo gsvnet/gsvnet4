@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UsersController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +23,47 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('intern')->group(function () {
-    Route::get('profiel', [UserController::class, 'showProfile']);
+Route::middleware('auth')->group(function () {
+
+    Route::prefix('intern')->group(function () {
+        Route::get('profiel', [UserController::class, 'showProfile'])
+            ->name('showProfile');
+        Route::get('profiel/bewerken', [UserController::class, 'editProfile']);
+        Route::post('profiel/bewerken', [UserController::class, 'updateProfile'])
+            ->name('updateProfile');
+
+        Route::get('sponsorprogramma', [HomeController::class, 'sponsorProgram']);
+    });
+
+
+
+    Route::get('jaarbundel', [UserController::class, 'showUsers']);
+    
+    Route::get('commissies', [AboutController::class, 'showCommittees']);
+    Route::get('commissies/{id}', [AboutController::class, 'showCommittee']);
+
+    Route::get('senaten', [AboutController::class, 'showSenates']);
+    Route::get('senaten/{id}', [AboutController::class, 'showSenate']);
 });
+
+
+Route::prefix('admin')
+        ->middleware(['auth','can:memberOrReunist,App\Models\User'])
+        ->group(function() {
+
+    Route::resource('gebruikers', UsersController::class);
+    
+    
+    Route::get('/', [AdminController::class, 'index']);
+    Route::get('/ik', [AdminController::class, 'redirectToMyProfile']);
+
+
+
+
+});
+
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

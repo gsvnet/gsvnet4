@@ -42,6 +42,14 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    // User types
+    const VISITOR = 0;
+    const POTENTIAL = 1;
+    const MEMBER = 2;
+    const REUNIST = 3;
+    const INTERNAL_COMMITTEE = 4;
+    const EXMEMBER = 5;
+
     /**
      * The attributes that should be cast.
      *
@@ -62,6 +70,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Committee::class)
             ->withPivot('start_date', 'end_date')
             ->withTimestamps();
+    }
+
+    public function committeesSorted(): BelongsToMany {
+        return $this->belongsToMany(Committee::class)
+            ->withPivot('start_date', 'end_date')
+            ->orderBy('committee_user.end_date', 'desc');
     }
 
     public function senates(): BelongsToMany {

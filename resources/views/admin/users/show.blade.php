@@ -1,0 +1,2 @@
+<h1>HI NONE MEMBER OR REUNIST </h1>
+{{$user}}
