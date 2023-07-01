@@ -17,57 +17,59 @@ use App\Http\Controllers\Admin\UsersController;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
+| We will put everything in the forum subdomain.
+|
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+$rootDomain = preg_replace('/https?:\/\//', '', env('APP_URL'));
 
-Route::middleware('auth')->group(function () {
-
-    Route::prefix('intern')->group(function () {
-        Route::get('profiel', [UserController::class, 'showProfile'])
-            ->name('showProfile');
-        Route::get('profiel/bewerken', [UserController::class, 'editProfile']);
-        Route::post('profiel/bewerken', [UserController::class, 'updateProfile'])
-            ->name('updateProfile');
-
-        Route::get('sponsorprogramma', [HomeController::class, 'sponsorProgram']);
+Route::domain('forum.'.$rootDomain)->group(function() {
+    Route::get('/', function () {
+        return view('welcome');
     });
 
+    Route::middleware('auth')->group(function () {
 
-
-    Route::get('jaarbundel', [UserController::class, 'showUsers']);
+        Route::prefix('intern')->group(function () {
+            Route::get('profiel', [UserController::class, 'showProfile'])
+                ->name('showProfile');
+            Route::get('profiel/bewerken', [UserController::class, 'editProfile']);
+            Route::post('profiel/bewerken', [UserController::class, 'updateProfile'])
+                ->name('updateProfile');
     
-    Route::get('commissies', [AboutController::class, 'showCommittees']);
-    Route::get('commissies/{id}', [AboutController::class, 'showCommittee']);
+            Route::get('sponsorprogramma', [HomeController::class, 'sponsorProgram']);
+        });
+    
+    
+    
+        Route::get('jaarbundel', [UserController::class, 'showUsers']);
+        
+        Route::get('commissies', [AboutController::class, 'showCommittees']);
+        Route::get('commissies/{id}', [AboutController::class, 'showCommittee']);
+    
+        Route::get('senaten', [AboutController::class, 'showSenates']);
+        Route::get('senaten/{id}', [AboutController::class, 'showSenate']);
+    });
+    
+    
+    Route::prefix('admin')  
+            ->middleware(['auth','can:memberOrReunist,App\Models\User'])
+            ->group(function() {
+        
+        Route::get('/', [AdminController::class, 'index']);
+        Route::get('/ik', [AdminController::class, 'redirectToMyProfile']);
 
-    Route::get('senaten', [AboutController::class, 'showSenates']);
-    Route::get('senaten/{id}', [AboutController::class, 'showSenate']);
+        // Users
+        Route::resource('gebruikers', UsersController::class);
+    });
+    
+    
+    
+    
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware(['auth'])->name('dashboard');
 });
-
-
-Route::prefix('admin')
-        ->middleware(['auth','can:memberOrReunist,App\Models\User'])
-        ->group(function() {
-
-    Route::resource('gebruikers', UsersController::class);
-    
-    
-    Route::get('/', [AdminController::class, 'index']);
-    Route::get('/ik', [AdminController::class, 'redirectToMyProfile']);
-
-
-
-
-});
-
-
-
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
 
 require __DIR__.'/auth.php';
