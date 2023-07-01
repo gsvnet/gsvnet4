@@ -42,14 +42,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // User types
-    const VISITOR = 0;
-    const POTENTIAL = 1;
-    const MEMBER = 2;
-    const REUNIST = 3;
-    const INTERNAL_COMMITTEE = 4;
-    const EXMEMBER = 5;
-
     /**
      * The attributes that should be cast.
      *
