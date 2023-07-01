@@ -29,6 +29,10 @@
 
             <!-- Page Content -->
             <main>
+                @if ($status = session('status'))
+                    <div class="absolute top-1 left-1 right-1 rounded-md p-8 bg-green-600 text-white shadow">{{ $status }}</div>
+                @endif
+
                 {{ $slot }}
             </main>
         </div>

@@ -1,9 +1,13 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 
 use GSVnet\Users\UsersRepository;
+use GSVnet\Users\UserType;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class UsersController extends Controller  
 {
@@ -54,4 +58,21 @@ class UsersController extends Controller
         ]);
     }
 
+    public function create() {
+        return view('admin.users.create');
+    }
+
+    public function store(StoreUserRequest $request) : RedirectResponse {
+        // Authorization and validation handled by request class
+        $input = $request->only('username', 'firstname', 'middlename', 'lastname', 'email');
+        $input['password'] = bcrypt($request->password);
+        $input['type'] = $request->enum('type', UserType::class);
+        $input['approved'] = true;
+
+        User::create($input);
+
+        $request->session()->flash('status', 'Gebruiker is succesvol opgeslagen.');
+
+        return redirect()->route('dashboard');
+    }
 }
