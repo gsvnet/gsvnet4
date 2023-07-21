@@ -3,7 +3,6 @@
 use App\Models\Reply;
 use App\Models\Thread;
 use App\Models\User;
-use App\Policies\UserPolicy;
 use GSVnet\Permissions\PermissionCache;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -43,6 +42,7 @@ class AuthServiceProvider extends ServiceProvider
 
         foreach (config('permissions.general') as $permission => $criteria) {
             Gate::define($permission, function (User $user) use ($permission) {
+                echo $permission;
                 return $this->has($user, $permission);
             });
         }

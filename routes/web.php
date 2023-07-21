@@ -53,7 +53,6 @@ Route::domain('forum.'.$rootDomain)->group(function() {
     
     
     Route::prefix('admin')  
-            ->middleware(['auth','can:memberOrReunist,App\Models\User'])
             ->group(function() {
         
         Route::get('/', [AdminController::class, 'index']);
@@ -61,6 +60,9 @@ Route::domain('forum.'.$rootDomain)->group(function() {
 
         // Users
         Route::resource('gebruikers', UsersController::class);
+
+        // Exporting data to Excel
+        Route::get('leden/leden.csv', [UsersController::class, 'exportMembers']);
     });
     
     
