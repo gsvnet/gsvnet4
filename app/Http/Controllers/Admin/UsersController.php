@@ -91,7 +91,6 @@ class UsersController extends Controller
     }
 
     public function store(StoreUserRequest $request) : RedirectResponse {
-        $this->authorize('users.manage');
         // Authorization and validation handled by request class
         $input = $request->only('username', 'type', 'firstname', 'middlename', 'lastname', 'email', 'password');
         StoreUser::dispatch($input);
