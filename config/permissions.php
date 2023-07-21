@@ -1,6 +1,6 @@
 <?php 
 
-use GSVnet\Users\UserType as UserType;
+use GSVnet\Core\Enums\UserTypeEnum as UserTypeEnum;
 
 /**
  * Permission configuration
@@ -14,19 +14,19 @@ return [
      */
     'general' => [
         'ads.hide' => [
-            'type' => [UserType::MEMBER, UserType::REUNIST]
+            'type' => [UserTypeEnum::MEMBER, UserTypeEnum::REUNIST]
         ],
 
         'member-or-reunist' => [
-            'type' => [UserType::MEMBER, UserType::REUNIST]
+            'type' => [UserTypeEnum::MEMBER, UserTypeEnum::REUNIST]
         ],
 
         'user.become-member' => [
-            'type' => [UserType::VISITOR]
+            'type' => [UserTypeEnum::VISITOR]
         ],
 
         'users.show' => [
-            'type' => [UserType::MEMBER, UserType::REUNIST],
+            'type' => [UserTypeEnum::MEMBER, UserTypeEnum::REUNIST],
         ],
 
         'users.manage' => [
@@ -40,11 +40,11 @@ return [
         ],
 
         'committees.show-novcie' => [
-            'type' => [UserType::MEMBER, UserType::REUNIST]
+            'type' => [UserTypeEnum::MEMBER, UserTypeEnum::REUNIST]
         ],
 
         'photos.show-private' => [
-            'type' => [UserType::MEMBER]
+            'type' => [UserTypeEnum::MEMBER]
         ],
 
         'photos.manage' => [
@@ -53,11 +53,11 @@ return [
         ],
 
         'docs.show' => [
-            'type' => [UserType::MEMBER]
+            'type' => [UserTypeEnum::MEMBER]
         ],
 
         'docs.manage' => [
-            'type' => [UserType::MEMBER]
+            'type' => [UserTypeEnum::MEMBER]
         ],
 
         'docs.publish' => [
@@ -66,15 +66,15 @@ return [
         ],
 
         'dropbox.show' => [
-            'type' => [UserType::MEMBER]
+            'type' => [UserTypeEnum::MEMBER]
         ],
 
         'events.show-private' => [
-            'type' => [UserType::MEMBER, UserType::REUNIST],
+            'type' => [UserTypeEnum::MEMBER, UserTypeEnum::REUNIST],
         ],
 
         'events.manage' => [
-            'type' => [UserType::MEMBER],
+            'type' => [UserTypeEnum::MEMBER],
         ],
 
         'events.publish' => [
@@ -83,7 +83,7 @@ return [
         ],
 
         'senates.show' => [
-            'type' => [UserType::MEMBER, UserType::REUNIST]
+            'type' => [UserTypeEnum::MEMBER, UserTypeEnum::REUNIST]
         ],
 
         'senates.manage' => [
@@ -92,7 +92,7 @@ return [
         ],
 
         'admin.show' => [
-            'type' => [UserType::MEMBER, UserType::REUNIST]
+            'type' => [UserTypeEnum::MEMBER, UserTypeEnum::REUNIST]
         ],
 
         'admin' => [
@@ -100,15 +100,15 @@ return [
         ],
 
         'users.edit-profile' => [
-            'type' => ['potential', UserType::MEMBER, UserType::REUNIST, UserType::EXMEMBER, UserType::INTERNAL_COMMITTEE]
+            'type' => ['potential', UserTypeEnum::MEMBER, UserTypeEnum::REUNIST, UserTypeEnum::EXMEMBER, UserTypeEnum::INTERNAL_COMMITTEE]
         ],
 
         'threads.show-private' => [
-            'type' => [UserType::MEMBER, UserType::INTERNAL_COMMITTEE]
+            'type' => [UserTypeEnum::MEMBER, UserTypeEnum::INTERNAL_COMMITTEE]
         ],
 
         'threads.show-internal' => [
-            'type' => [UserType::MEMBER, UserType::REUNIST, UserType::INTERNAL_COMMITTEE]
+            'type' => [UserTypeEnum::MEMBER, UserTypeEnum::REUNIST, UserTypeEnum::INTERNAL_COMMITTEE]
         ],
 
         'extension.manage' => [

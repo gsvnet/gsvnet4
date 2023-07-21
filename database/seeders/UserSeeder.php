@@ -6,7 +6,7 @@ use App\Models\Committee;
 use App\Models\User;
 use Carbon\Carbon;
 use Faker\Factory;
-use GSVnet\Users\UserType;
+use GSVnet\Core\Enums\UserTypeEnum;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
                 'lastname' => 'Knol',
                 'username' => 'Valkje',
                 'email' => 'loran.knol@gmail.com',
-                'type' => UserType::MEMBER,
+                'type' => UserTypeEnum::MEMBER,
                 'approved' => true
             ]);
         $webcie = Committee::where('unique_name', 'webcie')->first();

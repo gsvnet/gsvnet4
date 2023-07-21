@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use GSVnet\Users\UserType;
+use GSVnet\Core\Enums\UserTypeEnum;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,7 +29,8 @@ class User extends Authenticatable
         'lastname',
         'email',
         'password',
-        'type'
+        'type',
+        'approved'
     ];
 
     /**
@@ -53,7 +54,7 @@ class User extends Authenticatable
 
     protected function type(): Attribute {
         return Attribute::make(
-            get: fn($typeInt) => UserType::from($typeInt),
+            get: fn($typeInt) => UserTypeEnum::from($typeInt),
             set: fn($typeEnum) => $typeEnum->value
         );
     }
@@ -115,35 +116,35 @@ class User extends Authenticatable
     }
 
     public function isMember(): bool {
-        return $this->type == UserType::MEMBER;
+        return $this->type == UserTypeEnum::MEMBER;
     }
 
     public function wasOrIsMember(): bool {
-        return in_array($this->type, [UserType::MEMBER, UserType::REUNIST, UserType::EXMEMBER]);
+        return in_array($this->type, [UserTypeEnum::MEMBER, UserTypeEnum::REUNIST, UserTypeEnum::EXMEMBER]);
     }
 
     public function isFormerMember(): bool {
-        return $this->type == UserType::REUNIST || $this->type == UserType::EXMEMBER;
+        return $this->type == UserTypeEnum::REUNIST || $this->type == UserTypeEnum::EXMEMBER;
     }
 
     public function isMemberOrReunist(): bool {
-        return $this->type == UserType::MEMBER || $this->type == UserType::REUNIST;
+        return $this->type == UserTypeEnum::MEMBER || $this->type == UserTypeEnum::REUNIST;
     }
 
     public function isPotential(): bool {
-        return $this->type == UserType::POTENTIAL;
+        return $this->type == UserTypeEnum::POTENTIAL;
     }
 
     public function isReunist(): bool {
-        return $this->type == UserType::REUNIST;
+        return $this->type == UserTypeEnum::REUNIST;
     }
 
     public function isExMember(): bool {
-        return $this->type == UserType::EXMEMBER;
+        return $this->type == UserTypeEnum::EXMEMBER;
     }
 
     public function isVisitor(): bool {
-        return $this->type == UserType::VISITOR;
+        return $this->type == UserTypeEnum::VISITOR;
     }
 
     public function isVerified(): bool {

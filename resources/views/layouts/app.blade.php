@@ -20,6 +20,23 @@
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
+
+            @if ($message = session('success'))
+                <x-flash-message>
+                    {{ $message }}
+                </x-flash-message>
+            @endif
+
+            @if ($errors->any())
+                <x-flash-message class="bg-red-600">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </x-flash-message>
+            @endif
+
             <!-- Page Heading -->
             <header class="bg-white shadow">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -29,10 +46,6 @@
 
             <!-- Page Content -->
             <main>
-                @if ($status = session('status'))
-                    <div class="absolute top-1 left-1 right-1 rounded-md p-8 bg-green-600 text-white shadow">{{ $status }}</div>
-                @endif
-
                 {{ $slot }}
             </main>
         </div>

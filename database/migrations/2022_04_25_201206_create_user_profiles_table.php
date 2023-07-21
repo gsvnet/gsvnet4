@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('study')->nullable();
             $table->string('student_number')->nullable();
             $table->date('birthdate')->nullable();
-            $table->boolean('gender')->nullable();
+            $table->integer('gender')->nullable(); // Represented by GenderEnum
 //            $table->boolean('reunist')->default(0); Redundant because of User type
             $table->boolean('alive')->default(1);
 

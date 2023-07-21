@@ -2,15 +2,33 @@
 
 namespace App\Models;
 
-use GSVnet\Users\UserType;
+use GSVnet\Core\Enums\GenderEnum;
+use GSVnet\Core\Enums\UserTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laracasts\Presenter\PresentableTrait;
 
 class UserProfile extends Model
 {
-    use HasFactory;
+    use HasFactory, PresentableTrait;
+
+    /**
+     * Path to presenter class.
+     * 
+     * @var string
+     */
+    protected $presenter = 'GSVnet\Users\Profiles\ProfilePresenter';
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'gender' => GenderEnum::class,
+    ];
 
     // Mass assignment should be done carefully because of this
     protected $guarded = [];
@@ -32,7 +50,7 @@ class UserProfile extends Model
                                [str_replace(' ', '', $this->address)])
             ->where('user_id', '!=', $this->user_id)
             ->whereHas('user', function($q){
-                $q->where('type', UserType::MEMBER->value);
+                $q->where('type', UserTypeEnum::MEMBER->value);
             })
             ->get();
     }

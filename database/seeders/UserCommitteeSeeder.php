@@ -6,7 +6,7 @@ use App\Models\Committee;
 use App\Models\User;
 use Carbon\Carbon;
 use Faker\Factory;
-use GSVnet\Users\UserType;
+use GSVnet\Core\Enums\UserTypeEnum;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +20,7 @@ class UserCommitteeSeeder extends Seeder
      */
     public function run()
     {
-        $userIds = User::where('type', UserType::MEMBER->value)->pluck('id');
+        $userIds = User::where('type', UserTypeEnum::MEMBER->value)->pluck('id');
         $committeeIds = Committee::pluck('id')->all(); // all() converts from Collection to array
         $faker = Factory::create(config('app.faker_locale'));
 

@@ -1,61 +1,89 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use App\Exports\MembersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
-use App\Models\User;
-
+use App\Jobs\StoreUser;
+use GSVnet\Regions\RegionsRepository;
+use GSVnet\Users\Profiles\ProfilesRepository;
 use GSVnet\Users\UsersRepository;
-use GSVnet\Users\UserType;
+use GSVnet\Users\YearGroupRepository;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class UsersController extends Controller  
 {
     protected $users;
+    protected $profiles;
+    protected $yearGroups;
+    protected $regions;
 
     public function __construct(
         UsersRepository $users,
+        ProfilesRepository $profiles,
+        YearGroupRepository $yearGroups,
+        RegionsRepository $regions,
     ) {
         $this->users = $users;
+        $this->profiles = $profiles;
+        $this->yearGroups = $yearGroups;
+        $this->regions = $regions;
+    }
+
+    public function index()
+    {
+        $this->authorize('users.show');
+        $users = $this->users->paginateLatelyRegistered(50);
+
+        return view('admin.users.index')->with('users', $users);
+    }
+
+    public function showGuests()
+    {
+        $this->authorize('users.show');
+        $users = $this->users->paginateLatestRegisteredGuests(50);
+
+        return view('admin.users.visitors')->with('users', $users);
+    }
+
+    public function showPotentials()
+    {
+        $this->authorize('users.show');
+        $users = $this->users->paginateLatestPotentials(50);
+
+        return view('admin.users.potentials')->with(['users' => $users]);
     }
 
     public function show($id)
     {
-        $this->authorize('usersShow', User::class);
+        $this->authorize('users.show');
         $user = $this->users->byId($id);
 
-        //Committes, ordinary forum users or users without profile (due to GDPF for ex.)
+        // Committees or ordinary forum users do not need a fancy profile page.
+        // In addition, since GDPR, not all (former) members still have profiles.
         if ((!$user->isMemberOrReunist() && !$user->isPotential()) || !$user->profile)
-            return view('admin.users.show', [
-                'user' => $user,
-            ]);
+            return view('admin.users.show')->with(compact('user'));
 
-        $profile = $user->profile()->get();
+        $profile = $user->profile;
 
-        //Members, former members
         if ($user->isMemberOrReunist()) {
-            $committees = $user->committeesSorted()->get();
+            // Members, former members
+            $committees = $user->committeesSorted;
 
-            if (!$user->profile->alive) {
-                return view('admin.users.showDeceasedMember', [
-                    'user' => $user,
-                    'profile' => $profile,
-                    'committees' => $committees
-                ]);
+            if (! $user->profile->alive) {
+                return view('admin.users.showDeceasedMember')->with(compact('user', 'profile', 'committees'));
             }
 
-            return view('admin.users.showMember', [
-                'user' => $user,
-                'profile' => $profile,
-                'committees' => $committees
-            ]);
+            return view('admin.users.showMember')->with(compact('user', 'profile', 'committees'));
         }
 
         // Potentials
-        return view('admin.users.showPotential', [
-            'user' => $user,
-            'profile' => $profile,
-        ]);
+        return view('admin.users.showPotential')->with(compact('user', 'profile'));
+    }
+
+    public function exportMembers()
+    {
+        $this->authorize('users.show');
+        return (new MembersExport())->download('leden.xlsx');
     }
 
     public function create() {
@@ -63,15 +91,12 @@ class UsersController extends Controller
     }
 
     public function store(StoreUserRequest $request) : RedirectResponse {
+        $this->authorize('users.manage');
         // Authorization and validation handled by request class
-        $input = $request->only('username', 'firstname', 'middlename', 'lastname', 'email');
-        $input['password'] = bcrypt($request->password);
-        $input['type'] = $request->enum('type', UserType::class);
-        $input['approved'] = true;
+        $input = $request->only('username', 'type', 'firstname', 'middlename', 'lastname', 'email', 'password');
+        StoreUser::dispatch($input);
 
-        User::create($input);
-
-        $request->session()->flash('status', 'Gebruiker is succesvol opgeslagen.');
+        $request->session()->flash('success', 'Gebruiker is succesvol opgeslagen.');
 
         return redirect()->route('dashboard');
     }

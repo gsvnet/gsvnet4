@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Region;
 use App\Models\User;
 use Faker\Factory;
-use GSVnet\Users\UserType;
+use GSVnet\Core\Enums\UserTypeEnum;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -107,7 +107,7 @@ class RegionSeeder extends Seeder
     private function assignRegions() {
         $faker = Factory::create(config('app.faker_locale'));
 
-        $userIds = User::whereIn('type', [UserType::MEMBER->value, UserType::REUNIST->value])
+        $userIds = User::whereIn('type', [UserTypeEnum::MEMBER->value, UserTypeEnum::REUNIST->value])
             ->pluck('id')
             ->all();
 
@@ -122,9 +122,9 @@ class RegionSeeder extends Seeder
             // or one or more inactive regions.
             $hasActiveRegion = true;
             $numInactiveRegions = rand(0, 1);
-            if ($user->type == UserType::REUNIST && $hasActiveRegion = $faker->boolean)
+            if ($user->type == UserTypeEnum::REUNIST && $hasActiveRegion = $faker->boolean)
                 $numInactiveRegions = 1;
-            elseif ($user->type == UserType::REUNIST)
+            elseif ($user->type == UserTypeEnum::REUNIST)
                 $numInactiveRegions = rand(1, 2);
 
             if ($hasActiveRegion) {

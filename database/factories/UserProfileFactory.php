@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use GSVnet\Core\Enums\GenderEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -30,7 +31,7 @@ class UserProfileFactory extends Factory
             'country' => $this->faker->country,
             'study' => $this->faker->randomElement($this->studies),
             'birthdate' => $this->faker->dateTimeThisCentury->format('Y-m-d'),
-            'gender' => rand(0,1),
+            'gender' => $this->faker->randomElement(GenderEnum::cases()),
             'student_number' => 's' . (string) rand(1000000, 5000000),
             'parent_address' => $this->faker->streetAddress,
             'parent_zip_code' => $this->faker->postcode,
