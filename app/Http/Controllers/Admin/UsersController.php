@@ -4,11 +4,15 @@ use App\Exports\MembersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Jobs\StoreUser;
+use GSVnet\Core\Enums\UserTypeEnum;
 use GSVnet\Regions\RegionsRepository;
 use GSVnet\Users\Profiles\ProfilesRepository;
 use GSVnet\Users\UsersRepository;
 use GSVnet\Users\YearGroupRepository;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+// TODO: Create views
 
 class UsersController extends Controller  
 {
@@ -51,6 +55,54 @@ class UsersController extends Controller
         $users = $this->users->paginateLatestPotentials(50);
 
         return view('admin.users.potentials')->with(['users' => $users]);
+    }
+
+    public function showMembers(Request $request)
+    {
+        $this->authorize('users.show');
+        $search = $request->get('zoekwoord', '');
+        $type = UserTypeEnum::MEMBER;
+        $perPage = 300;
+
+        // Search on region
+        if (!($region = $request->get('regio') and $this->regions->exists($region)))
+            $region = null;
+
+        // Enable search on yeargroup
+        if (!($yearGroup = $request->get('jaarverband') and $this->yearGroups->exists($yearGroup)))
+            $yearGroup = null;
+
+        $profiles = $this->profiles->searchAndPaginate($search, $region, $yearGroup, $type, $perPage);
+        $yearGroups = $this->yearGroups->all();
+        $regions = $this->regions->all();
+
+        return view('admin.users.leden')->with('profiles', $profiles)
+            ->with('yearGroups', $yearGroups)
+            ->with('regions', $regions);
+    }
+
+    public function showFormerMembers(Request $request)
+    {
+        $this->authorize('users.show');
+        $search = $request->get('zoekwoord', '');
+        $perPage = 300;
+        $types = $request->enum('type', UserTypeEnum::class);
+
+        // Search on region
+        if (!($region = $request->get('regio') and $this->regions->exists($region)))
+            $region = null;
+
+        // Enable search on yeargroup
+        if (!($yearGroup = $request->get('jaarverband') and $this->yearGroups->exists($yearGroup)))
+            $yearGroup = null;
+
+        $profiles = $this->profiles->searchAndPaginate($search, $region, $yearGroup, $types, $perPage);
+        $yearGroups = $this->yearGroups->all();
+        $regions = $this->regions->all();
+
+        return view('admin.users.oud-leden')->with('profiles', $profiles)
+            ->with('yearGroups', $yearGroups)
+            ->with('regions', $regions);
     }
 
     public function show($id)
@@ -98,5 +150,111 @@ class UsersController extends Controller
         $request->session()->flash('success', 'Gebruiker is succesvol opgeslagen.');
 
         return redirect()->route('dashboard');
+    }
+
+    public function destroy($id)
+    {
+        $this->authorize('users.manage');
+        $user = $this->users->byId($id);
+
+        if ($profile = $user->profile)
+            $profile->delete();
+
+        $user->delete();
+
+        session()->flash('success', 'Account is succesvol verwijderd.');
+
+        return redirect()->action('Admin\UsersController@index');
+    }
+
+    public function storeProfile($id)
+    {
+        $this->authorize('users.manage');
+        $input = [];
+        $input['user_id'] = $id;
+
+        // volgende moet eigenlijk naar een repo
+        $this->profileCreatorValidator->validate($input);
+        $user = $this->users->byId($id);
+        UserProfile::create($input);
+
+        flash()->success("{$user->present()->fullName} heeft een GSV-profiel.");
+
+        return redirect()->action('Admin\UsersController@edit', $user->id);
+    }
+
+    public function destroyProfile($id)
+    {
+        $this->authorize('users.manage');
+        $user = $this->users->byId($id);
+        $user->profile()->delete();
+
+        flash()->success("Profiel van {$user->present()->fullName} is succesvol verwijderd.");
+
+        return redirect()->action('Admin\UsersController@edit', $user->id);
+    }
+
+    public function updateProfile(Request $request, $id)
+    {
+        $this->authorize('users.manage');
+        $user = $this->users->byId($id);
+
+        $input = $request->only('region', 'year_group_id', 'inauguration_date', 'initials', 'phone', 'address',
+            'zip_code', 'town', 'study', 'student_number', 'birthdate', 'gender');
+        $input['user_id'] = $id;
+
+        // Set some specific info for former members
+        if ($user->isFormerMember()) {
+            $input['reunist'] = $request->get('reunist', '0') === '1';
+            $input['resignation_date'] = $request->get('resignation_date');
+            $input['company'] = $request->get('company');
+            $input['profession'] = $request->get('profession');
+        }
+
+        // Natural parents
+        if ($user->isMember()) {
+            $input = array_merge($input, $request->only('parent_phone', 'parent_email', 'parent_address', 'parent_zip_code', 'parent_town'));
+        }
+
+        // Check if the region is valid
+        if (!$this->regions->exists($input['region'])) {
+            $input['region'] = null;
+        }
+
+        // Validate
+        $this->profileUpdaterValidator->validate($input);
+
+        // Update
+        $user->profile()->update($input);
+
+        flash()->success("Profiel van {$user->present()->fullName} is succesvol bijgewerkt.");
+
+        return redirect()->action('Admin\UsersController@show', $id);
+    }
+
+    public function activate($id)
+    {
+        $this->authorize('users.manage');
+        $this->users->activateUser($id);
+
+        $user = $this->users->byId($id);
+        // TODO: Fire UserActivated event
+
+        session()->flash('success', "Account van {$user->present()->fullName} is succesvol geactiveerd.");
+
+        return redirect()->action('Admin\UsersController@index');
+    }
+
+    public function accept($id)
+    {
+        $this->authorize('users.manage');
+        $this->users->acceptMembership($id);
+
+        $user = $this->users->byId($id);
+        // TODO: Fire MembershipAccepted event
+
+        session()->flash('success', "Noviet {$user->present()->fullName} is succesvol geïnstalleerd.");
+
+        return redirect()->action('Admin\UsersController@index');
     }
 }

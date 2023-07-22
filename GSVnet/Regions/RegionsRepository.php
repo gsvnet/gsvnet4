@@ -1,6 +1,7 @@
 <?php namespace GSVnet\Regions;
 
 use App\Models\Region;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use GSVnet\Core\BaseRepository;
 
@@ -13,12 +14,25 @@ class RegionsRepository extends BaseRepository
         $this->model = $model;
     }
 
-    public function byId($id)
+    public function byId($id): Region
     {
         return Region::findOrFail($id);
     }
 
-    public function former()
+    public function byIds(Array $ids): Collection
+    {
+        return Region::whereIn('id', $ids)->get();
+    }
+
+    public function current(): Collection
+    {
+        return Region::current()
+                    ->orderBy('end_date', 'DESC')
+                    ->orderBy('name', 'ASC')
+                    ->get();
+    }
+
+    public function former(): Collection
     {
         return Region::former()
             ->orderBy('end_date', 'DESC')
@@ -26,15 +40,15 @@ class RegionsRepository extends BaseRepository
             ->get();
     }
 
-    public function all()
+    public function all(): Collection
     {
         return Region::orderBy(\DB::raw('end_date IS NULL'), 'desc')
-        ->orderBy('end_date', 'DESC')
-        ->orderBy('name', 'ASC')
-        ->get();
+                ->orderBy('end_date', 'DESC')
+                ->orderBy('name', 'ASC')
+                ->get();
     }
 
-    public function exists($id)
+    public function exists($id): bool
     {
         try
         {
