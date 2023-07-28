@@ -2,8 +2,12 @@
 
 use App\Exports\MembersExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProfileRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateProfileRequest;
 use App\Jobs\StoreUser;
+use App\Models\User;
+use App\Models\UserProfile;
 use GSVnet\Core\Enums\UserTypeEnum;
 use GSVnet\Regions\RegionsRepository;
 use GSVnet\Users\Profiles\ProfilesRepository;
@@ -86,6 +90,7 @@ class UsersController extends Controller
         $this->authorize('users.show');
         $search = $request->get('zoekwoord', '');
         $perPage = 300;
+        // TODO: Check that an array of types can be retrieved in this way from HTML form
         $types = $request->enum('type', UserTypeEnum::class);
 
         // Search on region
@@ -167,41 +172,53 @@ class UsersController extends Controller
         return redirect()->action('Admin\UsersController@index');
     }
 
-    public function storeProfile($id)
+    /**
+     * Stores a UserProfile for $user. 
+     * 
+     * Not in its own controller because we do not want people bypass the user when interacting with the profile.
+     * @param \App\Http\Requests\StoreProfileRequest $request
+     * @param \App\Models\User $user
+     * @return RedirectResponse|mixed
+     */
+    public function storeProfile(StoreProfileRequest $request, User $user)
     {
-        $this->authorize('users.manage');
-        $input = [];
-        $input['user_id'] = $id;
-
-        // volgende moet eigenlijk naar een repo
-        $this->profileCreatorValidator->validate($input);
-        $user = $this->users->byId($id);
+        $input['user_id'] = $user->id;
         UserProfile::create($input);
 
-        flash()->success("{$user->present()->fullName} heeft een GSV-profiel.");
+        session()->flash('success', "GSV-profiel gecreëerd voor {$user->present()->fullName}.");
 
         return redirect()->action('Admin\UsersController@edit', $user->id);
     }
 
-    public function destroyProfile($id)
+    /**
+     * Destroys profile of $user.
+     * @param \App\Models\User $user
+     * @return RedirectResponse|mixed
+     */
+    public function destroyProfile(User $user)
     {
         $this->authorize('users.manage');
-        $user = $this->users->byId($id);
         $user->profile()->delete();
 
-        flash()->success("Profiel van {$user->present()->fullName} is succesvol verwijderd.");
+        session()->flash('success', "Profiel van {$user->present()->fullName} is succesvol verwijderd.");
 
         return redirect()->action('Admin\UsersController@edit', $user->id);
     }
 
-    public function updateProfile(Request $request, $id)
+    /**
+     * Updates a profile for $user.
+     * @param \App\Http\Requests\UpdateProfileRequest $request
+     * @param \App\Models\User $user
+     * @return RedirectResponse|mixed
+     */
+    public function updateProfile(UpdateProfileRequest $request, User $user)
     {
-        $this->authorize('users.manage');
-        $user = $this->users->byId($id);
-
-        $input = $request->only('region', 'year_group_id', 'inauguration_date', 'initials', 'phone', 'address',
-            'zip_code', 'town', 'study', 'student_number', 'birthdate', 'gender');
-        $input['user_id'] = $id;
+        $input = $request->only(
+            'region', 'year_group_id', 'inauguration_date', 'initials', 'phone', 
+            'address', 'zip_code', 'town', 'study', 'student_number', 'birthdate', 
+            'gender'
+        );
+        $input['user_id'] = $user->id;
 
         // Set some specific info for former members
         if ($user->isFormerMember()) {
@@ -221,15 +238,12 @@ class UsersController extends Controller
             $input['region'] = null;
         }
 
-        // Validate
-        $this->profileUpdaterValidator->validate($input);
-
         // Update
         $user->profile()->update($input);
 
-        flash()->success("Profiel van {$user->present()->fullName} is succesvol bijgewerkt.");
+        session()->flash('success', "Profiel van {$user->present()->fullName} is succesvol bijgewerkt.");
 
-        return redirect()->action('Admin\UsersController@show', $id);
+        return redirect()->action('Admin\UsersController@show', $user->id);
     }
 
     public function activate($id)
