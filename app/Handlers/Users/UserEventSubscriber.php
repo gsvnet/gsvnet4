@@ -26,9 +26,9 @@ use App\Events\Users\UserWasRegistered;
 
 // Handlers
 use App\Handlers\Users\UserMailer;
-use App\Handlers\Users\PotentialMailer;
-use App\Handlers\Users\ProfileUpdates;
-use App\Handlers\AbactisInformer;
+use App\Handlers\Potentials\PotentialMailer;
+use App\Handlers\Members\ProfileUpdateSaver;
+use App\Handlers\Admin\AbactisInformer;
 
 use Illuminate\Events\Dispatcher;
 
@@ -86,12 +86,10 @@ class UserEventSubscriber
         $events->listen(UserWasRegistered::class, [UserMailer::class, 'notifyReunist']);
         $events->listen(PotentialSignedUp::class, [PotentialMailer::class, 'sendWelcomeMail']);
 
-        $events->listen(self::$profileChanges, [ProfileUpdates::class, 'changedProfile']);
-        $events->listen(self::$verifyAccountWhen, [ProfileUpdates::class, 'tookAccountInUse']);
+        $events->listen(self::$profileChanges, [ProfileUpdateSaver::class, 'changedProfile']);
+        $events->listen(self::$verifyAccountWhen, [ProfileUpdateSaver::class, 'tookAccountInUse']);
 
-        // Disable this for now, since a lot of mails are coming in
-        // $events->listen(self::$informAbactisFor, AbactisInformer::class);
-        $events->listen(MemberFileWasCreated::class, [AbactisInformer::class, 'sendMemberFile']);
+        $events->listen(MemberFileWasCreated::class, AbactisInformer::class);
         
         $events->listen(self::$informNewsletterFor, NewsletterInformer::class);
 
