@@ -29,6 +29,7 @@ use App\Handlers\Users\UserMailer;
 use App\Handlers\Potentials\PotentialMailer;
 use App\Handlers\Members\ProfileUpdateSaver;
 use App\Handlers\Admin\AbactisInformer;
+use App\Handlers\Admin\NewsletterInformer;
 
 use Illuminate\Events\Dispatcher;
 
