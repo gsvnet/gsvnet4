@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Events\Potentials\PotentialSignedUp;
+use App\Events\Potentials\PotentialWasRegistered;
 use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Bus\Queueable;
@@ -22,7 +22,7 @@ class PotentialAppliedEmail extends Mailable
     public function __construct(
         private User $user,
         private UserProfile $profile,
-        private PotentialSignedUp $event
+        private PotentialWasRegistered $event
     ) {}
     
 

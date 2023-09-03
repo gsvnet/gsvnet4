@@ -1,7 +1,9 @@
 <?php namespace App\Handlers\Users;
 
+use App\Events\Users\UserWasActivated;
 use App\Events\Users\UserWasRegistered;
 use App\Mail\RegisteredAdminEmail;
+use App\Mail\UserActivatedEmail;
 use App\Mail\WelcomeEmail;
 use App\Mail\WelcomeReunistEmail;
 use GSVnet\Core\Enums\UserTypeEnum;
@@ -32,5 +34,11 @@ class UserMailer {
             return;
 
         Mail::to($user)->send(new WelcomeReunistEmail($user));
+    }
+
+    public function sendActivatedEmail(UserWasActivated $event)
+    {
+        $user = $event->user;
+        Mail::to($user)->send(new UserActivatedEmail($user));
     }
 }

@@ -5,7 +5,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PotentialSignedUp {
+class PotentialWasRegistered {
 
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -40,7 +40,7 @@ class PotentialSignedUp {
     public $parentsEmail;
 
     /**
-     * Instantiate PotentialSignedUp event.
+     * Instantiate PotentialWasRegistered event.
      * @param \App\Models\User $user
      * @param string $message
      * @param string $school

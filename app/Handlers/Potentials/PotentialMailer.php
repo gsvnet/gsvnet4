@@ -1,12 +1,14 @@
 <?php namespace App\Handlers\Potentials;
 
-use App\Events\Potentials\PotentialSignedUp;
+use App\Events\Potentials\PotentialWasAccepted;
+use App\Events\Potentials\PotentialWasRegistered;
 use App\Mail\JoinedWelcomeEmail;
+use App\Mail\PotentialAcceptedEmail;
 use App\Mail\PotentialAppliedEmail;
 use Illuminate\Support\Facades\Mail;
 
 class PotentialMailer {
-    public function sendWelcomeMail(PotentialSignedUp $event)
+    public function sendWelcomeEmail(PotentialWasRegistered $event)
     {
         $user = $event->user;
 
@@ -21,5 +23,11 @@ class PotentialMailer {
         Mail::to($novcie)
             ->cc([$prescie, $webcie])
             ->send(new PotentialAppliedEmail($user, $profile, $event));
+    }
+
+    public function sendActivatedEmail(PotentialWasAccepted $event)
+    {
+        $user = $event->user;
+        Mail::to($user)->send(new PotentialAcceptedEmail($user));
     }
 }

@@ -21,7 +21,9 @@ use App\Events\Members\Verifications\GenderWasVerified;
 use App\Events\Members\Verifications\NameWasVerified;
 use App\Events\Members\Verifications\YearGroupWasVerified;
 use App\Events\Members\YearGroupWasChanged;
-use App\Events\Potentials\PotentialSignedUp;
+use App\Events\Potentials\PotentialWasAccepted;
+use App\Events\Potentials\PotentialWasRegistered;
+use App\Events\Users\UserWasActivated;
 use App\Events\Users\UserWasRegistered;
 
 // Handlers
@@ -85,7 +87,10 @@ class UserEventSubscriber
     {
         $events->listen(UserWasRegistered::class, [UserMailer::class, 'sendWelcomeEmail']);
         $events->listen(UserWasRegistered::class, [UserMailer::class, 'notifyReunist']);
-        $events->listen(PotentialSignedUp::class, [PotentialMailer::class, 'sendWelcomeMail']);
+        $events->listen(UserWasActivated::class, [UserMailer::class, 'sendActivatedEmail']);
+        $events->listen(PotentialWasRegistered::class, [PotentialMailer::class, 'sendWelcomeEmail']);
+        // Not sure if the line below ever gets called
+        $events->listen(PotentialWasAccepted::class, [PotentialMailer::class, 'sendActivatedEmail']);
 
         $events->listen(self::$profileChanges, [ProfileUpdateSaver::class, 'changedProfile']);
         $events->listen(self::$verifyAccountWhen, [ProfileUpdateSaver::class, 'tookAccountInUse']);
@@ -93,13 +98,6 @@ class UserEventSubscriber
         $events->listen(MemberFileWasCreated::class, AbactisInformer::class);
         
         $events->listen(self::$informNewsletterFor, NewsletterInformer::class);
-
-        // TODO: Change these into proper handlers (no clue why we got two UserMailers)
-        $events->listen('user.registered', 'GSVnet\Users\UserMailer@registered');
-        $events->listen('user.activated', 'GSVnet\Users\UserMailer@activated');
-
-        $events->listen('potential.registered', 'GSVnet\Users\UserMailer@membership');
-        $events->listen('potential.accepted', 'GSVnet\Users\UserMailer@membershipAccepted');
 
     }
 }
