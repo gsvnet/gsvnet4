@@ -3,8 +3,8 @@
 use App\Models\User;
 use Carbon\Carbon;
 use GSVnet\Core\BaseRepository;
+use GSVnet\Core\Enums\UserTypeEnum;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class UsersRepository extends BaseRepository
@@ -201,9 +201,8 @@ class UsersRepository extends BaseRepository
     /**
      *   Activate user's account
      */
-    public function activateUser($id)
+    public function activateUser(User $user)
     {
-        $user = $this->byId($id);
         $user->approved = true;
         $user->save();
 
@@ -214,10 +213,8 @@ class UsersRepository extends BaseRepository
      *   Accept user's membership
      *   This method sets the user's type to member
      */
-    public function acceptMembership($id)
+    public function acceptMembership(User $user)
     {
-        $user = $this->byId($id);
-
         if (!$user->isPotential()) {
             throw new \Exception;
         }

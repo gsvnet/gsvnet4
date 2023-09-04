@@ -15,6 +15,10 @@ class UserWasRegistered {
      */
     public $user;
 
+    /**
+     * Construct UserWasRegistered event
+     * @param \App\Models\User $user
+     */
     function __construct(User $user)
     {
         $this->user = $user;
