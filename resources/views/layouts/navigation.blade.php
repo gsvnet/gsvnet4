@@ -1,25 +1,56 @@
-<nav class="w-full flex items-center justify-center pt-8 pb-4 fixed border-b-2 border-b-transparent/10 bg-gsv-purple">
-    <div class="w-full max-w-5xl flex items-center justify-center">
-        <div class="ml-6">
-            <img src = "{{ asset('/images/Logo-GSV-klein-icon.png') }}" alt="Logo GSV" class="h-[50px]"/>
+<div class="fixed top-0 bg-[#161616] min-h-screen w-52 flex-col pt-6">
+    <div class="text-white mx-auto flex-row">
+        <img src="{{ asset('/images/Logo-GSV-klein-icon.png') }}" alt="Logo GSV" class="h-12 w-12 mx-auto" />
+    </div>
+
+    <div class="text-white pt-6 mt-6 bg-[#202124] rounded-2xl ml-3 mr-3 pl-3 pr-3 pb-6">
+        <div class="rounded-full mx-auto h-24 w-24 overflow-hidden border-2 border-gsv-purple">
+            <img src="{{ asset('/images/JorisInfoA.jpg') }}" alt="Profielfoto" class="object-cover h-full aspect-auto" />
         </div>
 
-        <div class="flex flex-wrap mr-6 ml-auto">
-            <a class="text-white font-light hover:text-white/60 hover:cursor-pointer mr-3 my-auto transition-all duration-300">
-                <p> ACTIVITEITEN </p>
+        <p class="mx-auto text-center pt-6 font-semibold">
+            Herman Lassche
+        </p>
+        <p class="mx-auto text-center text-sm italic">
+            Chezulas
+        </p>
+
+        <div class="grid grid-cols-2 pt-6 text-center">
+            <div class="border-r-2 border-white group">
+                <p class="text-sm group-hover:scale-105">
+                    5984
+                </p>
+                <p class="text-xs text-gray-500 group-hover:scale-105">
+                    posts
+                </p>
+            </div>
+            <div class=" hover:scale-105">
+                <p class="text-sm">
+                    23
+                </p>
+                <p class="text-xs text-gray-500">
+                    topics
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-white pt-6 mt-6 bg-[#202124] rounded-2xl ml-3 mr-3 pb-6 text-center">
+        <div class="hover:border-l-[#c5023d] hover:cursor-pointer border-l-2 border-l-transparent hover:bg-gradient-to-r hover:from-gsv-purple/80 hover:to-transparent w-full h-full pt-2 pb-2 mb-2 transition-all duration-300 ease-linear">
+            <a>
+                Forum
             </a>
-            <a class="text-white font-light hover:text-white/60 hover:cursor-pointer mr-3 my-auto transition-all duration-300">
-                <p> FOTO'S </p>
+        </div>
+        <div class="hover:border-l-[#c5023d] hover:cursor-pointer border-l-2 border-l-transparent hover:bg-gradient-to-r hover:from-gsv-purple/80 hover:to-transparent w-full h-full pt-2 pb-2 mb-2 transition-all duration-300 ease-linear">
+            <a>
+                Foto's
             </a>
-            <a class="text-white font-light hover:text-white/60 hover:cursor-pointer mr-3 my-auto transition-all duration-300">
-                <p> DOCS </p>
-            </a>
-            <a class="text-white font-light hover:text-white/60 hover:cursor-pointer mr-6 my-auto transition-all duration-300">
-                <p> ADMIN </p>
-            </a>
-            <a class="text-black font-light bg-[#fffafa] hover:border-[#fffafa] hover:bg-transparent hover:text-white hover:cursor-pointer border-2 border-transparent rounded-full transition-all duration-300">
-                <p class="ml-7 pt-2 pb-2 mr-7 text-md font-medium"> FORUM </p>
+        </div>
+        <div class="hover:border-l-[#c5023d] hover:cursor-pointer border-l-2 border-l-transparent hover:bg-gradient-to-r hover:from-gsv-purple/80 hover:to-transparent w-full h-full pt-2 pb-2 mb-2 transition-all duration-300 ease-linear">
+            <a>
+                Admin
             </a>
         </div>
     </div>
-</nav>
+
+</div>

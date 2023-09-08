@@ -20,9 +20,8 @@
     </head>
     <body>
         @include('layouts.navigation')
-
-        <div class="font-sans text-gray-900 antialiased pt-20">
+        <!-- <div class="font-sans text-gray-900 antialiased pt-20 pl-8">
             @yield('content')
-        </div>
+        </div> -->
     </body>
 </html>
