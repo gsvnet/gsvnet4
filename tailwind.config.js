@@ -14,6 +14,7 @@ module.exports = {
             },
             colors: {
                 'gsv-purple': '#780125',
+                'gsv-purple-dark': '#3e0014'
             },
         },
     },
