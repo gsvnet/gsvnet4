@@ -83,13 +83,15 @@ class UserEventSubscriber
         EmailWasVerified::class
     ];
 
+    // TODO: Test all of these couplings
+
     public function subscribe(Dispatcher $events)
     {
         $events->listen(UserWasRegistered::class, [UserMailer::class, 'sendWelcomeEmail']);
         $events->listen(UserWasRegistered::class, [UserMailer::class, 'notifyReunist']);
         $events->listen(UserWasActivated::class, [UserMailer::class, 'sendActivatedEmail']);
         $events->listen(PotentialWasRegistered::class, [PotentialMailer::class, 'sendWelcomeEmail']);
-        // Not sure if the line below ever gets called
+        // Not sure if the line below ever gets called, in GSVnet3 this event was never fired
         $events->listen(PotentialWasAccepted::class, [PotentialMailer::class, 'sendActivatedEmail']);
 
         $events->listen(self::$profileChanges, [ProfileUpdateSaver::class, 'changedProfile']);

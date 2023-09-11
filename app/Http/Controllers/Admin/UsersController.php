@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use App\Events\Potentials\PotentialWasAccepted;
+use App\Events\Users\UserWasActivated;
 use App\Exports\MembersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProfileRequest;
@@ -20,23 +22,18 @@ use Illuminate\Http\Request;
 
 class UsersController extends Controller  
 {
-    protected $users;
-    protected $profiles;
-    protected $yearGroups;
-    protected $regions;
 
     public function __construct(
-        UsersRepository $users,
-        ProfilesRepository $profiles,
-        YearGroupRepository $yearGroups,
-        RegionsRepository $regions,
-    ) {
-        $this->users = $users;
-        $this->profiles = $profiles;
-        $this->yearGroups = $yearGroups;
-        $this->regions = $regions;
-    }
+        protected UsersRepository $users,
+        protected ProfilesRepository $profiles,
+        protected YearGroupRepository $yearGroups,
+        protected RegionsRepository $regions,
+    ) {}
 
+    /**
+     * Show an overview of all users.
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
         $this->authorize('users.show');
@@ -110,10 +107,14 @@ class UsersController extends Controller
             ->with('regions', $regions);
     }
 
-    public function show($id)
+    /**
+     * Return a view of the user dependent on the user type.
+     * @param \App\Models\User $user
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function show(User $user)
     {
         $this->authorize('users.show');
-        $user = $this->users->byId($id);
 
         // Committees or ordinary forum users do not need a fancy profile page.
         // In addition, since GDPR, not all (former) members still have profiles.
@@ -137,6 +138,10 @@ class UsersController extends Controller
         return view('admin.users.showPotential')->with(compact('user', 'profile'));
     }
 
+    /**
+     * Download an Excel file containing member information.
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function exportMembers()
     {
         $this->authorize('users.show');
@@ -157,10 +162,14 @@ class UsersController extends Controller
         return redirect()->route('dashboard');
     }
 
-    public function destroy($id)
+    /**
+     * Delete the user (and their profile, if it exists) from the database.
+     * @param \App\Models\User $user
+     * @return RedirectResponse|mixed
+     */
+    public function destroy(User $user)
     {
         $this->authorize('users.manage');
-        $user = $this->users->byId($id);
 
         if ($profile = $user->profile)
             $profile->delete();
@@ -246,26 +255,36 @@ class UsersController extends Controller
         return redirect()->action('Admin\UsersController@show', $user->id);
     }
 
-    public function activate($id)
+    /**
+     * Activate user account (can also be applied to potentials).
+     * @param \App\Models\User $user
+     * @return RedirectResponse|mixed
+     */
+    public function activate(User $user)
     {
         $this->authorize('users.manage');
-        $this->users->activateUser($id);
 
-        $user = $this->users->byId($id);
-        // TODO: Fire UserActivated event
+        $this->users->activateUser($user);
+
+        UserWasActivated::dispatch($user);
 
         session()->flash('success', "Account van {$user->present()->fullName} is succesvol geactiveerd.");
 
         return redirect()->action('Admin\UsersController@index');
     }
 
-    public function accept($id)
+    /**
+     * Accept potential as member.
+     * @param User $user
+     * @return RedirectResponse|mixed
+     */
+    public function accept(User $user)
     {
         $this->authorize('users.manage');
-        $this->users->acceptMembership($id);
 
-        $user = $this->users->byId($id);
-        // TODO: Fire MembershipAccepted event
+        $this->users->acceptMembership($user);
+
+        PotentialWasAccepted::dispatch($user);
 
         session()->flash('success', "Noviet {$user->present()->fullName} is succesvol geïnstalleerd.");
 
