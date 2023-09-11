@@ -1,12 +1,12 @@
-<div class="fixed top-0 bg-[#161616] w-full">
-    <form>
+<div class="fixed top-0 dark:bg-[#161616] bg-[#d9e0e1] w-full flex flex-row">
+    <form class="mx-auto">
         <div class="flex max-w-md mx-auto pt-4 pb-4">
             <label for="search-dropdown" class="mb-2 text-sm font-medium text-white sr-only ">Zoek</label>
-            <button id="dropdown-button" data-dropdown-toggle="dropdown" class="flex-shrink-0 z-10 inline-flex items-center px-4 text-xs font-medium text-center text-white bg-[#202124] border border-[#3d3e44] rounded-l-lg hover:bg-[#36383d] focus:outline-none focus:ring-gsv-purple-dark focus:ring-2 focus:border-gsv-purple-dark ease-linear duration-75 transition-all" type="button">All categories <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+            <button id="dropdown-button" data-dropdown-toggle="dropdown" class="flex-shrink-0 z-10 inline-flex items-center px-4 text-xs font-medium text-center text-white bg-[#202124] border border-[#3d3e44] rounded-l-lg hover:bg-[#36383d] focus:outline-none focus:ring-gsv-purple-dark focus:ring-2 focus:border-gsv-purple-dark ease-linear duration-75 transition-all" type="button">Zoekgebied <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
             </svg></button>
-                <div id="dropdown" class="z-10 hidden bg-[#161616] divide-y divide-[#3d3e44] rounded-lg shadow w-44 ">
-                    <ul class="py-2 text-sm text-white/80" aria-labelledby="dropdown-button">
+                <div id="dropdown" class="fixed top-4 z-10 hidden bg-[#161616] divide-y divide-[#3d3e44] rounded-lg shadow w-44 ">
+                    <ul class="py-2 text-xs text-white/80" aria-labelledby="dropdown-button">
                     <li>
                         <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-[#4e5158] ">Eerste bericht + Topic-naam</button>
                     </li>
@@ -29,4 +29,45 @@
             </div>
         </div>
     </form>
+
+    <div class="right-0 mr-4 my-auto">
+        <button type="button" x-bind:class="darkMode ? 'bg-gsv-purple-dark' : 'bg-gsv-purple'"
+            x-on:click="darkMode = !darkMode"
+            class="relative hover:border-white border-transparent inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:gsv-purple-dark focus:ring-offset-2"
+            role="switch" aria-checked="false">
+            <span class="sr-only">Dark mode toggle</span>
+            <span x-bind:class="darkMode ? 'translate-x-5 bg-gray-700': 'translate-x-0 bg-white'"
+                class="pointer-events-none relative inline-block h-5 w-5 transform rounded-full shadow ring-0 transition duration-200 ease-in-out">
+                <span
+                    x-bind:class="darkMode ? 'opacity-0 ease-out duration-100' : 'opacity-100 ease-in duration-200'"
+                    class="absolute inset-0 flex h-full w-full items-center justify-center transition-opacity"
+                    aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-gray-400"
+                        viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                    </svg>
+                </span>
+                <span
+                    x-bind:class="darkMode ?  'opacity-100 ease-in duration-200' : 'opacity-0 ease-out duration-100'"
+                    class="absolute inset-0 flex h-full w-full items-center justify-center transition-opacity"
+                    aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-white"
+                        viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </span>
+            </span>
+        </button>
+    </div>
 </div>
+
+<script>
+    const dropdownButton = document.getElementById("dropdown-button");
+    const dropdown = document.getElementById("dropdown");
+
+    dropdownButton.addEventListener("click", function () {
+        dropdown.classList.toggle("hidden");
+    });
+</script>

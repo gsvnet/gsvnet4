@@ -18,11 +18,18 @@
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
     </head>
-    <body>
-        @include('layouts.searchbar')
-        @include('layouts.navigation')
+    <body x-data="{ darkMode: false }" x-init="
+    if (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      localStorage.setItem('darkMode', JSON.stringify(true));
+    }
+    darkMode = JSON.parse(localStorage.getItem('darkMode'));
+    $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))" x-cloak>
+        <div x-bind:class="{'dark' : darkMode === true}" class="min-h-screen bg-gray-100">
+            @include('layouts.searchbar')
+            @include('layouts.navigation')
         <!-- <div class="font-sans text-gray-900 antialiased pt-20 pl-8">
             @yield('content')
         </div> -->
+        </div>
     </body>
 </html>
