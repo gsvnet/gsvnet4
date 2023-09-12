@@ -18,38 +18,39 @@
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body x-data="{ darkMode: false }" x-init="
+    if (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      localStorage.setItem('darkMode', JSON.stringify(true));
+    }
+    darkMode = JSON.parse(localStorage.getItem('darkMode'));
+    $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))" x-cloak>
+        <div x-bind:class="{'dark' : darkMode === true}" class="min-h-screen">
+            <div class="dark:bg-[#161616] bg-[#d9e0e1] h-screen">
+                @include('layouts.searchbar')
+                @include('layouts.navigation')
 
 
-            @if ($message = session('success'))
-                <x-flash-message>
-                    {{ $message }}
-                </x-flash-message>
-            @endif
+                @if ($message = session('success'))
+                    <x-flash-message>
+                        {{ $message }}
+                    </x-flash-message>
+                @endif
 
-            @if ($errors->any())
-                <x-flash-message class="bg-red-600">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </x-flash-message>
-            @endif
+                @if ($errors->any())
+                    <x-flash-message class="bg-red-600">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </x-flash-message>
+                @endif
 
-            <!-- Page Heading -->
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    @yield('header')
-                </div>
-            </header>
-
-            <!-- Page Content -->
-            <main class="pt-20">
-                @yield('content')
-            </main>
+                <!-- Page Content -->
+                <main class="pt-20">
+                    @yield('content')
+                </main>
+            </div>
         </div>
     </body>
 </html>

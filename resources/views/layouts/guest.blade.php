@@ -24,12 +24,12 @@
     }
     darkMode = JSON.parse(localStorage.getItem('darkMode'));
     $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))" x-cloak>
-        <div x-bind:class="{'dark' : darkMode === true}" class="min-h-screen bg-gray-100">
-            @include('layouts.searchbar')
-            @include('layouts.navigation')
-        <!-- <div class="font-sans text-gray-900 antialiased pt-20 pl-8">
-            @yield('content')
-        </div> -->
+        <div x-bind:class="{'dark' : darkMode === true}">
+            <div class="dark:bg-[#161616] bg-[#d9e0e1]">
+                <div class="font-sans text-gray-900 antialiased pl-8">
+                    @yield('content')
+                </div>
+            </div>
         </div>
     </body>
 </html>

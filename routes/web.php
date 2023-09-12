@@ -24,11 +24,10 @@ use App\Http\Controllers\Admin\UsersController;
 $rootDomain = preg_replace('/https?:\/\//', '', env('APP_URL'));
 
 Route::domain('forum.'.$rootDomain)->group(function() {
-    Route::get('/', function () {
-        return view('welcome');
-    });
-
     Route::middleware('auth')->group(function () {
+        Route::get('/', function () {
+            return view('dashboard');
+        });
 
         Route::prefix('intern')->group(function () {
             Route::get('profiel', [UserController::class, 'showProfile'])
@@ -64,13 +63,6 @@ Route::domain('forum.'.$rootDomain)->group(function() {
         // Exporting data to Excel
         Route::get('leden/leden.csv', [UsersController::class, 'exportMembers']);
     });
-    
-    
-    
-    
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware(['auth'])->name('dashboard');
 });
 
 
