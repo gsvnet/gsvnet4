@@ -23,23 +23,25 @@ class UserComposerServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-            $user = Auth::user();
-            $usersRepository = app(UsersRepository::class);
-            
-            $activeUserPostCount = $usersRepository->postsAllTimeUser($user->id);
-            $activeUserTopicCount = $usersRepository->topicsAllTimeUser($user->id);
-            
-            if ($activeUserPostCount == null){
-                $activeUserPostCount = 0;
-            }
-            
-            if ($activeUserTopicCount == null){
-                $activeUserTopicCount = 0;
-            }
+            if (Auth::check()) {
+                $user = Auth::user();
+                $usersRepository = app(UsersRepository::class);
+                
+                $activeUserPostCount = $usersRepository->postsAllTimeUser($user->id);
+                $activeUserTopicCount = $usersRepository->topicsAllTimeUser($user->id);
+                
+                if ($activeUserPostCount == null){
+                    $activeUserPostCount = 0;
+                }
+                
+                if ($activeUserTopicCount == null){
+                    $activeUserTopicCount = 0;
+                }
 
-            $view->with('user', $user)
-                 ->with('activeUserPostCount', $activeUserPostCount)
-                 ->with('activeUserTopicCount', $activeUserTopicCount);
+                $view->with('user', $user)
+                    ->with('activeUserPostCount', $activeUserPostCount)
+                    ->with('activeUserTopicCount', $activeUserTopicCount);
+            }
         });
     }
 }

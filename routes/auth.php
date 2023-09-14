@@ -54,7 +54,7 @@ Route::domain('forum.'.$rootDomain)->group(function() {
 
         Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
-        Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-                    ->name('logout');
+        Route::post('uitloggen', [AuthenticatedSessionController::class, 'destroy'])
+                    ->name('uitloggen');
     });
 });
