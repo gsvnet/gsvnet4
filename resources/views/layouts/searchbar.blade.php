@@ -33,7 +33,7 @@
     <div class="right-0 mr-4 my-auto">
         <button type="button" x-bind:class="darkMode ? 'bg-gsv-purple-dark' : 'bg-gsv-purple'"
             x-on:click="darkMode = !darkMode"
-            class="relative ring-2 hover:ring-white border-transparent inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:gsv-purple-dark focus:ring-offset-2"
+            class="relative ring-2 hover:ring-white ring-transparent border-transparent inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:gsv-purple-dark focus:ring-offset-2"
             role="switch" aria-checked="false">
             <span class="sr-only">Dark mode toggle</span>
             <span x-bind:class="darkMode ? 'translate-x-5 bg-gray-700': 'translate-x-0 bg-white'"

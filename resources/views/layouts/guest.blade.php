@@ -26,7 +26,7 @@
     $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))" x-cloak>
         <div x-bind:class="{'dark' : darkMode === true}">
             <div class="dark:bg-[#161616] bg-[#d9e0e1]">
-                <div class="font-sans text-gray-900 antialiased pl-8">
+                <div class="font-sans text-gray-900 antialiased pl-8 scroll-smooth">
                     @yield('content')
                 </div>
             </div>

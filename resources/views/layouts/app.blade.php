@@ -48,7 +48,7 @@
 
                 <!-- Page Content -->
                 <!-- Take Distance from nav + searchbar 6rem==logo+mt+pt -->
-                <main class="pt-24 pl-52 pb-6">
+                <main class="pt-24 pl-52 pb-6 scroll-smooth">
                     @yield('content')
                 </main>
             </div>
