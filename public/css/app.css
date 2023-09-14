@@ -1484,6 +1484,11 @@ select {
   --tw-scale-y: .9;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+.hover\:scale-95:hover {
+  --tw-scale-x: .95;
+  --tw-scale-y: .95;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
 .hover\:cursor-pointer:hover {
   cursor: pointer;
 }
@@ -1551,6 +1556,12 @@ select {
 }
 .hover\:text-black\/70:hover {
   color: rgb(0 0 0 / 0.7);
+}
+.hover\:opacity-90:hover {
+  opacity: 0.9;
+}
+.hover\:opacity-80:hover {
+  opacity: 0.8;
 }
 .hover\:ring-white:hover {
   --tw-ring-opacity: 1;
