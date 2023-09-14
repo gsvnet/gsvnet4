@@ -4,7 +4,7 @@
         <img src="{{ asset('/images/Logo-GSV-klein-icon-zwart.png') }}" alt="Logo GSV" class="mx-auto" x-bind:class="darkMode ? 'h-0 w-0' : 'h-12 w-12'" />
     </div>
 
-    <div class="text-black dark:text-white pt-6 mt-6 dark:bg-[#202124] bg-[#d9e0e1] rounded-2xl ml-3 mr-3 pl-3 pr-3 pb-6">
+    <div class="text-black dark:text-white pt-6 mt-6 dark:bg-[#202124] bg-[#d0d5d6] rounded-2xl ml-3 mr-3 pl-3 pr-3 pb-6">
         <div class="rounded-full mx-auto h-24 w-24 overflow-hidden border-2 border-gsv-purple">
             <img src="{{ asset('/images/JorisInfoA.jpg') }}" alt="Profielfoto" class="object-cover h-full aspect-auto" />
         </div>
@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <div class="dark:text-white text-black pt-6 mt-6 dark:bg-[#202124] bg-[#d9e0e1] rounded-2xl ml-3 mr-3 pb-6 text-center">
+    <div class="dark:text-white text-black pt-6 mt-6 dark:bg-[#202124] bg-[#d0d5d6] rounded-2xl ml-3 mr-3 pb-6 text-center">
     <div class="hover:border-l-[#c5023d] hover:cursor-pointer border-l-2 border-l-transparent hover:bg-gradient-to-r hover:from-gsv-purple/80 hover:to-transparent w-full h-full pt-2 pb-2 mb-2 transition-all duration-300 ease-in">
             <a>
                 Forum

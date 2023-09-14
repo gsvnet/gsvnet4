@@ -25,7 +25,7 @@
     darkMode = JSON.parse(localStorage.getItem('darkMode'));
     $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))" x-cloak>
         <div x-bind:class="{'dark' : darkMode === true}" class="min-h-screen">
-            <div class="dark:bg-[#161616] bg-[#d9e0e1] h-screen">
+            <div class="dark:bg-[#161616] bg-[#d9e0e1] min-h-screen">
                 @include('layouts.searchbar')
                 @include('layouts.navigation')
 
@@ -47,7 +47,8 @@
                 @endif
 
                 <!-- Page Content -->
-                <main class="pt-20">
+                <!-- Take Distance from nav + searchbar 6rem==logo+mt+pt -->
+                <main class="pt-24 pl-52 pb-6">
                     @yield('content')
                 </main>
             </div>
