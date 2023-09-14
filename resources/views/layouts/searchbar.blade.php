@@ -2,19 +2,19 @@
     <form class="mx-auto">
         <div class="flex max-w-md mx-auto pt-4 pb-4">
             <label for="search-dropdown" class="mb-2 text-sm font-medium text-white sr-only">Zoek</label>
-            <button id="dropdown-button" data-dropdown-toggle="dropdown" class="flex-shrink-0 z-10 inline-flex items-center px-4 text-xs font-medium text-center dark:text-white text-black dark:bg-[#202124] bg-[#d0d5d6] border border-white/70 dark:border-[#3d3e44] rounded-l-lg dark:hover:bg-[#36383d] hover:bg-white/70 focus:outline-none dark:focus:ring-gsv-purple-dark focus:ring-gsv-purple focus:ring-2 focus:border-gsv-purple dark:focus:border-gsv-purple-dark ease-linear duration-75 transition-all" type="button">Zoekgebied <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+            <button id="dropdown-button" data-dropdown-toggle="dropdown" class="flex-shrink-0 z-10 inline-flex items-center px-4 text-xs font-medium text-center dark:text-white text-black dark:bg-[#202124] bg-[#d0d5d6] border border-white/70 dark:border-[#3d3e44] rounded-l-lg dark:hover:bg-[#36383d] hover:bg-white/70 focus:outline-none dark:focus:ring-gsv-purple-dark focus:ring-gsv-purple focus:ring-2 focus:border-gsv-purple dark:focus:border-gsv-purple-dark ease-linear duration-200 transition-all" type="button">Zoekgebied <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
             </svg></button>
             <div id="dropdown" class="fixed top-4 z-10 hidden bg-[#d0d5d6] dark:bg-[#161616] divide-y divide-[#3d3e44] rounded-lg shadow w-44">
                 <ul class="py-2 text-xs text-black/80 dark:text-white/80" aria-labelledby="dropdown-button">
                     <li>
-                        <button type="button" class="dropdown-option inline-flex w-full px-4 py-2 dark:hover:bg-[#4e5158] hover:bg-white/70 ">Eerste bericht + Topic-naam</button>
+                        <button type="button" class="dropdown-option inline-flex w-full px-4 py-2 dark:hover:bg-[#4e5158] hover:bg-white/70 duration-200 transition-all ease-in-out">Eerste bericht + Topic-naam</button>
                     </li>
                     <li>
-                        <button type="button" class="dropdown-option inline-flex w-full px-4 py-2 dark:hover:bg-[#4e5158] hover:bg-white/70 ">Alle berichten</button>
+                        <button type="button" class="dropdown-option inline-flex w-full px-4 py-2 dark:hover:bg-[#4e5158] hover:bg-white/70 duration-200 transition-all ease-in-out">Alle berichten</button>
                     </li>
                     <li>
-                        <button type="button" class="dropdown-option inline-flex w-full px-4 py-2 dark:hover:bg-[#4e5158] hover:bg-white/70 ">Leden</button>
+                        <button type="button" class="dropdown-option inline-flex w-full px-4 py-2 dark:hover:bg-[#4e5158] hover:bg-white/70 duration-200 transition-all ease-in-out">Leden</button>
                     </li>
                 </ul>
             </div>
@@ -33,7 +33,7 @@
     <div class="right-0 mr-4 my-auto">
         <button type="button" x-bind:class="darkMode ? 'bg-gsv-purple-dark' : 'bg-gsv-purple'"
             x-on:click="darkMode = !darkMode"
-            class="relative hover:border-white border-transparent inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:gsv-purple-dark focus:ring-offset-2"
+            class="relative ring-2 hover:ring-white border-transparent inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:gsv-purple-dark focus:ring-offset-2"
             role="switch" aria-checked="false">
             <span class="sr-only">Dark mode toggle</span>
             <span x-bind:class="darkMode ? 'translate-x-5 bg-gray-700': 'translate-x-0 bg-white'"
