@@ -292,6 +292,16 @@ class UsersRepository extends BaseRepository
             ->first();
     }
 
+    public function topicsAllTimeUser($userid)
+    {
+        return User::select(\DB::raw('count(DISTINCT forum_replies.thread_id) as num, users.id, users.type, users.username, users.firstname, users.middlename, users.lastname'))
+            ->join('forum_replies', 'users.id', '=', 'forum_replies.author_id')
+            ->groupBy('forum_replies.author_id')
+            ->where('users.id', $userid)
+            ->first();
+    }
+    
+
     public function postsAllTimeUserRank($activeUser)
     {
         $users = User::select(\DB::raw('count(forum_replies.author_id) as num, users.id, users.type, users.username, users.firstname, users.middlename, users.lastname'))

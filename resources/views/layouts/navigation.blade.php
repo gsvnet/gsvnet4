@@ -10,16 +10,27 @@
         </div>
 
         <p class="mx-auto text-center pt-6 font-semibold">
-            Herman Lassche
+            @auth
+                {{ $user->present()->fullname }}
+            @endauth
         </p>
-        <p class="mx-auto text-center text-sm italic">
-            Chezulas
-        </p>
+        <div class="mx-auto text-center text-sm italic flex flex-row items-center justify-center">
+            <p>
+                @auth
+                    {{ $user->profile->present()->yearGroupName }}
+                @endauth
+            </p>
+            <p class="text-gsv-purple ml-2">
+                @auth
+                    • {{ $user->present()->membershipType }}
+                @endauth 
+            </p>
+        </div>
 
         <div class="grid grid-cols-2 pt-6 text-center">
             <div class="border-r-2 border-white group">
                 <p class="text-sm group-hover:scale-105 font-semibold">
-                    5984
+                    {{ $activeUserPostCount }}
                 </p>
                 <p class="text-xs text-gray-500 group-hover:scale-105">
                     posts
@@ -27,7 +38,7 @@
             </div>
             <div class=" hover:scale-105">
                 <p class="text-sm font-semibold">
-                    23
+                    {{ $activeUserTopicCount }}
                 </p>
                 <p class="text-xs text-gray-500">
                     topics
