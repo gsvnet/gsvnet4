@@ -106,6 +106,13 @@ class UserPresenter extends Presenter
         return $since->formatLocalized('%B %Y');
     }
 
+    public function outCommiteeSince()
+    {
+        $since = Carbon::createFromFormat('Y-m-d H:i:s', $this->pivot->end_date);
+
+        return $since->formatLocalized('%B %Y');
+    }
+
     public function committeeFromTo()
     {
         $from = Carbon::createFromFormat('Y-m-d H:i:s', $this->pivot->start_date);

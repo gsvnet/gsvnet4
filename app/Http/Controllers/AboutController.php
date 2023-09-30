@@ -28,13 +28,14 @@ class AboutController extends Controller
     public function showCommittee($slug)
     {
         $committee = $this->committees->bySlug($slug);
-        $allCommittees = $this->committees->all();
         $activeMembers = $committee->activeMembers()->get();
+        $previousMembers = $committee->previousMembersTwoYear()->get();
+
 
         return view('committees.show', [
             'committee' => $committee,
-            'committees' => $allCommittees,
-            'activeMembers' => $activeMembers
+            'activeMembers' => $activeMembers,
+            'previousMembers' => $previousMembers
         ]);
     }
 

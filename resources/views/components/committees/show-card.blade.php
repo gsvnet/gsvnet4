@@ -1,4 +1,4 @@
-<a href="/comissies/{{ $unique }}" class="group overflow-hidden block max-w-sm border-b border-gray-200 rounded-lg shadow-2xl hover:bg-white/50 dark:bg-[#36373a] bg-white/20 dark:border-gray-700 dark:hover:bg-white/20 h-36 hover:translate-y-1 transition-all duration-300 ease-in-out hover:border-b-transparent dark:hover:border-b-transparent">
+<a href="/commissies/{{ $unique }}" class="group overflow-hidden block max-w-sm border-b rounded-lg dark:shadow-white/10 shadow-lg hover:bg-white/50 dark:bg-[#36373a] bg-white/20 dark:border-gray-700 dark:hover:bg-white/20 h-36 hover:translate-y-1 transition-all duration-300 ease-in-out hover:border-b-transparent dark:hover:border-b-transparent">
     <div class="dark:bg-gsv-purple-dark/80 bg-gsv-purple/80 w-[100%] p-4  ">
         <h5 class="text-ellipsis overflow-hidden truncate text-md  tracking-tight text-white "> {{ $title }} </h5>
     </div>

@@ -37,7 +37,21 @@ class Committee extends Model
             ->withPivot('start_date', 'end_date');
     }
 
+    public function previousMembersTwoYear(): BelongsToMany {
+        // Select all active members, i.e. for which the current date is
+        // between the start and end date
+        return $this->belongsToMany(User::class)
+            ->where('committee_user.start_date', '<=', new \DateTime('now'))
+            ->where(function($q) {
+                $twoYearsAgo = now()->subYears(2); // Calculate the date from two years ago
+                return $q->where('committee_user.end_date', '>=', $twoYearsAgo)
+                    ->where('committee_user.end_date', '<', new \DateTime('now'));
+            })           
+            ->withPivot('start_date', 'end_date');
+    }
+
     public function activeUsers(): BelongsToMany {
         return $this->activeMembers();
     }
+
 }
