@@ -1,4 +1,4 @@
-<div class="fixed top-0 dark:bg-[#161616] bg-[#d9e0e1] w-full flex flex-row">
+<div class="fixed top-0 dark:bg-[#161616] bg-[#d9e0e1] w-full flex flex-row z-50">
     <form class="mx-auto">
         <div class="flex max-w-md mx-auto pt-4 pb-4">
             <label for="search-dropdown" class="mb-2 text-sm font-medium text-white sr-only">Zoek</label>
