@@ -858,6 +858,9 @@ select {
 .min-h-screen {
   min-height: 100vh;
 }
+.min-h-\[100\%\] {
+  min-height: 100%;
+}
 .w-5 {
   width: 1.25rem;
 }
