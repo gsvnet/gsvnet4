@@ -1,4 +1,4 @@
-<div class="fixed top-0 dark:bg-[#161616] bg-[#d9e0e1] min-h-screen w-52 flex-col pt-6 z-50">
+<div class="fixed top-0 dark:bg-[#161616] bg-[#d9e0e1] min-h-screen max-h-screen w-52 flex-col pt-6 z-50">
     <div class="dark:text-white text-black mx-auto flex-row">
         <img src="{{ asset('/images/Logo-GSV-klein-icon.png') }}" alt="Logo GSV" class="mx-auto" x-bind:class="darkMode ? 'h-12 w-12'  : 'h-0 w-0'" />
         <img src="{{ asset('/images/Logo-GSV-klein-icon-zwart.png') }}" alt="Logo GSV" class="mx-auto" x-bind:class="darkMode ? 'h-0 w-0' : 'h-12 w-12'" />
@@ -109,5 +109,4 @@
             </button>
         </form>
     </div>
-
 </div>
