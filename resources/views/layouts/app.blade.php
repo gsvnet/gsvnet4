@@ -51,7 +51,7 @@
 
                     <!-- Page Content -->
                     <!-- Take Distance from nav + searchbar 6rem==logo+mt+pt -->
-                    <main class="pt-24 pl-52 pb-6 scroll-smooth">
+                    <main class="pt-24 md:pl-52 pb-6 scroll-smooth">
                         <div class="text-black dark:text-white pt-6 dark:bg-[#202124] bg-[#d0d5d6] rounded-2xl ml-3 mr-3 pl-3 pr-3 pb-6">
                             @yield('content')
                         </div>

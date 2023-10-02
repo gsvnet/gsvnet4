@@ -9,8 +9,8 @@
     </div>
 
     <div class="justify-center items-center flex flex-row w-[35%] mx-auto">
-        <div class="rounded-full h-16 w-16 overflow-hidden border-4 dark:border-[#2021249c] border-[#20212446]">
-            <img src="{{ asset('/images/JorisInfoA.jpg') }}" alt="Profielfoto" class="object-cover h-full aspect-auto" />
+        <div class="rounded-full h-16 w-16 aspect-square overflow-hidden border-4 dark:border-[#2021249c] border-[#20212446]">
+            <img src="{{ asset('/images/JorisInfoA.jpg') }}" alt="Profielfoto" class="object-cover h-full aspect-square" />
         </div>
         <div>
             <p class="dark:text-white/30 text-black/30 text-xs ml-2">
