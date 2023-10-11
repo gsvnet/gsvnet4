@@ -7,25 +7,7 @@
                     <img src="{{ asset('/images/JorisInfoA.jpg') }}" alt="Profielfoto" class="object-cover h-full aspect-square" />
                 </div>
             </a>
-            <div class="w-full items-start m-3">
-                <p class="font-semibold">
-                    @auth
-                        {{ $user->present()->fullname }}
-                    @endauth
-                </p>
-                <div class="text-sm italic flex flex-row">
-                    <p>
-                        @auth
-                            {{ $user->profile->present()->yearGroupName }}
-                        @endauth
-                    </p>
-                    <p class="text-gsv-purple ml-2">
-                        @auth
-                            • {{ $user->present()->membershipType }}
-                        @endauth 
-                    </p>
-                </div>
-            </div>
+            <x-navigation.mobile.user-show />
             <button class="navbar-close">
                 <svg class="h-6 w-6 text-gray-400 cursor-pointer hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
