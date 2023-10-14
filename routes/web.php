@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\MemberController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
@@ -51,9 +53,7 @@ Route::domain('forum.'.$rootDomain)->group(function() {
     });
     
     
-    Route::prefix('admin')  
-            ->group(function() {
-        
+    Route::prefix('admin')->group(function() {
         Route::get('/', [AdminController::class, 'index']);
         Route::get('/ik', [AdminController::class, 'redirectToMyProfile']);
 
@@ -62,6 +62,44 @@ Route::domain('forum.'.$rootDomain)->group(function() {
 
         // Exporting data to Excel
         Route::get('leden/leden.csv', [UsersController::class, 'exportMembers']);
+
+        Route::prefix('leden/{user}')
+          ->controller(MemberController::class)
+          ->group(function() {
+            // Each part of the profile
+            Route::get('contact',       'editContactDetails');
+            Route::put('contact',       'updateContactDetails');
+            Route::get('email',         'editEmail');
+            Route::put('email',         'updateEmail');
+            Route::get('wachtwoord',    'editPassword');
+            Route::put('wachtwoord',    'updatePassword');
+            Route::get('geboortedatum', 'editBirthDay');
+            Route::put('geboortedatum', 'updateBirthDay');
+            Route::get('geslacht',      'editGender');
+            Route::put('geslacht',      'updateGender');
+            Route::get('jaarverband',   'editYearGroup');
+            Route::put('jaarverband',   'updateYearGroup');
+            Route::get('naam',          'editName');
+            Route::put('naam',          'updateName');
+            Route::get('gebruikersnaam','editUsername');
+            Route::put('gebruikersnaam','updateUsername');
+            Route::get('werk',          'editBusiness');
+            Route::put('werk',          'updateBusiness');
+            Route::get('foto',          'editPhoto');
+            Route::put('foto',          'updatePhoto');
+            Route::get('ouders',        'editParentContactDetails');
+            Route::put('ouders',        'updateParentContactDetails');
+            Route::get('studie',        'editStudy');
+            Route::put('studie',        'updateStudy');
+            Route::get('regio',         'editRegion');
+            Route::put('regio',         'updateRegion');
+            Route::get('tijd-van-lidmaatschap', 'editMembershipPeriod');
+            Route::put('tijd-van-lidmaatschap', 'updateMembershipPeriod');
+            Route::get('in-leven',      'editAlive');
+            Route::put('in-leven',      'updateAlive');
+            Route::get('sic-ontvangen', 'editNewspaper');
+            Route::put('sic-ontvangen', 'updateNewspaper');
+        });
     });
 });
 
