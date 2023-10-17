@@ -5,6 +5,10 @@
         <h1 class="text-white mx-auto text-center text-2xl font-semibold py-8"> Discussie gezocht </h1>
     </div>
 
+    <a class="text-black dark:text-white text-xs hover:text-black/50" href="/">
+        < Alle Topics
+    </a>
+
     <div class="flex mx-8">
         <div class="flex flex-col">
             <x-forum.message />

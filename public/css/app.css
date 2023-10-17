@@ -854,6 +854,9 @@ select {
 .max-h-32 {
   max-height: 8rem;
 }
+.max-h-36 {
+  max-height: 9rem;
+}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -1436,6 +1439,12 @@ select {
 .pl-\[15\%\] {
   padding-left: 15%;
 }
+.pr-2 {
+  padding-right: 0.5rem;
+}
+.pl-2 {
+  padding-left: 0.5rem;
+}
 .text-left {
   text-align: left;
 }
@@ -1751,6 +1760,11 @@ select {
   --tw-scale-y: .95;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+.hover\:scale-110:hover {
+  --tw-scale-x: 1.1;
+  --tw-scale-y: 1.1;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
 @keyframes ping {
 
   75%, 100% {
@@ -2001,6 +2015,10 @@ select {
 }
 .dark .dark\:border-\[\#2021249c\] {
   border-color: #2021249c;
+}
+.dark .dark\:border-\[\#202124\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(32 33 36 / var(--tw-border-opacity));
 }
 .dark .dark\:border-l-\[\#26272b\] {
   --tw-border-opacity: 1;

@@ -1,21 +1,22 @@
-<div class="w-[640px] mt-4 shadow-inner pb-2 mx-auto border-b rounded-lg dark:shadow-white/10 dark:bg-[#36373a] bg-white/20 dark:border-gray-700 flex-row flex">
-    <div class="bg-[#d0d5d6] w-24 max-h-32 border-4 border-[#d0d5d6] rounded-br-md inline-block">
-        <div class="rounded-full overflow-hidden aspect-square mt-2">
+<div class="w-[640px] mt-4 shadow-inner pb-2 mx-auto border-b rounded-lg dark:bg-[#36373a] bg-white/20 dark:border-gray-700 flex-row flex">
+    <div class="bg-[#d0d5d6] dark:bg-[#202124] dark:border-[#202124] w-24 h-36 border-4 border-[#d0d5d6] rounded-br-md inline-block pr-2 pl-2">
+        <div class="rounded-full overflow-hidden aspect-square mt-2 hover:scale-105 hover:cursor-pointer hover:opacity-80 transition-all duration-150 ease-linear">
             <img src="{{ asset('/images/JorisInfoA.jpg') }}" alt="Profielfoto" class="object-cover h-full aspect-auto" />
         </div>  
-        <div class="w-full text-gsv-purple mt-2 flex flex-row items-center justify-center hover:-translate-y-1 tran hover:cursor-pointer ease-linear transition-all duration-150">
+        <svg fill="currentColor" viewBox="0 0 32 32" class="mt-2 text-gsv-purple w-[45%] mx-auto hover:scale-110 hover:cursor-pointer hover:opacity-80 transition-all duration-150 ease-linear">
+            <path d="M6.67,26.06c.09,0,8.77-.14,8.77-11.89A7.22,7.22,0,1,0,5.67,20.9v4.16A1,1,0,0,0,6.67,26.06ZM3,14.17a5.22,5.22,0,1,1,10.44,0c0,7.5-3.88,9.31-5.77,9.75V20.17a1,1,0,0,0-.75-1A5.21,5.21,0,0,1,3,14.17Z"/>
+            <path d="M22.22,26.06c.09,0,8.78-.14,8.78-11.89a7.22,7.22,0,1,0-9.78,6.73v4.16A1,1,0,0,0,22.22,26.06ZM18.56,14.17a5.22,5.22,0,1,1,10.44,0c0,7.5-3.89,9.31-5.78,9.75V20.17a1,1,0,0,0-.75-1A5.21,5.21,0,0,1,18.56,14.17Z"/>
+        </svg>
+        <div class="w-full text-gsv-purple  flex flex-row items-center justify-center hover:-translate-y-1 tran hover:cursor-pointer ease-linear transition-all duration-150">
             <p class="oldstyle-nums text-gray-700 dark:text-gray-400 text-center text-md mr-2 my-auto">
                 189
             </p>
-            <svg viewBox="-0.5 0 25 25" fill="none" class="w-6 my-auto">
+            <svg viewBox="-0.5 0 25 25" fill="none" class="w-6 mt-2 my-auto">
                 <path d="M12 22.4199C17.5228 22.4199 22 17.9428 22 12.4199C22 6.89707 17.5228 2.41992 12 2.41992C6.47715 2.41992 2 6.89707 2 12.4199C2 17.9428 6.47715 22.4199 12 22.4199Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M8 13.8599L10.87 10.8C11.0125 10.6416 11.1868 10.5149 11.3815 10.4282C11.5761 10.3415 11.7869 10.2966 12 10.2966C12.2131 10.2966 12.4239 10.3415 12.6185 10.4282C12.8132 10.5149 12.9875 10.6416 13.13 10.8L16 13.8599" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
-        <svg fill="currentColor" viewBox="0 0 32 32" class="text-gsv-purple w-[45%] mx-auto hover:scale-105 hover:cursor-pointer hover:opacity-80 transition-all duration-150 ease-linear">
-            <path d="M6.67,26.06c.09,0,8.77-.14,8.77-11.89A7.22,7.22,0,1,0,5.67,20.9v4.16A1,1,0,0,0,6.67,26.06ZM3,14.17a5.22,5.22,0,1,1,10.44,0c0,7.5-3.88,9.31-5.77,9.75V20.17a1,1,0,0,0-.75-1A5.21,5.21,0,0,1,3,14.17Z"/>
-            <path d="M22.22,26.06c.09,0,8.78-.14,8.78-11.89a7.22,7.22,0,1,0-9.78,6.73v4.16A1,1,0,0,0,22.22,26.06ZM18.56,14.17a5.22,5.22,0,1,1,10.44,0c0,7.5-3.89,9.31-5.78,9.75V20.17a1,1,0,0,0-.75-1A5.21,5.21,0,0,1,18.56,14.17Z"/>
-        </svg>
+
     </div>  
     <div class="mt-2 ml-2">    
         <p class="font-bold">
