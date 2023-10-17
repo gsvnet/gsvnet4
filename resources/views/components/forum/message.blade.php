@@ -1,4 +1,4 @@
-<div class="w-[640px] mt-4 shadow-inner pb-2 mx-auto border-b rounded-lg dark:bg-[#36373a] bg-white/20 dark:border-gray-700 flex-row flex">
+<div class="w-full xl:w-[640px] mt-4 shadow-inner pb-2 mx-auto border-b rounded-lg dark:bg-[#36373a] bg-white/20 dark:border-gray-700 flex-row flex">
     <div class="bg-[#d0d5d6] dark:bg-[#202124] dark:border-[#202124] w-24 h-36 border-4 border-[#d0d5d6] rounded-br-md inline-block pr-2 pl-2">
         <div class="rounded-full overflow-hidden aspect-square mt-2 hover:scale-105 hover:cursor-pointer hover:opacity-80 transition-all duration-150 ease-linear">
             <img src="{{ asset('/images/JorisInfoA.jpg') }}" alt="Profielfoto" class="object-cover h-full aspect-auto" />

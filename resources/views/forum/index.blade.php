@@ -9,7 +9,7 @@
         < Alle Topics
     </a>
 
-    <div class="flex mx-8">
+    <div class="flex mx-8 flex-col lg:flex-row">
         <div class="flex flex-col">
             <x-forum.message />
             <x-forum.message />
