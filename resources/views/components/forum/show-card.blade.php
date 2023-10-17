@@ -1,4 +1,4 @@
-<div class="mx-2 px-4 py-4 dark:bg-[#36373a] bg-white/20 mt-2 flex flex-row rounded-2xl divide-x-2 hover:cursor-pointer hover:scale-95 transition-all ease-in-out hover:opacity-80">
+<a href="/default-topic" class="mx-2 px-4 py-4 dark:bg-[#36373a] bg-white/20 mt-2 flex flex-row rounded-2xl divide-x-2 hover:cursor-pointer hover:translate-y-1 hover:scale-95 transition-all ease-in-out hover:opacity-80">
     <div class="items-center flex flex-col justify-center w-[15%] text-center align-middle">
         <p class="text-sm">
             13:15
@@ -39,4 +39,4 @@
             </p>        
         </div>
     </div>    
-</div>
+</a>

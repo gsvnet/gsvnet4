@@ -31,6 +31,10 @@ Route::domain('forum.'.$rootDomain)->group(function() {
             return view('dashboard');
         });
 
+        Route::get('/default-topic', function () {
+            return view('forum.index');
+        });
+
         Route::prefix('intern')->group(function () {
             Route::get('profiel', [UserController::class, 'showProfile'])
                 ->name('showProfile');
@@ -39,10 +43,8 @@ Route::domain('forum.'.$rootDomain)->group(function() {
                 ->name('updateProfile');
     
             Route::get('sponsorprogramma', [HomeController::class, 'sponsorProgram']);
-        });
-    
-    
-    
+        });        
+
         Route::get('jaarbundel', [UserController::class, 'showUsers']);
         
         Route::get('commissies', [AboutController::class, 'showCommittees']);
