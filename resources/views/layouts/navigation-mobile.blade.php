@@ -1,4 +1,4 @@
-<nav class="navbar-menu relative z-50 hidden">
+<nav class="navbar-menu relative z-50 hidden md:hidden">
     <div class="navbar-backdrop fixed inset-0 bg-gray-800 opacity-25"></div>
     <div class="fixed top-0 left-0 bottom-0 flex flex-col w-5/6 max-w-sm py-6 px-6 dark:bg-[#202124] bg-[#d0d5d6] dark:text-white text-black border-r dark:border-r-[#4e5158] overflow-y-auto">
         <div class="flex flex-row items-center mb-8">
