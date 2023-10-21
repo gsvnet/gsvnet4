@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateNameRequest;
 use App\Jobs\ChangeName;
 use App\Models\User;
 use GSVnet\Regions\RegionsRepository;
@@ -32,11 +33,11 @@ class MemberController extends Controller
         return view('admin.users.update.name')->with(compact('user'));
     }
 
-    public function updateName(Request $request, User $user)
+    public function updateName(UpdateNameRequest $request, User $user)
     {
         ChangeName::dispatch($request, $user);
 
         session()->flash('success', "Naam {$user->present()->fullName()} succesvol aangepast");
-        return redirect()->action('Admin\UsersController@show', $user->id);
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
     }
 }

@@ -12,7 +12,7 @@ class UpdateNameRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $member = User::find($this->route('user'));
+        $member = $this->route('user');
         return $this->user->can('user.manage.name', $member);
     }
 

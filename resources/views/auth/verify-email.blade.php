@@ -27,7 +27,7 @@
                 </div>
             </form>
 
-            <form method="POST" action="{{ route('uiltloggen') }}">
+            <form method="POST" action="{{ route('uitloggen') }}">
                 @csrf
 
                 <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900">
