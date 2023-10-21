@@ -23,7 +23,7 @@ class SenateSeeder extends Seeder
             ->hasAttached(User::factory(), ['function' => SenateFunction::FISCUS->value], 'members')
             ->hasAttached(User::factory(), ['function' => SenateFunction::ASSESSOR_PRIMUS->value], 'members')
             ->hasAttached(User::factory(), ['function' => SenateFunction::ASSESSOR_SECUNDUS->value], 'members')
-            ->count(60)
+            ->count(10)
             ->create();
     }
 }

@@ -19,8 +19,10 @@ class ThreadSeeder extends Seeder
      */
     public function run()
     {
-        $numThreads = 50;
-        $numReplies = 50; // TODO: Find an elegant way to make the number of replies variable per thread
+        // I (Loran) turned these numbers down for quick reseeding during automated testing.
+        // Feel free to turn them up if you need more for interface testing.
+        $numThreads = 10;
+        $numReplies = 15; // TODO: Find an elegant way to make the number of replies variable per thread
 
         $userIds = User::pluck('id')->all();
         $faker = Factory::create(config('app.faker_locale'));

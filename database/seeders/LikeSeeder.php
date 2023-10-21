@@ -18,7 +18,7 @@ class LikeSeeder extends Seeder
      */
     public function run()
     {
-        $maxLikes = 40;
+        $maxLikes = 20;
 
         $userIds = User::pluck('id')->all();
         $replyIds = Reply::pluck('id')->all();
