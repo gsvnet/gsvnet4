@@ -11,7 +11,9 @@ class UpdateContactDetailsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $member = $this->route('user');
+        return $this->user->can('user.manage.address', $member)
+               && $this->user->can('user.manage.phone', $member);
     }
 
     /**
@@ -22,7 +24,7 @@ class UpdateContactDetailsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            // TODO: Make some wicked phone number validation rules.
         ];
     }
 }

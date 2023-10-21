@@ -11,7 +11,7 @@ class UpdateUsernameRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user->can('users.manage');
     }
 
     /**
@@ -22,7 +22,7 @@ class UpdateUsernameRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'username' => 'required'
         ];
     }
 }
