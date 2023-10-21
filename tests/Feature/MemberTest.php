@@ -12,7 +12,7 @@ use Mockery\MockInterface;
 class MemberTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * Test whether we can change a user's name.
      */
     public function test_name_can_be_changed(): void
     {
@@ -21,11 +21,12 @@ class MemberTest extends TestCase
         // activate during testing (because it will try to communicate with 
         // the Mailchimp server). That's why we mock it.
         $this->mock(NewsletterList::class, function (MockInterface $mock) {
-            $mock->shouldReceive("subscribeTo")->once();
+            $mock->shouldReceive("subscribeTo")->zeroOrMoreTimes();
         });
         
         $manager = User::factory()->create();
 
+        // Might be a member, might be a potential
         $user = User::factory()
             ->profileType()
             ->hasProfile(1, function (array $attributes, User $user) {
@@ -37,7 +38,7 @@ class MemberTest extends TestCase
         $firstname = "Jan";
         $middlename = "van";
         $lastname = "Jansen";
-        
+
         $response = $this->actingAs($manager)
                          ->put('admin/leden/'.$user->id.'/naam', [
                             "initials" => "J.J.",
