@@ -4,10 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use GSVnet\Newsletters\NewsletterList;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use Mockery\MockInterface;
+use Tests\TestCase;
 
 class MemberTest extends TestCase
 {
@@ -23,8 +21,6 @@ class MemberTest extends TestCase
         $this->mock(NewsletterList::class, function (MockInterface $mock) {
             $mock->shouldReceive("subscribeTo")->zeroOrMoreTimes();
         });
-        
-        $manager = User::factory()->create();
 
         // Might be a member, might be a potential
         $user = User::factory()
@@ -39,7 +35,7 @@ class MemberTest extends TestCase
         $middlename = "van";
         $lastname = "Jansen";
 
-        $response = $this->actingAs($manager)
+        $response = $this->actingAs($user)
                          ->put('admin/leden/'.$user->id.'/naam', [
                             "initials" => "J.J.",
                             "firstname" => "Jan",
