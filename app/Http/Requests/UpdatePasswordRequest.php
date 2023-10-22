@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class UpdatePasswordRequest extends FormRequest
 {
@@ -11,7 +12,9 @@ class UpdatePasswordRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // Note that $this->user() and $this->user are different entities.
+        $member = $this->user;
+        return $this->user()->can('user.manage.password', $member);
     }
 
     /**
@@ -22,7 +25,7 @@ class UpdatePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'password' => ['required', 'confirmed', Password::defaults()]
         ];
     }
 }

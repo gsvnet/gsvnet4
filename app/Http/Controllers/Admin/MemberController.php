@@ -3,11 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateBirthdayRequest;
 use App\Http\Requests\UpdateContactDetailsRequest;
+use App\Http\Requests\UpdateEmailRequest;
 use App\Http\Requests\UpdateNameRequest;
+use App\Http\Requests\UpdateParentContactDetailsRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUsernameRequest;
 use App\Jobs\ChangeAddress;
+use App\Jobs\ChangeBirthday;
+use App\Jobs\ChangeEmail;
 use App\Jobs\ChangeName;
+use App\Jobs\ChangeParentsDetails;
+use App\Jobs\ChangePassword;
 use App\Jobs\ChangePhone;
 use App\Jobs\ChangeUsername;
 use App\Models\User;
@@ -67,12 +75,72 @@ class MemberController extends Controller
         return view('admin.users.update.contact')->with(compact('user'));
     }
 
-    public function updateContactDetails(UpdateContactDetailsRequest $request, User $user)
-    {
+    public function updateContactDetails(
+        UpdateContactDetailsRequest $request, 
+        User $user
+    ) {
         ChangeAddress::dispatch($request, $user);
         ChangePhone::dispatch($request, $user);
 
         session()->flash('success', "Contactgegevens {$user->present()->fullName()} succesvol aangepast");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editParentContactDetails(User $user)
+    {
+        $this->authorize('user.manage.parents', $user);
+        return view('admin.users.update.parents')->with(compact('user'));
+    }
+
+    public function updateParentContactDetails(
+        UpdateParentContactDetailsRequest $request, 
+        User $user
+    ) {
+        ChangeParentsDetails::dispatch($request, $user);
+
+        session()->flash('success', "Gegevens van {$user->present()->fullName()}s ouders succesvol aangepast");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editBirthDay(User $user)
+    {
+        $this->authorize('user.manage.birthday', $user);
+        return view('admin.users.update.birthday')->with(compact('user'));
+    }
+
+    public function updateBirthDay(UpdateBirthdayRequest $request, User $user)
+    {
+        ChangeBirthday::dispatch($request, $user);
+
+        session()->flash('success', "Geboortedatum van {$user->present()->fullName()} succesvol aangepast");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editEmail(User $user)
+    {
+        $this->authorize('user.manage.email', $user);
+        return view('admin.users.update.email')->with(compact('user'));
+    }
+
+    public function updateEmail(UpdateEmailRequest $request, User $user)
+    {
+        ChangeEmail::dispatch($request, $user);
+
+        session()->flash('success', "E-mailadres van {$user->present()->fullName()} succesvol aangepast");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editPassword(User $user)
+    {
+        $this->authorize('user.manage.password', $user);
+        return view('admin.users.update.password')->with(compact('user'));
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request, User $user)
+    {
+        ChangePassword::dispatch($request, $user);
+
+        session()->flash('success', "Wachtwoord van {$user->present()->fullName()} succesvol aangepast");
         return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
     }
 }

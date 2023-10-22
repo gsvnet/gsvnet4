@@ -1,6 +1,6 @@
 <?php namespace App\Events\Members;
 
-class BirthDayWasChanged extends ProfileEvent
+class BirthdayWasChanged extends ProfileEvent
 {
     
 }

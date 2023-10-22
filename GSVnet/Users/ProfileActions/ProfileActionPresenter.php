@@ -1,7 +1,7 @@
 <?php namespace GSVnet\Users\ProfileActions;
 
 use App\Events\Members\AddressWasChanged;
-use App\Events\Members\BirthDayWasChanged;
+use App\Events\Members\BirthdayWasChanged;
 use App\Events\Members\BusinessWasChanged;
 use App\Events\Members\MemberEmailWasChanged;
 use App\Events\Members\GenderWasChanged;
@@ -30,7 +30,7 @@ class ProfileActionPresenter extends Presenter
 
     public static $map = [
         AddressWasChanged::class => 'Adres',
-        BirthDayWasChanged::class => 'Geboortedatum',
+        BirthdayWasChanged::class => 'Geboortedatum',
         BusinessWasChanged::class => 'Werk',
         MemberEmailWasChanged::class => 'Email',
         GenderWasChanged::class => 'Geslacht',

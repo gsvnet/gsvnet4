@@ -28,6 +28,7 @@ class UserProfile extends Model
      */
     protected $casts = [
         'gender' => GenderEnum::class,
+        'birthday' => 'date:Carbon'
     ];
 
     // Mass assignment should be done carefully because of this

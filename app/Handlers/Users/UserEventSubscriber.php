@@ -2,7 +2,7 @@
 
 // Events
 use App\Events\Members\AddressWasChanged;
-use App\Events\Members\BirthDayWasChanged;
+use App\Events\Members\BirthdayWasChanged;
 use App\Events\Members\BusinessWasChanged;
 use App\Events\Members\GenderWasChanged;
 use App\Events\Members\MemberEmailWasChanged;
@@ -39,7 +39,7 @@ class UserEventSubscriber
 {
     static $profileChanges = [
         AddressWasChanged::class,
-        BirthDayWasChanged::class,
+        BirthdayWasChanged::class,
         BusinessWasChanged::class,
         GenderWasChanged::class,
         MemberEmailWasChanged::class,
@@ -62,7 +62,7 @@ class UserEventSubscriber
 
     static $informAbactisFor = [
         AddressWasChanged::class,
-        BirthDayWasChanged::class,
+        BirthdayWasChanged::class,
         BusinessWasChanged::class,
         MemberEmailWasChanged::class,
         ParentDetailsWereChanged::class,
