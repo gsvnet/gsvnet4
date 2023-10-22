@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Hash;
 
 class StoreUser implements ShouldQueue
 {
@@ -30,7 +31,7 @@ class StoreUser implements ShouldQueue
      */
     public function handle(ProfilesRepository $profiles): void
     {
-        $this->data['password'] = bcrypt($this->data['password']);
+        $this->data['password'] = Hash::make($this->data['password']);
         $this->data['type'] = UserTypeEnum::from($this->data['type']);
         $this->data['approved'] = true;
 
