@@ -11,7 +11,7 @@ class UpdateYearGroupRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('users.manage');
     }
 
     /**
@@ -22,7 +22,7 @@ class UpdateYearGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'year_group_id' => 'exists:year_groups,id'
         ];
     }
 }

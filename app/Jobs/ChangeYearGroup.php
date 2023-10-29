@@ -2,29 +2,28 @@
 
 namespace App\Jobs;
 
-use App\Events\Members\PhoneNumberWasChanged;
-use App\Jobs\ChangeProfileDetail;
+use App\Events\Members\YearGroupWasChanged;
 use App\Models\User;
+use App\Models\YearGroup;
 use GSVnet\Users\Profiles\ProfilesRepository;
-use GSVnet\Users\ValueObjects\PhoneNumber;
+use GSVnet\Users\YearGroupRepository;
 use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Http\Request;
 
-class ChangePhone extends ChangeProfileDetail
+class ChangeYearGroup extends ChangeProfileDetail
 {
     public function __construct(
         protected User $member, 
         protected User $manager, 
-        private PhoneNumber $phoneNumber
+        private YearGroup $yearGroup
     ) {}
 
     static function dispatchFromForm(User $member, Request $request): PendingDispatch 
     {
-        $phone = new PhoneNumber(
-            $request->get('phone')
-        );
+        $yearGroups = app(YearGroupRepository::class);
+        $group = $yearGroups->byId($request->get('year_group_id'));
 
-        return new PendingDispatch(new static($member, $request->user(), $phone));
+        return new PendingDispatch(new static($member, $request->user(), $group));
     }
 
     /**
@@ -32,10 +31,10 @@ class ChangePhone extends ChangeProfileDetail
      */
     public function handle(ProfilesRepository $profiles): void
     {
-        $this->member->profile->phone = $this->phoneNumber->getPhone();
+        $this->member->profile->yearGroup()->associate($this->yearGroup);
 
         $profiles->save($this->member->profile);
 
-        PhoneNumberWasChanged::dispatch($this->member, $this->manager);
+        YearGroupWasChanged::dispatch($this->member, $this->manager);
     }
 }

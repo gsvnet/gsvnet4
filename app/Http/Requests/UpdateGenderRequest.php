@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use GSVnet\Core\Enums\GenderEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class UpdateGenderRequest extends FormRequest
 {
@@ -11,7 +13,9 @@ class UpdateGenderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // Note that $this->user() and $this->user are different entities.
+        $member = $this->user;
+        return $this->user()->can('user.manage.gender', $member);
     }
 
     /**
@@ -22,7 +26,7 @@ class UpdateGenderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'gender' => [new Enum(GenderEnum::class)]
         ];
     }
 }

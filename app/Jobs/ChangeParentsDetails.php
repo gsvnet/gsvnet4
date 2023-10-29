@@ -3,28 +3,54 @@
 namespace App\Jobs;
 
 use App\Events\Members\ParentDetailsWereChanged;
+use App\Models\User;
 use GSVnet\Users\Profiles\ProfilesRepository;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use GSVnet\Users\ValueObjects\Address;
+use GSVnet\Users\ValueObjects\Email;
+use GSVnet\Users\ValueObjects\PhoneNumber;
+use Illuminate\Foundation\Bus\PendingDispatch;
+use Illuminate\Http\Request;
 
 class ChangeParentsDetails extends ChangeProfileDetail
 {
+    public function __construct(
+        protected User $member, 
+        protected User $manager, 
+        private Address $address,
+        private PhoneNumber $phoneNumber,
+        private Email $email
+    ) {}
+
+    static function dispatchFromForm(User $member, Request $request): PendingDispatch 
+    {
+        $address = new Address(
+            $request->input("parent_address"),
+            $request->input("parent_zip_code"),
+            $request->input("parent_town")
+        );
+
+        $phone = new PhoneNumber($request->input("parent_phone"));
+
+        $email = new Email($request->input("email"));
+
+        return new PendingDispatch(
+            new static($member, $request->user(), $address, $phone, $email));
+    }
+
     /**
      * Execute the job.
      */
     public function handle(ProfilesRepository $profiles): void
     {
-        $this->member->profile->parent_address = $this->data["parent_address"];
-        $this->member->profile->parent_zip_code = $this->data["parent_zip_code"];
-        $this->member->profile->parent_town = $this->data["parent_town"];
-        $this->member->profile->parent_phone = $this->data["parent_phone"];
-        $this->member->profile->parent_email = $this->data["parent_email"];
+        $profile = $this->member->profile;
 
-        $profiles->save($this->member->profile);
+        $profile->parent_address = $this->address->getStreet();
+        $profile->parent_zip_code = $this->address->getZipCode();
+        $profile->parent_town = $this->address->getTown();
+        $profile->parent_phone = $this->phoneNumber->getPhone();
+        $profile->parent_email = $this->email->getEmail();
+
+        $profiles->save($profile);
 
         ParentDetailsWereChanged::dispatch($this->member, $this->manager);
     }

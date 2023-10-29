@@ -6,19 +6,31 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateBirthdayRequest;
 use App\Http\Requests\UpdateContactDetailsRequest;
 use App\Http\Requests\UpdateEmailRequest;
+use App\Http\Requests\UpdateGenderRequest;
+use App\Http\Requests\UpdateMembershipPeriodRequest;
 use App\Http\Requests\UpdateNameRequest;
 use App\Http\Requests\UpdateParentContactDetailsRequest;
 use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\UpdateRegionRequest;
 use App\Http\Requests\UpdateUsernameRequest;
 use App\Jobs\ChangeAddress;
 use App\Jobs\ChangeBirthday;
+use App\Jobs\ChangeBusiness;
 use App\Jobs\ChangeEmail;
+use App\Jobs\ChangeGender;
+use App\Jobs\ChangeMembershipPeriod;
+use App\Jobs\ChangeMembershipStatus;
 use App\Jobs\ChangeName;
 use App\Jobs\ChangeParentsDetails;
 use App\Jobs\ChangePassword;
 use App\Jobs\ChangePhone;
+use App\Jobs\ChangeRegion;
+use App\Jobs\ChangeStudy;
 use App\Jobs\ChangeUsername;
+use App\Jobs\ChangeYearGroup;
+use App\Jobs\ForgetMember;
 use App\Models\User;
+use GSVnet\Core\Enums\UserTypeEnum;
 use GSVnet\Regions\RegionsRepository;
 use GSVnet\Users\ProfileActions\ProfileActionsRepository;
 use GSVnet\Users\UsersRepository;
@@ -30,7 +42,7 @@ class MemberController extends Controller
     public function __construct(
         private ProfileActionsRepository $actions,
         private UsersRepository $users,
-        private YearGroupRepository $yeargroups,
+        private YearGroupRepository $yearGroups,
         private RegionsRepository $regions
     ) {}
 
@@ -48,7 +60,7 @@ class MemberController extends Controller
 
     public function updateName(UpdateNameRequest $request, User $user)
     {
-        ChangeName::dispatch($request, $user);
+        ChangeName::dispatchFromForm($user, $request);
 
         session()->flash('success', "Naam {$user->present()->fullName()} succesvol aangepast");
         return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
@@ -62,7 +74,7 @@ class MemberController extends Controller
 
     public function updateUsername(UpdateUsernameRequest $request, User $user)
     {
-        ChangeUsername::dispatch($request, $user);
+        ChangeUsername::dispatchFromForm($user, $request);
 
         session()->flash('success', "Gebruikersnaam {$user->username} succesvol aangepast");
         return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
@@ -79,8 +91,8 @@ class MemberController extends Controller
         UpdateContactDetailsRequest $request, 
         User $user
     ) {
-        ChangeAddress::dispatch($request, $user);
-        ChangePhone::dispatch($request, $user);
+        ChangeAddress::dispatchFromForm($user, $request);
+        ChangePhone::dispatchFromForm($user, $request);
 
         session()->flash('success', "Contactgegevens {$user->present()->fullName()} succesvol aangepast");
         return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
@@ -96,7 +108,7 @@ class MemberController extends Controller
         UpdateParentContactDetailsRequest $request, 
         User $user
     ) {
-        ChangeParentsDetails::dispatch($request, $user);
+        ChangeParentsDetails::dispatchFromForm($user, $request);
 
         session()->flash('success', "Gegevens van {$user->present()->fullName()}s ouders succesvol aangepast");
         return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
@@ -110,7 +122,7 @@ class MemberController extends Controller
 
     public function updateBirthDay(UpdateBirthdayRequest $request, User $user)
     {
-        ChangeBirthday::dispatch($request, $user);
+        ChangeBirthday::dispatchFromForm($user, $request);
 
         session()->flash('success', "Geboortedatum van {$user->present()->fullName()} succesvol aangepast");
         return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
@@ -124,7 +136,7 @@ class MemberController extends Controller
 
     public function updateEmail(UpdateEmailRequest $request, User $user)
     {
-        ChangeEmail::dispatch($request, $user);
+        ChangeEmail::dispatchFromForm($user, $request);
 
         session()->flash('success', "E-mailadres van {$user->present()->fullName()} succesvol aangepast");
         return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
@@ -138,9 +150,168 @@ class MemberController extends Controller
 
     public function updatePassword(UpdatePasswordRequest $request, User $user)
     {
-        ChangePassword::dispatch($request, $user);
+        ChangePassword::dispatchFromForm($user, $request);
 
         session()->flash('success', "Wachtwoord van {$user->present()->fullName()} succesvol aangepast");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editGender(User $user)
+    {
+        $this->authorize('user.manage.gender', $user);
+        return view('admin.users.update.gender')->with(compact('user'));
+    }
+
+    public function updateGender(UpdateGenderRequest $request, User $user)
+    {
+        ChangeGender::dispatchFromForm($user, $request);
+
+        session()->flash('success', "Geslacht van {$user->present()->fullName()} succesvol aangepast");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editYearGroup(User $user)
+    {
+        $this->authorize('users.manage');
+
+        $yearGroups = $this->yearGroups->all();
+        return view('admin.users.update.yeargroup')->with(compact('user', 'yearGroups'));
+    }
+
+    public function updateYearGroup(Request $request, User $user)
+    {
+        ChangeYearGroup::dispatchFromForm($user, $request);
+
+        session()->flash('success', "Jaarverband van {$user->present()->fullName()} succesvol aangepast");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editBusiness(User $user)
+    {
+        $this->authorize('user.manage.business', $user);
+        return view('admin.users.update.business')->with(compact('user'));
+    }
+
+    public function updateBusiness(Request $request, User $user)
+    {
+        // No validation restrictions
+        $this->authorize('user.manage.business', $user);
+
+        ChangeBusiness::dispatchFromForm($user, $request);
+
+        session()->flash('success', "Werk van {$user->present()->fullName()} succesvol aangepast");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editStudy(User $user)
+    {
+        $this->authorize('user.manage.study', $user);
+
+        return view('admin.users.update.study')->with(compact('user'));
+    }
+
+    public function updateStudy(Request $request, User $user)
+    {
+        // No validation restrictions
+        $this->authorize('user.manage.study', $user);
+
+        ChangeStudy::dispatchFromForm($user, $request);
+
+        session()->flash('success', "Studie van {$user->present()->fullName()} succesvol aangepast");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editMembershipPeriod(User $user)
+    {
+        $this->authorize('users.manage');
+
+        return view('admin.users.update.membershipPeriod')->with(compact('user'));
+    }
+
+    public function updateMembershipPeriod(
+        UpdateMembershipPeriodRequest $request, 
+        User $user
+    ) {
+        ChangeMembershipPeriod::dispatchFromForm($user, $request);
+
+        session()->flash('success', "Periode van lidmaatschap van {$user->present()->fullName()} succesvol aangepast");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editRegion(User $user)
+    {
+        $this->authorize('users.manage');
+
+        $userRegions = $user->profile->regions;
+
+        $currentRegions = $this->regions->current();
+        $formerRegions = $this->regions->former();
+
+        return view('admin.users.update.region')->with(compact('user', 'userRegions', 'currentRegions', 'formerRegions'));
+    }
+
+    public function updateRegion(UpdateRegionRequest $request, User $user)
+    {
+        ChangeRegion::dispatchFromForm($user, $request);
+
+        session()->flash('success', "Regio van {$user->present()->fullName()} succesvol aangepast");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editMembershipStatus(User $user)
+    {
+        $this->authorize('users.manage');
+
+        return view('admin.users.update.membership')->with(compact('user'));
+    }
+
+    public function makeReunist(Request $request, User $user)
+    {
+        $this->authorize('users.manage');
+
+        ChangeMembershipStatus::dispatch(UserTypeEnum::REUNIST, $user, $request->user());
+
+        session()->flash('success', "{$user->present()->fullName()} is nu reünist");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function makeExMember(Request $request, User $user)
+    {
+        $this->authorize('users.manage');
+
+        ChangeMembershipStatus::dispatch(UserTypeEnum::EXMEMBER, $user, $request->user());
+
+        session()->flash('success', "{$user->present()->fullName()} is nu oud-lid");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function makeMember(Request $request, User $user)
+    {
+        $this->authorize('users.manage');
+
+        ChangeMembershipStatus::dispatch(UserTypeEnum::MEMBER, $user, $request->user());
+
+        session()->flash('success', "{$user->present()->fullName()} is nu lid");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    // ...more methods...
+
+    public function setForget(User $user)
+    {
+        $this->authorize('users.manage');
+
+        return view('admin.users.settingsForget')->with(compact('user'));
+    }
+
+    public function forget(Request $request, User $user)
+    {
+        $this->authorize('users.manage');
+
+        ForgetMember::dispatchFromForm($request, $user);
+
+        session()->flash('success', "Profiel en account opgeschoond.");
+
         return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
     }
 }

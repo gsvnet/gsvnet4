@@ -2,29 +2,26 @@
 
 namespace App\Jobs;
 
-use App\Events\Members\PhoneNumberWasChanged;
-use App\Jobs\ChangeProfileDetail;
+use App\Events\Members\GenderWasChanged;
 use App\Models\User;
 use GSVnet\Users\Profiles\ProfilesRepository;
-use GSVnet\Users\ValueObjects\PhoneNumber;
+use GSVnet\Users\ValueObjects\Gender;
 use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Http\Request;
 
-class ChangePhone extends ChangeProfileDetail
+class ChangeGender extends ChangeProfileDetail
 {
     public function __construct(
         protected User $member, 
         protected User $manager, 
-        private PhoneNumber $phoneNumber
+        private Gender $gender
     ) {}
 
     static function dispatchFromForm(User $member, Request $request): PendingDispatch 
     {
-        $phone = new PhoneNumber(
-            $request->get('phone')
-        );
+        $gender = new Gender($request->input("gender"));
 
-        return new PendingDispatch(new static($member, $request->user(), $phone));
+        return new PendingDispatch(new static($member, $request->user(), $gender));
     }
 
     /**
@@ -32,10 +29,10 @@ class ChangePhone extends ChangeProfileDetail
      */
     public function handle(ProfilesRepository $profiles): void
     {
-        $this->member->profile->phone = $this->phoneNumber->getPhone();
+        $this->member->profile->gender = $this->gender->getGender();
 
         $profiles->save($this->member->profile);
 
-        PhoneNumberWasChanged::dispatch($this->member, $this->manager);
+        GenderWasChanged::dispatch($this->member, $this->manager);
     }
 }
