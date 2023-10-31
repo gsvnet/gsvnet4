@@ -1,13 +1,21 @@
 @extends('layouts.app')
 
 
-@section('content')    
+@section('content')
     <div class="justify-start text-white">
         <x-forum.selection-button text="Alles"/>
         <x-forum.selection-button text="Senaat"/>
         <x-forum.selection-button text="Praktisch"/>
         <x-forum.selection-button text="Vermaak"/>
     </div>
+
+<div class='justify-start text-white'>
+    <a href='/forum/create' target='_blank'>
+        <x-forum.selection-button text='New Post'/>
+    </a>
+</div>
+
+<div class="add-all">
     <div class="pt-4">
         <div class="px-4 mx-2 flex flex-row text-xs">
             <div class="w-[15%] text-left pl-4">

@@ -14,9 +14,13 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <link href='https://cdn.quilljs.com/1.3.6/quill.snow.css' rel='stylesheet'>
+
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
+        <script src='https://cdn.quilljs.com/1.3.6/quill.js'></script>
+        <script src='https://cdn.quilljs.com/1.3.6/quill.min.js'></script>
     </head>
     <body x-data="{ darkMode: false }" x-init="
     if (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) {

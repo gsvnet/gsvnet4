@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ForumController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
+
 
 
 /*
@@ -39,10 +41,15 @@ Route::middleware('auth')->group(function () {
         Route::get('sponsorprogramma', [HomeController::class, 'sponsorProgram']);
     });
 
+    // Add a route for creating a new forum post -- Denk nog overzetten naar Post of Thread controller
+    Route::get('forum/create', [ForumController::class, 'create'])->name('forum.create');
+    Route::post('forum/store', [ForumController::class, 'store'])->name('forum.store');
+    Route::post('/forum/{thread}/reply', 'ForumController@storeReply')->name('forum.storeReply');
+
 
 
     Route::get('jaarbundel', [UserController::class, 'showUsers']);
-    
+
     Route::get('commissies', [AboutController::class, 'showCommittees']);
     Route::get('commissies/{id}', [AboutController::class, 'showCommittee']);
 
