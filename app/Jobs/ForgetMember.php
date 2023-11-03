@@ -14,7 +14,6 @@ use GSVnet\Users\ValueObjects\PhoneNumber;
 use GSVnet\Users\ValueObjects\Study;
 use GSVnet\Users\ValueObjects\Username;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Bus\PendingDispatch;
@@ -22,7 +21,6 @@ use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 
 class ForgetMember implements ShouldQueue
 {
@@ -34,17 +32,17 @@ class ForgetMember implements ShouldQueue
     public function __construct(
         private User $member,
         private User $manager,
-        private $name,
-        private $username,
-        private $address,
-        private $email,
-        private $profilePicture,
-        private $birthDay,
-        private $gender,
-        private $phone,
-        private $study,
-        private $business,
-        private $parents
+        private bool $name,
+        private bool $username,
+        private bool $address,
+        private bool $email,
+        private bool $profilePicture,
+        private bool $birthDay,
+        private bool $gender,
+        private bool $phone,
+        private bool $study,
+        private bool $business,
+        private bool $parents
     ) {}
 
     static function dispatchFromForm(Request $request, User $member) {
@@ -85,8 +83,8 @@ class ForgetMember implements ShouldQueue
             $newsletterList->unsubscribeFrom($member->type, $member->email);
             ChangeEmail::dispatch($member, $manager, new Email(Str::random(15)."@gsvnet.nl"));
         }
-        if ($this->profilePicture) // TODO: Implement this
-            dispatch(new DeleteProfilePicture($user, $manager));
+        if ($this->profilePicture)
+            DeleteProfilePicture::dispatch($member, $manager);
         if ($this->birthDay)
             ChangeBirthDay::dispatch($member, $manager, Carbon::createFromDate(1966, 6, 23));
         if ($this->gender)
