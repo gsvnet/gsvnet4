@@ -1,6 +1,8 @@
 <?php 
 
 namespace GSVnet\Core;
+use GdImage;
+use GSVnet\Core\Exceptions\ImageTypeNotValidException;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
@@ -136,11 +138,74 @@ class ImageHandler
     }
 
     /**
+     * Write `$image` to `$path`.
+     * 
+     * Actual write location determined by `$this->getAbsolutePath`. Currently supports GIF, JPEG, and PNG. Will throw an error if anything else is supplied.
+     * @param \GdImage $image
+     * @param string $path
+     * @throws \GSVnet\Core\Exceptions\ImageTypeNotValidException
+     * @return void
+     */
+    private function writeGdImage(GdImage $image, string $path): void
+    {
+        $absPath = $this->getAbsolutePath($path);
+        [ , , $imgType] = getimagesize($absPath);
+
+        switch ($imgType) {
+            case IMAGETYPE_GIF:
+                imagegif($image, $absPath);
+                break;
+            case IMAGETYPE_JPEG:
+                imagejpeg($image, $absPath);
+                break;
+            case IMAGETYPE_PNG:
+                imagepng($image, $absPath);
+                break;
+            default:
+                throw new ImageTypeNotValidException('Only GIF, JPEG, and PNG are supported.');
+        }
+    }
+
+    /**
+     * Restrict size to `dimensions['max']`, as specified in `config/images.php`.
+     * @param string $path
+     * @return void
+     */
+    private function restrictSize(string $path) 
+    {
+        [$maxWidth, $maxHeight] = config('images.dimensions.max');
+
+        // Read image into a string
+        $imgString = $this->get($path);
+        [$width, $height] = getimagesizefromstring($imgString);
+
+        if ($width > $maxWidth || $height > $maxHeight) {
+            // Downscaling by the strictest (smallest) factor will also
+            // satisfy the constraint for the other dimension
+            $scaleFactor = min($maxWidth / $width, $maxHeight / $height);
+
+            // Create image object from string
+            $originalImg = imagecreatefromstring($imgString);
+
+            $scaledImg = imagescale(
+                $originalImg, 
+                $scaleFactor * $width, 
+                $scaleFactor * $height,
+                IMG_BICUBIC
+            );
+
+            // Replace original image by scaled image
+            $this->writeGdImage($scaledImg, $path);
+        }
+    }
+
+    /**
      * Try to fix orientation of image specified by `path`.
      * @param string $path
      * @return void
      */
-    private function fixImageOrientation(string $path) {
+    private function fixImageOrientation(string $path) 
+    {
         $absPath = $this->getAbsolutePath($path);
         $exif = exif_read_data($absPath);
         
@@ -164,6 +229,6 @@ class ImageHandler
         }
 
         // Write rotated image object over original file
-        imagejpeg($image, $absPath);
+        $this->writeGdImage($image, $path);
     }
 }
