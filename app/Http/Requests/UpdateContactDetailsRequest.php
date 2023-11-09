@@ -11,7 +11,13 @@ class UpdateContactDetailsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // Note that $this->user() and $this->user are different entities:
+        // The former retrieves the currently authenticated user,
+        // while the latter uses route-model binding to get the user
+        // from the URI.
+        $member = $this->user;
+        return $this->user()->can('user.manage.address', $member)
+               && $this->user()->can('user.manage.phone', $member);
     }
 
     /**
@@ -22,7 +28,7 @@ class UpdateContactDetailsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            // TODO: Make some wicked phone number validation rules.
         ];
     }
 }

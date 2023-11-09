@@ -12,8 +12,10 @@ use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
-    private int $totalUsers = 2000;
-    private int $numUsersWithProfiles = 1000;
+    // These numbers were originally 2000 and 1000, respectively,
+    // but I (Loran) turned them down for quick reseeding during testing.
+    private int $totalUsers = 100;
+    private int $numUsersWithProfiles = 50;
 
     /**
      * Run the database seeds.
@@ -25,7 +27,7 @@ class UserSeeder extends Seeder
         $yearGroupIds = DB::table('year_groups')->pluck('id');
         $faker = Factory::create(config('app.faker_locale'));
 
-        echo "Seeding admin user...\n";
+        // echo "Seeding admin user...\n";
         // Admin user
         $loran = User::factory()
             ->hasProfile(1, ['year_group_id' => $faker->randomElement($yearGroupIds)])
@@ -42,7 +44,7 @@ class UserSeeder extends Seeder
         $loran->committees()->save($webcie, ['start_date' => Carbon::now()]);
 
         // Fake users with profile
-        echo "Seeding users with profile...\n";
+        // echo "Seeding users with profile...\n";
         User::factory()
             ->profileType()
             ->hasProfile(1, function (array $attributes, User $user) use ($faker, $yearGroupIds) {
@@ -52,7 +54,7 @@ class UserSeeder extends Seeder
             ->create();
 
         // Fake users without profile
-        echo "Seeding users without profile...\n";
+        // echo "Seeding users without profile...\n";
         User::factory()
             ->noProfileType()
             ->count($this->totalUsers - $this->numUsersWithProfiles)

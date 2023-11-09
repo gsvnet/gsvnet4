@@ -51,14 +51,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'type' => UserTypeEnum::class
     ];
-
-    protected function type(): Attribute {
-        return Attribute::make(
-            get: fn($typeInt) => UserTypeEnum::from($typeInt),
-            set: fn($typeEnum) => $typeEnum->value
-        );
-    }
 
     /**
      * Path to presenter class.

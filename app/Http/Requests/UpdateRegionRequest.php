@@ -11,7 +11,7 @@ class UpdateRegionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('users.manage');
     }
 
     /**
@@ -21,8 +21,10 @@ class UpdateRegionRequest extends FormRequest
      */
     public function rules(): array
     {
+        // TODO: Check that this runs
         return [
-            //
+            'current_region' => 'exists:regions,id',
+            'former_regions.*' => 'exists:regions,id'
         ];
     }
 }

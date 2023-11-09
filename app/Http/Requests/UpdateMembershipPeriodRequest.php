@@ -11,7 +11,7 @@ class UpdateMembershipPeriodRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('users.manage');
     }
 
     /**
@@ -22,7 +22,8 @@ class UpdateMembershipPeriodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'inauguration_date' => 'date',
+            'resignation_date' => 'date|after:inauguration_date'
         ];
     }
 }

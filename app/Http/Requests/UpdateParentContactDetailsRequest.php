@@ -11,7 +11,9 @@ class UpdateParentContactDetailsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // Note: $this->user is not the same entity as $this->user().
+        $member = $this->user;
+        return $this->user()->can('user.manage.parents', $member);
     }
 
     /**

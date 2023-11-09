@@ -11,7 +11,9 @@ class UpdateEmailRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // Note: $this->user is not the same entity as $this->user().
+        $member = $this->user;
+        return $this->user()->can('user.manage.email', $member);
     }
 
     /**
@@ -22,7 +24,7 @@ class UpdateEmailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'email' => 'required|email|unique:users,email'
         ];
     }
 }
