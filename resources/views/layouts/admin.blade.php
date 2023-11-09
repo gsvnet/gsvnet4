@@ -26,11 +26,11 @@
     $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))" x-cloak>
         <div x-bind:class="{'dark' : darkMode === true}" class="min-h-screen">
             <!-- Color of background, full screen -->
-            <div class="dark:bg-[#161616] bg-[#d9e0e1] w-[100%] grid grid-cols-10 pb-6">
+            <div class="dark:bg-[#161616] bg-[#d9e0e1] w-[100%] grid grid-cols-10 pb-6 overflow-y-auto">
                 @include('layouts.navigation-admin')
 
                 <!-- Max size for all content -->
-                <div class="max-w-7xl mx-auto">
+                <div class="max-w-7xl col-span-9">
                     @if ($message = session('success'))
                         <x-flash-message>
                             {{ $message }}
@@ -49,7 +49,7 @@
                     
                     <!-- Page Content -->
                     <!-- Take Distance from nav + searchbar 6rem==logo+mt+pt -->
-                    <main class="pt-24 md:pl-52 pb-6 scroll-smooth min-h-screen col-span-9">
+                    <main class="pt-24 md:pl-32 pb-6 scroll-smooth min-h-screen ">
                         <div class="text-black dark:text-white pt-6 ml-3 mr-3 pl-3 pr-3 pb-6">
                             @yield('content')
                         </div>

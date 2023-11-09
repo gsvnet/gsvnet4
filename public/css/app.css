@@ -1049,9 +1049,18 @@ select {
   border-right-width: calc(2px * var(--tw-divide-x-reverse));
   border-left-width: calc(2px * calc(1 - var(--tw-divide-x-reverse)));
 }
+.divide-y-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(2px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(2px * var(--tw-divide-y-reverse));
+}
 .divide-\[\#3d3e44\] > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-opacity: 1;
   border-color: rgb(61 62 68 / var(--tw-divide-opacity));
+}
+.divide-black > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-opacity: 1;
+  border-color: rgb(0 0 0 / var(--tw-divide-opacity));
 }
 .overflow-hidden {
   overflow: hidden;
@@ -1185,6 +1194,10 @@ select {
 .border-\[\#20212446\] {
   border-color: #20212446;
 }
+.border-gray-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
+}
 .border-l-white\/70 {
   border-left-color: rgb(255 255 255 / 0.7);
 }
@@ -1250,6 +1263,14 @@ select {
 .bg-green-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(22 163 74 / var(--tw-bg-opacity));
+}
+.bg-gray-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
+}
+.bg-blue-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(147 197 253 / var(--tw-bg-opacity));
 }
 .fill-current {
   fill: currentColor;
@@ -1459,6 +1480,9 @@ select {
 .leading-tight {
   line-height: 1.25;
 }
+.leading-3 {
+  line-height: .75rem;
+}
 .tracking-tight {
   letter-spacing: -0.025em;
 }
@@ -1529,6 +1553,12 @@ select {
 .text-gray-800 {
   --tw-text-opacity: 1;
   color: rgb(31 41 55 / var(--tw-text-opacity));
+}
+.text-white\/70 {
+  color: rgb(255 255 255 / 0.7);
+}
+.text-white\/90 {
+  color: rgb(255 255 255 / 0.9);
 }
 .underline {
   -webkit-text-decoration-line: underline;
@@ -1730,6 +1760,13 @@ select {
 .hover\:bg-gray-50:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+}
+.hover\:bg-gray-400:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
+}
+.hover\:bg-gsv-purple\/80:hover {
+  background-color: rgb(120 1 37 / 0.8);
 }
 .hover\:bg-gradient-to-r:hover {
   background-image: linear-gradient(to right, var(--tw-gradient-stops));
@@ -2009,6 +2046,9 @@ select {
 .dark .dark\:hover\:bg-gsv-purple-dark\/60:hover {
   background-color: rgb(62 0 20 / 0.6);
 }
+.dark .dark\:hover\:bg-gsv-purple-dark\/80:hover {
+  background-color: rgb(62 0 20 / 0.8);
+}
 .dark .dark\:hover\:text-white\/70:hover {
   color: rgb(255 255 255 / 0.7);
 }
@@ -2097,6 +2137,18 @@ select {
 
   .md\:pl-52 {
     padding-left: 13rem;
+  }
+
+  .md\:pl-44 {
+    padding-left: 11rem;
+  }
+
+  .md\:pl-40 {
+    padding-left: 10rem;
+  }
+
+  .md\:pl-32 {
+    padding-left: 8rem;
   }
 }
 @media (min-width: 1024px) {
