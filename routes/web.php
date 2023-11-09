@@ -29,6 +29,28 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     });
 
+        Route::get('/default-topic', function () {
+            return view('forum.index');
+        });
+
+        Route::prefix('intern')->group(function () {
+            Route::get('profiel', [UserController::class, 'showProfile'])
+                ->name('showProfile');
+            Route::get('profiel/bewerken', [UserController::class, 'editProfile']);
+            Route::post('profiel/bewerken', [UserController::class, 'updateProfile'])
+                ->name('updateProfile');
+    
+            Route::get('sponsorprogramma', [HomeController::class, 'sponsorProgram']);
+        });        
+
+        Route::get('jaarbundel', [UserController::class, 'showUsers']);
+        
+        Route::get('commissies', [AboutController::class, 'showCommittees']);
+        Route::get('commissies/{id}', [AboutController::class, 'showCommittee']);
+    
+        Route::get('senaten', [AboutController::class, 'showSenates']);
+        Route::get('senaten/{id}', [AboutController::class, 'showSenate']);
+  
     Route::prefix('intern')->group(function () {
         Route::get('profiel', [UserController::class, 'showProfile'])
             ->name('showProfile');
