@@ -2,15 +2,19 @@
 
 namespace GSVnet\Core;
 use GdImage;
+use GSVnet\Core\Exceptions\FileNotFoundException;
 use GSVnet\Core\Exceptions\ImageTypeNotValidException;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
+use InvalidArgumentException;
 
 // TODO: Extensively test this class. GSVnet 3 made use of Intervention's Image class,
 // but that one does not seem to be maintained very well anymore (devs don't reply to
 // issues about security concerns). I therefore opted for using the GD image functions,
 // which are a bit more clunky.
+
+// TODO: Destroy all derivatives when destroying original.
 
 class ImageHandler
 {
@@ -58,6 +62,121 @@ class ImageHandler
             return $path;
 
         return $this->join_paths($this->basePath, $path);
+    }
+
+    /**
+    *   Check if `$dimension` is valid.
+    *
+    *   @param string $dimension
+    *   @throws InvalidArgumentException
+    */
+    private function dimensionIsValid($dimension = ''): bool
+    {
+        $dimensions = config('images.dimensions');
+
+        // An empty dimension is handled as the original image and considered valid.
+        if ($dimension !== '' && ! array_key_exists($dimension, $dimensions))
+            return false;
+        
+        return true;
+    }
+
+    /**
+     * Add `$dimension` to filename in `$path`.
+     * 
+     * For instance, if `$path` is `"images/cat.png"` and `$dimension` is `"small"`, will return `"images/cat-small.png"`.
+     * @param mixed $path
+     * @param mixed $dimension
+     * @return string
+     */
+    private function mergePathDimension($path, $dimension): string
+    {
+        if ($dimension == '')
+            return $path;
+
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        return str_replace(".$ext", '', $path) . "-$dimension.$ext";
+    }
+
+    /**
+     * Merge `$dimension` into `$path` and prepend with the base path.
+     * 
+     * Throws an error if `$dimension` does not match the array keys of the `'dimensions'` array in `config/images.php`.
+     * @param string $path
+     * @param string $dimension
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    private function getDerivedPath(string $path, string $dimension): string
+    {
+        if (! $this->dimensionIsValid($dimension))
+            throw new InvalidArgumentException("Dimension '$dimension' should be any of the keys specified in config/images.php");
+
+        return $this->prependBasePath($this->mergePathDimension($path, $dimension));
+    }
+
+    /**
+     * Creates derivative from image if it does not exist.
+     * 
+     * Returns path to derivative.
+     * @param string $path
+     * @param string $dimension
+     * @throws \GSVnet\Core\Exceptions\FileNotFoundException
+     * @return string
+     */
+    private function createDerivative(string $path, string $dimension): string
+    {
+        $originalPath = $this->prependBasePath($path);
+
+        // Check if there is a file to be derived from
+        if (! $this->disk->exists($originalPath))
+            throw new FileNotFoundException("File $originalPath does not exist");
+
+        $derivedPath = $this->getDerivedPath($path, $dimension);
+
+        // If the file already exists, we don't need to do anything
+        if ($this->disk->exists($derivedPath))
+            return $derivedPath;
+
+        // Scale such that image at least completely fills the dimension frame.
+        // Crop everything that falls outside of the frame.
+        $dimensions = config('images.dimensions');
+        [$frameWidth, $frameHeight] = $dimensions[$dimension];
+
+        // Read original image into a string
+        $imgString = $this->disk->get($originalPath);
+        [$width, $height] = getimagesizefromstring($imgString);
+
+        // Step 1: Fill. 
+        // If the image is smaller than the frame, you want the largest scaling factor.
+        // If the image is larger than the frame, you want the scaling factor that
+        // downscales the least, i.e., the largest scaling factor.
+        $scaleFactor = max($frameWidth / $width, $frameHeight / $height);
+
+        // Create image object from string
+        $originalImg = imagecreatefromstring($imgString);
+
+        $scaledImg = imagescale(
+            $originalImg, 
+            $scaleFactor * $width, 
+            $scaleFactor * $height,
+            IMG_BICUBIC
+        );
+
+        // Step 2: Crop.
+        $croppedImg = imagecrop(
+            $scaledImg,
+            [
+                'x' => 0,
+                'y' => 0,
+                'width' => $frameWidth,
+                'height' => $frameHeight
+            ]
+        );
+
+        $this->writeGdImage($croppedImg, $derivedPath);
+
+        return $derivedPath;
     }
 
     /**
@@ -109,32 +228,41 @@ class ImageHandler
 
     /**
      * Get contents of file specified by `$path` as a string.
+     * 
+     * `$dimension` can be any of the keys of the `'dimensions'` array in `config/images.php`.
      * @param string $path
+     * @param string $dimension
      * @return string
      */
-    public function get(string $path): string
+    public function get(string $path, string $dimension = ''): string
     {
-        return $this->disk->get($this->prependBasePath($path));
+        return $this->disk->get($this->createDerivative($path, $dimension));
     }
 
     /**
      * Get URL to file specified by `$path`.
+     * 
+     * `$dimension` can be any of the keys of the `'dimensions'` array in `config/images.php`.
      * @param string $path
+     * @param string $dimension
      * @return string
      */
-    public function getUrl(string $path): string
+    public function getUrl(string $path, string $dimension = ''): string
     {
-        return $this->disk->url($this->prependBasePath($path));
+        return $this->disk->url($this->createDerivative($path, $dimension));
     }
 
     /**
      * Get absolute path to `$path`, after prepending `$this->basePath`.
+     * 
+     * `$dimension` can be any of the keys of the `'dimensions'` array in `config/images.php`.
      * @param string $path
+     * @param string $dimension
      * @return string
      */
-    public function getAbsolutePath(string $path): string
+    public function getAbsolutePath(string $path, string $dimension = ''): string
     {
-        return $this->disk->path($this->prependBasePath($path));
+        return $this->disk->path($this->createDerivative($path, $dimension));
     }
 
     /**
