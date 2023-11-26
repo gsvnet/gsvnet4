@@ -14,8 +14,6 @@ use InvalidArgumentException;
 // issues about security concerns). I therefore opted for using the GD image functions,
 // which are a bit more clunky.
 
-// TODO: Destroy all derivatives when destroying original.
-
 class ImageHandler
 {
     protected $basePath;
@@ -164,6 +162,7 @@ class ImageHandler
         );
 
         // Step 2: Crop.
+        // TODO: Center cropping (set crop midpoint to original image midpoint).
         $croppedImg = imagecrop(
             $scaledImg,
             [
@@ -205,12 +204,19 @@ class ImageHandler
     }
 
     /**
-     * Destroy file specified by `$path`.
+     * Destroy image specified by `$path`, along with all its derivatives.
      * @param string $path
      * @return void
      */
     public function destroy(string $path): bool
     {
+        foreach (config('images.dimensions') as $dimName => $dims) {
+            $derivedPath = $this->getDerivedPath($path, $dimName);
+
+            if ($this->disk->exists($derivedPath))
+                $this->disk->delete($derivedPath);
+        }
+
         return $this->disk->delete($this->prependBasePath($path));
     }
 
