@@ -11,9 +11,11 @@ use App\Http\Requests\UpdateMembershipPeriodRequest;
 use App\Http\Requests\UpdateNameRequest;
 use App\Http\Requests\UpdateParentContactDetailsRequest;
 use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\UpdatePhotoRequest;
 use App\Http\Requests\UpdateRegionRequest;
 use App\Http\Requests\UpdateUsernameRequest;
 use App\Jobs\ChangeAddress;
+use App\Jobs\ChangeAlive;
 use App\Jobs\ChangeBirthday;
 use App\Jobs\ChangeBusiness;
 use App\Jobs\ChangeEmail;
@@ -29,6 +31,7 @@ use App\Jobs\ChangeStudy;
 use App\Jobs\ChangeUsername;
 use App\Jobs\ChangeYearGroup;
 use App\Jobs\ForgetMember;
+use App\Jobs\SetProfilePicture;
 use App\Models\User;
 use GSVnet\Core\Enums\UserTypeEnum;
 use GSVnet\Regions\RegionsRepository;
@@ -292,6 +295,39 @@ class MemberController extends Controller
         ChangeMembershipStatus::dispatch(UserTypeEnum::MEMBER, $user, $request->user());
 
         session()->flash('success', "{$user->present()->fullName()} is nu lid");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editPhoto(User $user)
+    {
+        $this->authorize('user.manage.photo', $user);
+
+        return view('admin.users.update.photo')->with(compact('user'));
+    }
+
+    public function updatePhoto(UpdatePhotoRequest $request, User $user)
+    {
+        if ($request->hasFile('photo_path'))
+            SetProfilePicture::dispatchFromForm($user, $request);
+
+        session()->flash('success', "Foto van {$user->present()->fullName()} succesvol opgeslagen");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    public function editAlive(User $user)
+    {
+        $this->authorize('users.manage');
+
+        return view('admin.users.update.alive')->with(compact('user'));
+    }
+
+    public function updateAlive(Request $request, User $user)
+    {
+        $this->authorize('users.manage');
+
+        ChangeAlive::dispatchFromForm($user, $request);
+
+        session()->flash('success', "Status gewijzigd");
         return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
     }
 

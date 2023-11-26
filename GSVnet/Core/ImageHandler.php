@@ -6,6 +6,7 @@ use GSVnet\Core\Exceptions\FileNotFoundException;
 use GSVnet\Core\Exceptions\ImageTypeNotValidException;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\File;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 
@@ -179,54 +180,78 @@ class ImageHandler
     }
 
     /**
+     * Apply corrections to image specified by `$path`.
+     * 
+     * `$path` does not need to be prepended by `$this->basePath`.
+     * @param string $path
+     * @return void
+     */
+    private function correct(string $path): void
+    {
+        $this->fixImageOrientation($path);
+        $this->restrictSize($path);
+    }
+
+    /**
      * Store `$image` and return generated file path.
-     * @param \Illuminate\Http\File $image
+     * @param \Illuminate\Http\File|\Illuminate\Http\UploadedFile $image
      * @return string
      */
-    public function store(File $image): string
+    public function store(File|UploadedFile $image): string
     {
         $path = $this->disk->putFile($this->basePath, $image);
         
-        $this->fixImageOrientation($path);
+        $this->correct($path);
         
         return $path;
     }
 
     /**
      * Store `$image` with file name `$filename`. Return entire file path.
-     * @param \Illuminate\Http\File $image
+     * @param \Illuminate\Http\File|\Illuminate\Http\UploadedFile $image
      * @param string $path
      * @return string
      */
-    public function storeAs(File $image, string $path): string
+    public function storeAs(File|UploadedFile $image, string $path): string
     {
-        return $this->disk->putFileAs($this->basePath, $image, $path);
+        $path = $this->disk->putFileAs($this->basePath, $image, $path);
+
+        $this->correct($path);
+
+        return $path;
     }
 
     /**
-     * Destroy image specified by `$path`, along with all its derivatives.
+     * Destroy image specified by `$path` if it exists, along with all its derivatives.
      * @param string $path
      * @return void
      */
     public function destroy(string $path): bool
     {
+        // Whether something has been deleted
+        $delFlag = false;
+
         foreach (config('images.dimensions') as $dimName => $dims) {
             $derivedPath = $this->getDerivedPath($path, $dimName);
 
             if ($this->disk->exists($derivedPath))
-                $this->disk->delete($derivedPath);
+                $delFlag = $this->disk->delete($derivedPath) || $delFlag;
         }
 
-        return $this->disk->delete($this->prependBasePath($path));
+        $originalPath = $this->prependBasePath($path);
+        if (! $this->disk->exists($originalPath))
+            return $delFlag;
+
+        return $this->disk->delete($originalPath) || $delFlag;
     }
 
     /**
      * Replace original file at `$path` with `$image`.
-     * @param \Illuminate\Http\File $image
+     * @param \Illuminate\Http\File|\Illuminate\Http\UploadedFile $image
      * @param string $path
      * @return string
      */
-    public function update(File $image, string $path): string
+    public function update(File|UploadedFile $image, string $path): string
     {
         $this->destroy($path);
         return $this->storeAs($image, $path);
