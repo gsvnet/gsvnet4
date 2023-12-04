@@ -81,6 +81,9 @@ Route::prefix('admin')->group(function() {
     Route::get('/leden/updates', function () {
         return view('admin.users.latestUpdates');
     });
+    Route::get('/gebruikers/novieten', function () {
+        return view('admin.users.potentials');
+    });
 
 
     // Users

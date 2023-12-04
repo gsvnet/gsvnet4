@@ -1330,6 +1330,10 @@ select {
 .bg-white\/0 {
   background-color: rgb(255 255 255 / 0);
 }
+.bg-red-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(185 28 28 / var(--tw-bg-opacity));
+}
 .fill-current {
   fill: currentColor;
 }
@@ -1394,6 +1398,14 @@ select {
 .py-12 {
   padding-top: 3rem;
   padding-bottom: 3rem;
+}
+.px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+.py-2\.5 {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
 }
 .pb-6 {
   padding-bottom: 1.5rem;
@@ -1835,6 +1847,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
+.hover\:bg-red-800:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(153 27 27 / var(--tw-bg-opacity));
+}
 .hover\:bg-gradient-to-r:hover {
   background-image: linear-gradient(to right, var(--tw-gradient-stops));
 }
@@ -1973,6 +1989,10 @@ select {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(199 210 254 / var(--tw-ring-opacity));
 }
+.focus\:ring-red-300:focus {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(252 165 165 / var(--tw-ring-opacity));
+}
 .focus\:ring-opacity-50:focus {
   --tw-ring-opacity: 0.5;
 }
@@ -2069,6 +2089,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(11 143 88 / var(--tw-bg-opacity));
 }
+.dark .dark\:bg-red-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 38 38 / var(--tw-bg-opacity));
+}
 .dark .dark\:text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -2139,6 +2163,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(78 81 88 / var(--tw-bg-opacity));
 }
+.dark .dark\:hover\:bg-red-700:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(185 28 28 / var(--tw-bg-opacity));
+}
 .dark .dark\:hover\:text-white\/70:hover {
   color: rgb(255 255 255 / 0.7);
 }
@@ -2156,6 +2184,10 @@ select {
 .dark .dark\:focus\:ring-gsv-purple-dark:focus {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(62 0 20 / var(--tw-ring-opacity));
+}
+.dark .dark\:focus\:ring-red-900:focus {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(127 29 29 / var(--tw-ring-opacity));
 }
 .dark .dark\:active\:bg-gsv-purple-dark\/90:active {
   background-color: rgb(62 0 20 / 0.9);

@@ -9,9 +9,9 @@
         <table class="min-w-full bg-transparent">
             <thead class="border-b-2 border-b-gray-100 dark:border-b-gray-700">
                 <tr>
-                    <th class="py-2 px-4 border-b text-left">Wanneer</th>
-                    <th class="py-2 px-4 border-b text-left">Wie</th>
-                    <th class="py-2 px-4 border-b text-left">Wat</th>
+                    <th class="py-2 px-4 border-b text-left text-xs">Wanneer</th>
+                    <th class="py-2 px-4 border-b text-left text-xs">Wie</th>
+                    <th class="py-2 px-4 border-b text-left text-xs">Wat</th>
                 </tr>
             </thead>
             <tbody>
