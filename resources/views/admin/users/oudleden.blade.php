@@ -4,12 +4,12 @@
 @section('content')    
     <div class="text-black dark:text-white">
         <h1 class="text-3xl divide-black border-b-2 mb-4">
-            Leden der GSV
+            Oud-leden der GSV
         </h1>
         <div class="flex flex-row pb-6 gap-x-2">
             <div>
                 <label for="helper-text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Naam</label>
-                <input type="text" id="helper-text" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gsv-purple/50 focus:border-gsv-purple/50 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gsv-purple/50 dark:focus:border-gsv-purple/50 py-3" placeholder="Japie">
+                <input type="text" id="helper-text" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gsv-purple/50 focus:border-gsv-purple/50 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gsv-purple/50 dark:focus:border-gsv-purple/50 py-3" placeholder="Jan Thijs">
             </div>
             <div>
                 <label for="helper-text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jaarverband</label>
