@@ -26,7 +26,7 @@
     $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))" x-cloak>
         <div x-bind:class="{'dark' : darkMode === true}" class="min-h-screen">
             <!-- Color of background, full screen -->
-            <div class="dark:bg-[#161616] bg-[#d9e0e1] w-[100%] grid grid-cols-10 pb-6 overflow-y-auto">
+            <div class="dark:bg-[#161616] bg-[#d9e0e1] w-[100%] grid grid-cols-10 pb-11 overflow-y-clip">
                 @include('layouts.navigation-admin')
 
                 <!-- Max size for all content -->

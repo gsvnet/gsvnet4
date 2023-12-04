@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 
-
 @section('content')    
     <div class="text-black dark:text-white">
         <h1 class="text-3xl divide-black border-b-2 border-gray-300 mb-4">

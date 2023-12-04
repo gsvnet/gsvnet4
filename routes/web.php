@@ -77,6 +77,12 @@ Route::prefix('admin')->group(function() {
     Route::get('/', [AdminController::class, 'index']);
     Route::get('/ik', [AdminController::class, 'redirectToMyProfile']);
 
+    // PLACEHOLDERS
+    Route::get('/leden/updates', function () {
+        return view('admin.users.latestUpdates');
+    });
+
+
     // Users
     Route::resource('users', UsersController::class);
 

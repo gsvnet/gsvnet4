@@ -5,7 +5,7 @@
     </div>
     
     <nav>
-        <h3 class="text-xl text-black dark:text-white font-extralight ml-4 mt-6">
+        <h3 class="text-xl text-black dark:text-white/70 font-extralight ml-4 mt-6">
             Administratie
         </h3>
         <ul class="dark:text-white text-black mt-2 pt-4 dark:bg-[#202124] bg-[#d0d5d6] rounded-2xl ml-3 mr-3 pb-6 text-center">
@@ -18,10 +18,10 @@
             <x-navigation.menu-item title="Uw profiel" link="/admin/gebruikers/EIGENID"> 
                 @svg('heroicon-o-user-circle', 'h-6 w-6 mr-2')   
             </x-navigation.menu-item> 
-            <h4 class="text-md text-gray-600 dark:text-white font-extralight mb-2 pt-6 italic">
+            <h4 class="text-md text-gray-600 dark:text-white/70 font-extralight mb-2 pt-6 italic">
                 Ledenadministratie
             </h4>
-            <x-navigation.menu-item title="Updates" link="/admin/leden/update"> 
+            <x-navigation.menu-item title="Updates" link="/admin/leden/updates"> 
                 @svg('heroicon-o-bell', 'h-6 w-6 mr-2')
             </x-navigation.menu-item> 
             <x-navigation.menu-item title="Novieten" link="/admin/gebruikers/novieten"> 
@@ -36,7 +36,7 @@
             <x-navigation.menu-item title="Registreren" link="/admin/gebruikers/create"> 
                 @svg('heroicon-o-user-plus', 'h-6 w-6 mr-2')   
             </x-navigation.menu-item> 
-            <h4 class="text-md text-gray-600 dark:text-white font-extralight mb-2 pt-6 italic">
+            <h4 class="text-md text-gray-600 dark:text-white/70 font-extralight mb-2 pt-6 italic">
                 Activiteiten
             </h4>
             <x-navigation.menu-item title="Activiteiten" link="/admin/events"> 
@@ -45,7 +45,7 @@
             <x-navigation.menu-item title="Toevoegen" link="/admin/events/create"> 
                 @svg('heroicon-o-squares-plus', 'h-6 w-6 mr-2')
             </x-navigation.menu-item> 
-            <h4 class="text-md text-gray-600 dark:text-white font-extralight mb-2 pt-6 italic">
+            <h4 class="text-md text-gray-600 dark:text-white/70 font-extralight mb-2 pt-6 italic">
                 Overig
             </h4>
             <x-navigation.menu-item title="Commissies" link="/admin/commissies"> 
