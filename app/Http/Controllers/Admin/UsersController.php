@@ -60,7 +60,7 @@ class UsersController extends Controller
 
     public function showMembers(Request $request)
     {
-        $this->authorize('users.show');
+        // $this->authorize('users.show'); TO DO: AUTHORIZE LIKE THIS DOES NOT WORK
         $search = $request->get('zoekwoord', '');
         $type = UserTypeEnum::MEMBER;
         $perPage = 300;

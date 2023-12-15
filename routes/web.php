@@ -84,11 +84,11 @@ Route::prefix('admin')->group(function() {
     Route::get('/gebruikers/novieten', function () {
         return view('admin.users.potentials');
     });
-    Route::get('/gebruikers/leden', function () {
-        return view('admin.users.leden');
-    });
     Route::get('/gebruikers/oud-leden', function () {
         return view('admin.users.oudleden');
+    });
+    Route::prefix('gebruikers')->group(function() {
+        Route::get('leden', [UsersController::class, 'showMembers']);
     });
 
     // Users
