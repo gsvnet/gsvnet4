@@ -89,6 +89,7 @@ Route::prefix('admin')->group(function() {
     });
     Route::prefix('gebruikers')->group(function() {
         Route::get('leden', [UsersController::class, 'showMembers']);
+        Route::get('oud-leden', [UsersController::class, 'showFormerMembers']);
     });
 
     // Users
