@@ -159,7 +159,7 @@ class UsersController extends Controller
 
         $request->session()->flash('success', 'Gebruiker is succesvol opgeslagen.');
 
-        return redirect()->route('dashboard');
+        return redirect()->route('latestupdates');
     }
 
     /**

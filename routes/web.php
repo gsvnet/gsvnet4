@@ -80,7 +80,7 @@ Route::prefix('admin')->group(function() {
     // PLACEHOLDERS
     Route::get('/leden/updates', function () {
         return view('admin.users.latestUpdates');
-    });
+    })->name('latestupdates');
     Route::get('/gebruikers/novieten', function () {
         return view('admin.users.potentials');
     });
@@ -93,7 +93,7 @@ Route::prefix('admin')->group(function() {
     });
 
     // Users
-    Route::resource('users', UsersController::class);
+    Route::resource('gebruikers', UsersController::class);
 
     // Exporting data to Excel
     Route::get('leden/leden.csv', [UsersController::class, 'exportMembers']);
