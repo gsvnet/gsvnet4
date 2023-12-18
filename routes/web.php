@@ -114,10 +114,8 @@ Route::prefix('admin')->group(function() {
         Route::put('geslacht',      'updateGender');
         Route::get('jaarverband',   'editYearGroup');
         Route::put('jaarverband',   'updateYearGroup');
-        Route::get('naam',          'editName');
-        Route::put('naam',          'updateName');
-        Route::get('gebruikersnaam','editUsername');
-        Route::put('gebruikersnaam','updateUsername');
+        Route::put('naam',          'updateName')->name('gebruikers.updateName');
+        Route::put('gebruikersnaam','updateUsername')->name('gebruikers.updateUsername');
         Route::get('werk',          'editBusiness');
         Route::put('werk',          'updateBusiness');
         Route::get('foto',          'editPhoto');

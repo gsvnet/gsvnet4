@@ -114,7 +114,7 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
-        $this->authorize('users.show');
+        // $this->authorize('users.show'); TO DO: AUTHORIZE LIKE THIS DOES NOT WORK
 
         // Committees or ordinary forum users do not need a fancy profile page.
         // In addition, since GDPR, not all (former) members still have profiles.

@@ -13,49 +13,49 @@
                 <x-navigation.dark-toggle/>
             </div>
             <x-navigation.menu-item title="Dashboard" link="/admin"> 
-                @svg('heroicon-o-home', 'h-6 w-6 mr-2')
+                @svg('gmdi-home-filled', 'h-6 w-6 mr-2')
             </x-navigation.menu-item> 
             <x-navigation.menu-item title="Uw profiel" link="/admin/gebruikers/EIGENID"> 
-                @svg('heroicon-o-user-circle', 'h-6 w-6 mr-2')   
+                @svg('gmdi-account-circle-r', 'h-6 w-6 mr-2')   
             </x-navigation.menu-item> 
             <h4 class="text-md text-gray-600 dark:text-white/70 font-extralight mb-2 pt-6 italic">
                 Ledenadministratie
             </h4>
             <x-navigation.menu-item title="Updates" link="/admin/leden/updates"> 
-                @svg('heroicon-o-bell', 'h-6 w-6 mr-2')
+                @svg('gmdi-tips-and-updates-r', 'h-6 w-6 mr-2')
             </x-navigation.menu-item> 
             <x-navigation.menu-item title="Novieten" link="/admin/gebruikers/novieten"> 
-                @svg('heroicon-o-user', 'h-6 w-6 mr-2')       
+                @svg('gmdi-person', 'h-6 w-6 mr-2')       
             </x-navigation.menu-item> 
             <x-navigation.menu-item title="Leden" link="/admin/gebruikers/leden"> 
-                @svg('heroicon-o-users', 'h-6 w-6 mr-2') 
+                @svg('gmdi-group', 'h-6 w-6 mr-2') 
             </x-navigation.menu-item> 
             <x-navigation.menu-item title="Oud-leden" link="/admin/gebruikers/oud-leden"> 
-                @svg('heroicon-o-user-group', 'h-6 w-6 mr-2') 
+                @svg('gmdi-groups-2-r', 'h-6 w-6 mr-2') 
             </x-navigation.menu-item> 
             <x-navigation.menu-item title="Registreren" link="/admin/gebruikers/create"> 
-                @svg('heroicon-o-user-plus', 'h-6 w-6 mr-2')   
+                @svg('gmdi-person-add', 'h-6 w-6 mr-2')   
             </x-navigation.menu-item> 
             <h4 class="text-md text-gray-600 dark:text-white/70 font-extralight mb-2 pt-6 italic">
                 Activiteiten
             </h4>
             <x-navigation.menu-item title="Activiteiten" link="/admin/events"> 
-                @svg('heroicon-o-calendar-days', 'h-6 w-6 mr-2')
+                @svg('gmdi-calendar-today', 'h-6 w-6 mr-2')
             </x-navigation.menu-item> 
             <x-navigation.menu-item title="Toevoegen" link="/admin/events/create"> 
-                @svg('heroicon-o-squares-plus', 'h-6 w-6 mr-2')
+                @svg('gmdi-edit-calendar', 'h-6 w-6 mr-2')
             </x-navigation.menu-item> 
             <h4 class="text-md text-gray-600 dark:text-white/70 font-extralight mb-2 pt-6 italic">
                 Overig
             </h4>
             <x-navigation.menu-item title="Commissies" link="/admin/commissies"> 
-                @svg('heroicon-o-briefcase', 'h-6 w-6 mr-2')
+                @svg('gmdi-diversity-2-r', 'h-6 w-6 mr-2')
             </x-navigation.menu-item> 
             <x-navigation.menu-item title="GSVdocs" link="/admin/files"> 
-                @svg('heroicon-o-document-text', 'h-6 w-6 mr-2')
+                @svg('gmdi-file-copy-r', 'h-6 w-6 mr-2')
             </x-navigation.menu-item> 
             <x-navigation.menu-item title="Senaten" link="/admin/senaten"> 
-                @svg('heroicon-o-bug-ant', 'h-6 w-6 mr-2')
+                @svg('gmdi-account-balance-r', 'h-6 w-6 mr-2')
             </x-navigation.menu-item> 
             <div class="items-center justify-center flex">
                 <form method="POST" action="{{ route('uitloggen') }}">
@@ -65,7 +65,7 @@
                         <p class="text-xs my-auto mr-2 mx-auto">
                             Log uit
                         </p>
-                        @svg('heroicon-o-arrow-right-on-rectangle', 'h-6 w-6')
+                        @svg('gmdi-logout-r', 'h-6 w-6')
                     </button>
                 </form>
             </div>

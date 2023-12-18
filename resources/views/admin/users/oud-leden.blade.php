@@ -30,7 +30,7 @@
                 </select>
             </div>
             <div class='flex items-end'>
-                <button type="submit" class="flex text-white bg-gsv-purple hover:bg-gsv-purple/80 focus:ring-4 focus:ring-gsv-purple/30 font-medium rounded-lg text-sm px-5 py-3 dark:bg-gsv-purple-dark dark:hover:bg-gsv-purple-dark/80 focus:outline-none dark:focus:ring-gsv-purple/80">@svg('heroicon-o-funnel', 'h-4 w-4 mr-2') Filter</button>
+                <button type="submit" class="flex text-white bg-gsv-purple hover:bg-gsv-purple/80 focus:ring-4 focus:ring-gsv-purple/30 font-medium rounded-lg text-sm px-5 py-3 dark:bg-gsv-purple-dark dark:hover:bg-gsv-purple-dark/80 focus:outline-none dark:focus:ring-gsv-purple/80">@svg('gmdi-filter-alt-tt', 'h-4 w-4 mr-2') Filter</button>
             </div>
         </form>
         <div class='flex flex-col'>

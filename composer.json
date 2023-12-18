@@ -6,8 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "blade-ui-kit/blade-heroicons": "^2.1",
         "blade-ui-kit/blade-icons": "^1.5",
+        "codeat3/blade-google-material-design-icons": "^1.18",
         "guzzlehttp/guzzle": "^7.2",
         "laracasts/presenter": "^0.2",
         "laravel/framework": "^10.0",

@@ -63,7 +63,7 @@ class MemberController extends Controller
         ChangeName::dispatchFromForm($user, $request);
 
         session()->flash('success', "Naam {$user->present()->fullName()} succesvol aangepast");
-        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+        return redirect()->action([UsersController::class, 'show'], ['gebruiker' =>$user->id]);
     }
 
     public function editUsername(User $user)
@@ -77,7 +77,7 @@ class MemberController extends Controller
         ChangeUsername::dispatchFromForm($user, $request);
 
         session()->flash('success', "Gebruikersnaam {$user->username} succesvol aangepast");
-        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+        return redirect()->action([UsersController::class, 'show'], ['gebruiker' =>$user->id]);
     }
 
     public function editContactDetails(User $user)

@@ -39,6 +39,8 @@ class MailchimpNewsletterList implements NewsletterList
     }
 
     public function subscribeTo(UserTypeEnum $listName, $email, $merge_fields) {
+        // TODO: Impelement this again?
+        return
         $listName = $this->checkListName($listName);
 
         return $this->client->lists->addListMember(
