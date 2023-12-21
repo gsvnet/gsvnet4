@@ -113,30 +113,31 @@ class UsersController extends Controller
      * @param \App\Models\User $user
      * @return \Illuminate\Contracts\View\View
      */
-    public function show(User $user)
+    public function show($id)
     {
         // $this->authorize('users.show'); TO DO: AUTHORIZE LIKE THIS DOES NOT WORK
+        $userShow = $this->users->byId($id);
 
         // Committees or ordinary forum users do not need a fancy profile page.
         // In addition, since GDPR, not all (former) members still have profiles.
-        if ((!$user->isMemberOrReunist() && !$user->isPotential()) || !$user->profile)
-            return view('admin.users.show')->with(compact('user'));
+        if ((!$userShow->isMemberOrReunist() && !$userShow->isPotential()) || !$userShow->profile)
+            return view('admin.users.show')->with(compact('userShow'));
 
-        $profile = $user->profile;
+        $profile = $userShow->profile;
 
-        if ($user->isMemberOrReunist()) {
+        if ($userShow->isMemberOrReunist()) {
             // Members, former members
-            $committees = $user->committeesSorted;
+            $committees = $userShow->committeesSorted;
 
-            if (! $user->profile->alive) {
-                return view('admin.users.showDeceasedMember')->with(compact('user', 'profile', 'committees'));
+            if (! $userShow->profile->alive) {
+                return view('admin.users.showDeceasedMember')->with(compact('userShow', 'profile', 'committees'));
             }
 
-            return view('admin.users.showMember')->with(compact('user', 'profile', 'committees'));
+            return view('admin.users.showMember')->with(compact('userShow', 'profile', 'committees'));
         }
 
         // Potentials
-        return view('admin.users.showPotential')->with(compact('user', 'profile'));
+        return view('admin.users.showPotential')->with(compact('userShow', 'profile'));
     }
 
     /**
