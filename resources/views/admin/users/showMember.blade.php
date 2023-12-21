@@ -8,7 +8,11 @@
     </h1>
     <div class="max-w-7xl grid grid-cols-7">
         <div class="overflow-hidden col-span-7 md:col-span-5">
+            @cannot('users.manage')
+                <div class="text-xs text-gray-400 dark:text-gray-500 italic font-light" role="alert">Tip: Klopt er iets niet wat u zelf niet kunt wijzigen? Mail de abactis!</div>
+            @endcan
             <div class="py-6">
+
                     {{-- Name --}}
                     <form method="POST" action="{{ route('gebruikers.updateName', ['user' => $userShow->id]) }}"> 
                         @csrf
@@ -17,20 +21,26 @@
                         <x-label for="firstname" value="Naam" ></x-label>
                         <div id="textFullname" class="flex group items-center">
                             <p class="mt-1 w-fit mr-1 font-ligt text-xs italic">({{ $userShow->profile->initials }})</p>
-                            <p class="mt-1 w-fit group-hover:underline text-lg">{{ $userShow->present()->fullName }}</p>
-                            <button type="button" class="group-hover:block hidden ml-2 hover:text-slate-400 items-center" onclick="toggleInput('Fullname')"> @svg('gmdi-edit', 'h-4 w-4') </button>
+                            @can('user.manage.name', $userShow)
+                                <p class="mt-1 w-fit group-hover:underline text-lg">{{ $userShow->present()->fullName }}</p>
+                                <button type="button" class="group-hover:block hidden ml-2 hover:text-slate-400 items-center" onclick="toggleInput('Fullname')"> @svg('gmdi-edit', 'h-4 w-4') </button>
+                            @else
+                                <p class="mt-1 w-fit text-lg">{{ $userShow->present()->fullName }}</p>
+                            @endcan
                         </div>
-                        <div id="inputFullname" class="hidden">
-                            <div class="flex flex-col md:flex-row">
-                                <x-input id="initials" name="initials" type="text" class="mt-1 w-40 md:w-20 mr-1 bg-slate-100" value="{{ $userShow->profile->initials }}" required />
-                                <x-input id="firstname" name="firstname" type="text" class="mt-1 w-40 bg-slate-100" required  value="{{ $userShow->firstname }}" />
-                                <x-input id="middlename" name="middlename" type="text" class="mt-1 w-40 md:w-20 md:mx-1 bg-slate-100"  value="{{ $userShow->middlename }}" />
-                                <x-input id="lastname" name="lastname" type="text" class="mt-1 w-40 bg-slate-100" required  value="{{ $userShow->lastname }}" />
-                                <x-button class="ml-3 mt-2 md:mt-0 mx-auto md:mr-0" type="submit">
-                                    Update
-                                </x-button>
+                        @can('user.manage.name', $userShow)
+                            <div id="inputFullname" class="hidden">
+                                <div class="flex flex-col md:flex-row">
+                                    <x-input id="initials" name="initials" type="text" class="mt-1 w-40 md:w-20 mr-1 bg-slate-100" value="{{ $userShow->profile->initials }}" required />
+                                    <x-input id="firstname" name="firstname" type="text" class="mt-1 w-40 bg-slate-100" required  value="{{ $userShow->firstname }}" />
+                                    <x-input id="middlename" name="middlename" type="text" class="mt-1 w-40 md:w-20 md:mx-1 bg-slate-100"  value="{{ $userShow->middlename }}" />
+                                    <x-input id="lastname" name="lastname" type="text" class="mt-1 w-40 bg-slate-100" required  value="{{ $userShow->lastname }}" />
+                                    <x-button class="ml-3 mt-2 md:mt-0 mx-auto md:mr-0" type="submit">
+                                        Update
+                                    </x-button>
+                                </div>
                             </div>
-                        </div>
+                        @endcan
                     </form>
 
                     {{-- Username --}}

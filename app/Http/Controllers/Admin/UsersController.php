@@ -115,7 +115,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        // $this->authorize('users.show'); TO DO: AUTHORIZE LIKE THIS DOES NOT WORK
+        $this->authorize('users.show');
         $userShow = $this->users->byId($id);
 
         // Committees or ordinary forum users do not need a fancy profile page.
