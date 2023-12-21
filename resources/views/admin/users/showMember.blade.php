@@ -50,16 +50,22 @@
                         
                         <x-label for="username" value="Gebruikersnaam" ></x-label>
                         <div id="textUsername" class="flex group items-center">
-                            <p class="mt-1 w-fit group-hover:underline text-lg">{{ $userShow->username }}</p>
-                            <button type="button" class="group-hover:block hidden ml-2 hover:text-slate-400 items-center" onclick="toggleInput('Username')"> @svg('gmdi-edit', 'h-4 w-4') </button>
+                            @can('users.manage')
+                                <p class="mt-1 w-fit group-hover:underline text-lg">{{ $userShow->username }}</p>
+                                <button type="button" class="group-hover:block hidden ml-2 hover:text-slate-400 items-center" onclick="toggleInput('Username')"> @svg('gmdi-edit', 'h-4 w-4') </button>
+                            @else
+                                <p class="mt-1 w-fit text-lg">{{ $userShow->username }}</p>
+                            @endcan
                         </div>
-                        <div id="inputUsername" class="hidden">
-                            <div class="flex flex-col md:flex-row">
-                                <x-input id="username" name="username" type="text" class="mt-1 w-40 bg-slate-100" value="{{ $userShow->username }}" required />
-                                <x-button class="ml-3 mt-2 md:mt-0 mx-auto md:mr-0" type="submit">
-                                    Update
-                                </x-button>
-                        </div>
+                        @can('users.manage')
+                            <div id="inputUsername" class="hidden">
+                                <div class="flex flex-col md:flex-row">
+                                    <x-input id="username" name="username" type="text" class="mt-1 w-40 bg-slate-100" value="{{ $userShow->username }}" required />
+                                    <x-button class="ml-3 mt-2 md:mt-0 mx-auto md:mr-0" type="submit">
+                                        Update
+                                    </x-button>
+                            </div>
+                        @endcan
                     </div>
                     </form>
 
