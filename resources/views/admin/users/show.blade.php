@@ -7,8 +7,8 @@
         {{ $user->present()->fullName }}
     </h1>
     <div class="max-w-7xl grid grid-cols-7">
-        <div class="overflow-hidden col-span-5">
-            <div class="p-6">
+        <div class="overflow-hidden col-span-7 md:col-span-5">
+            <div class="py-6">
                     {{-- Name --}}
                     <form method="POST" action="{{ route('gebruikers.updateName', ['user' => $user->id]) }}"> 
                         @csrf
@@ -56,9 +56,44 @@
                     <!-- TODO: Continue this practice for all other input parts && to component -->
             </div>
         </div>
-        <div class="col-span-2">
-            @svg('gmdi-family-restroom-r', 'w-24 h-24')
-            FAMILIE!!
+        <div class="col-span-7 md:col-span-2">
+            <h2 class="flex items-end text-2xl">
+                @svg('gmdi-family-restroom-r', 'w-14 h-14 mr-2')
+                GSV-familie
+            </h2>
+            <h3 class="mt-2 font-thin text-xl">
+                Papa of Mama
+            </h3>
+            @forelse($user->parents as $parent)
+                <p class="mt-1 ml-1">
+                    {{$parent->present()->fullName() }}
+                </p>
+            @empty
+                <p class="mt-1 ml-1 text-gray-500 italic">Geen ouders</p>
+            @endforelse
+
+            <h3 class="mt-4 font-thin text-xl">
+                Kinderen
+            </h3>
+            @forelse($user->children as $child)
+                <p class="mt-1 ml-1">
+                    {{$child->present()->fullName() }}
+                </p>
+            @empty
+                <p class="mt-1 ml-1 text-gray-500 italic">Geen kinderen</p>
+            @endforelse
+
+            <h2 class="flex items-end text-2xl mt-8">Laatste veranderingen</h2>
+            <ul class="mt-4">
+                @forelse($user->profileChanges()->take(10)->orderBy('at', 'DESC')->get() as $change)
+                    <li class="max-w-sm my-1 px-4 py-2 hover:-translate-x-1 bg-white/25 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                        <h4 class="mb-[0.5] text-md font-semibold tracking-tight text-gray-900 dark:text-white">{{ $change->present()->actionName() }}</h4>
+                        <p class="mb-1 font-normal text-gray-500 dark:text-gray-400 text-sm">{{ $change->at->diffForHumans() }}</p>
+                    </li>
+                @empty
+                    <li class="mb-3 font-normal text-gray-500 dark:text-gray-400 italic">Niks recent veranderd</li>
+                @endforelse
+            </ul>
         </div>
     </div>
 </div>

@@ -84,7 +84,8 @@ class UsersController extends Controller
 
     public function showFormerMembers(Request $request)
     {
-        // $this->authorize('users.show'); TO DO: AUTHORIZE LIKE THIS DOES NOT WORK
+        $user = $request->user();
+        // $this->authorize('users.show', $user); @TODO Fix this
         $search = $request->get('zoekwoord', '');
         $perPage = 300;
         // TODO: Check that an array of types can be retrieved in this way from HTML form
