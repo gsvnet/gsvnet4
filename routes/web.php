@@ -126,5 +126,11 @@ Route::prefix('admin')->group(function() {
         });
 });
 
+Route::prefix('forum')
+    ->middleware(['auth', 'approved'])
+    ->group(function() {
+        // TODO: Add all forum routes
+    });
+
 
 require __DIR__.'/auth.php';
