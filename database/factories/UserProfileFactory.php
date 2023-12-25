@@ -41,7 +41,8 @@ class UserProfileFactory extends Factory
             'inauguration_date' => $this->faker->dateTimeBetween('-10 years', 'now'),
             'company' => $this->faker->randomElement($this->companies),
             'profession' => $this->faker->randomElement($this->professions),
-            'business_url' => $this->faker->url
+            'business_url' => $this->faker->url,
+            'receive_newspaper' => $this->faker->boolean
         ];
     }
 }

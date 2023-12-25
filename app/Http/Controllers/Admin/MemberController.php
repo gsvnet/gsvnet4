@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\NewspaperRecipientsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateBirthdayRequest;
 use App\Http\Requests\UpdateContactDetailsRequest;
@@ -9,6 +10,7 @@ use App\Http\Requests\UpdateEmailRequest;
 use App\Http\Requests\UpdateGenderRequest;
 use App\Http\Requests\UpdateMembershipPeriodRequest;
 use App\Http\Requests\UpdateNameRequest;
+use App\Http\Requests\UpdateNewspaperRequest;
 use App\Http\Requests\UpdateParentContactDetailsRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdatePhotoRequest;
@@ -23,6 +25,7 @@ use App\Jobs\ChangeGender;
 use App\Jobs\ChangeMembershipPeriod;
 use App\Jobs\ChangeMembershipStatus;
 use App\Jobs\ChangeName;
+use App\Jobs\ChangeNewspaper;
 use App\Jobs\ChangeParentsDetails;
 use App\Jobs\ChangePassword;
 use App\Jobs\ChangePhone;
@@ -331,7 +334,30 @@ class MemberController extends Controller
         return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
     }
 
-    // ...more methods...
+    public function editNewspaper(User $user)
+    {
+        $this->authorize('user.manage.receive_newspaper', $user);
+
+        return view('admin.users.update.newspaper')->with(compact('user'));
+    }
+
+    public function updateNewspaper(UpdateNewspaperRequest $request, User $user)
+    {
+        ChangeNewspaper::dispatchFromForm($user, $request);
+
+        session()->flash('success', "Voorkeuren opgeslagen");
+        return redirect()->action([UsersController::class, 'show'], ['user' =>$user->id]);
+    }
+
+    /**
+     * Download an Excel file containing SIC recipients.
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function exportNewspaperRecipients(NewspaperRecipientsExport $export)
+    {
+        $this->authorize('users.show');
+        return $export->download('sic-ontvangers.xlsx');
+    }
 
     public function setForget(User $user)
     {
