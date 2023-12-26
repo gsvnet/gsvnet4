@@ -2,9 +2,13 @@
 
 use App\Models\Thread;
 use GSVnet\Core\EloquentRepository;
+use GSVnet\Core\Exceptions\EntityNotFoundException;
 use GSVnet\Forum\VisibilityLevel;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 
 class ThreadRepository extends EloquentRepository
@@ -18,6 +22,40 @@ class ThreadRepository extends EloquentRepository
         return $this->model->where('slug', '=', $slug)->pluck('id');
     }
 
+    /**
+     * Populate the likers attribute of the reply with the authenticated user IF they liked the reply.
+     */
+    private function addUserIfLiked(Builder $query): Builder
+    {
+        if( Auth::check() )
+        {
+            $id = Auth::user()->id;
+
+            $query->with(['likers' => function(Builder $q) use ($id){
+                $q->where('user_id', $id);
+            }]);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Populate the visitations attribute of the thread with the authenticated user IF they visited the thread.
+     */
+    private function addUserIfVisited(Builder $query): Builder
+    {
+        if( Auth::check() )
+        {
+            $id = Auth::user()->id;
+
+            $query->with(['visitations' => function(Builder $q) use ($id){
+                $q->where('user_id', $id);
+            }]);
+        }
+
+        return $query;
+    }
+
     public function getByTagsPaginated(Collection $tags, $perPage = 20)
     {
         $query = $this->model->with(['mostRecentReply', 'mostRecentReply.author', 'tags']);
@@ -27,37 +65,32 @@ class ThreadRepository extends EloquentRepository
                 ->whereIn('tagged_items.tag_id', $tags->pluck('id'));
         }
 
-        // The necessity to cast the enum values to a string is a known issue
         if (Gate::denies('threads.show-internal'))
-            $query = $query->where('visibility', (string) VisibilityLevel::PUBLIC->value);
+            $query = $query->where('visibility', VisibilityLevel::PUBLIC);
         elseif (Gate::denies('threads.show-private')) // Allows internal, but not private
-            $query = $query->whereNot('visibility', (string) VisibilityLevel::PRIVATE->value);
+            $query = $query->whereNot('visibility', VisibilityLevel::PRIVATE);
 
-        if ( Auth::check() )
-        {
-            $id = Auth::user()->id;
-            $query->with(['visitations' => function($q) use ($id){
-                $q->where('user_id', $id);
-            }]);
-        }
+        $query = $this->addUserIfVisited($query);
 
         $query->orderBy('updated_at', 'desc');
 
         return $query->paginate($perPage, ['forum_threads.*']);
     }
 
-    public function getThreadRepliesPaginated(Thread $thread, $perPage = 20)
+    /**
+     * Get replies to provided `$thread`, paginated.
+     * 
+     * Also provides every reply's author. If the authenticated user has liked the reply, the user will be provided to the reply's `likers` attribute. Otherwise, `likers` is empty.
+     * 
+     * @param Thread $thread
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function getThreadRepliesPaginated(Thread $thread, $perPage = 20): LengthAwarePaginator
     {
         $query = $thread->replies()->with('author');
 
-        if( Auth::check() )
-        {
-            $id = Auth::user()->id;
-
-            $query->with(['likes' => function($q) use ($id){
-                $q->where('user_id', $id);
-            }]);
-        }
+        $query = $this->addUserIfLiked($query);
 
         $query->orderBy('created_at', 'asc');
 
@@ -81,18 +114,9 @@ class ThreadRepository extends EloquentRepository
         
         // Include removed ones if permissions allow
         if (Gate::allows('thread.manage'))
-        {
             $query->withTrashed();
-        }
 
-        if ( Auth::check() )
-        {
-            $id = Auth::user()->id;
-            $query->with(['likes' => function($q) use ($id)
-            {
-                $q->where('user_id', $id);
-            }]);
-        }
+        $query = $this->addUserIfLiked($query);
 
         return $query->first();
     }
@@ -109,14 +133,7 @@ class ThreadRepository extends EloquentRepository
         if (Gate::denies('threads.show-private'))
             $query = $query->where('private', '=', 0);
 
-        if ( Auth::check() )
-        {
-            $id = Auth::user()->id;
-            $query->with(['visitations' => function($q) use ($id)
-            {
-                $q->where('user_id', $id);
-            }]);
-        }
+        $query = $this->addUserIfVisited($query);
 
         $query->orderBy('updated_at', 'desc');
 
@@ -161,43 +178,16 @@ class ThreadRepository extends EloquentRepository
         return $this->model::withTrashed()->where('slug', $slug)->exists();
     }
 
-    public function like(Thread $thread, Like $like)
-    {
-        $thread->likes()->save($like);
-    }
-
-    public function incrementLikeCount($threadId)
-    {
-        //$this->model->where('id', $threadId)->increment('like_count');
-        /* NOTE: The increment method above seems to update timestamps, which we don't want here */
-
-        $thread = $this->model->where('id', $threadId)->first();
-        
-        $thread->timestamps = false;
-        $thread->like_count++;
-        $thread->save();
-    }
-
-    public function decrementLikeCount($threadId)
-    {
-        //$this->model->where('id', $threadId)->decrement('like_count');
-        /* NOTE: The decrement method above seems to update timestamps, which we don't want here */
-
-        $thread = $this->model->where('id', $threadId)->first();
-        
-        $thread->timestamps = false;
-        $thread->like_count--;
-        $thread->save();
-    }
+    // Note: We don't allow threads themselves to be liked anymore.
 
     public function totalLikesGivenPerYearGroup()
     {
         return Cache::remember('total-likes-given-per-year-group', 24*60, function()
         {
             return \DB::select("SELECT yg.name as name, count(1) AS likes_given
-                FROM likeable_likes as ll
+                FROM likes as l
                 INNER JOIN user_profiles as up
-                ON ll.user_id = up.user_id
+                ON l.user_id = up.user_id
                 INNER JOIN year_groups as yg
                 ON yg.id = up.year_group_id
                 GROUP BY yg.id
@@ -211,39 +201,17 @@ class ThreadRepository extends EloquentRepository
     {
         return Cache::remember('total-likes-received-per-year-group', 24*60, function()
         {
-            // This is getting quite a large query... LOL
-            return \DB::select("SELECT t.name, count(t.id) AS likes_received
-                FROM
-                (
-                    SELECT yg.id, yg.year, yg.name
-                    FROM likeable_likes as ll
-                    INNER JOIN forum_replies as fr
-                    ON fr.id = ll.likable_id
-                    INNER JOIN user_profiles as up
-                    ON fr.author_id = up.user_id
-                    INNER JOIN year_groups as yg
-                    ON yg.id = up.year_group_id
-                    WHERE ll.likable_type = ?
-
-                    UNION ALL
-
-                    SELECT yg.id, yg.year, yg.name
-                    FROM likeable_likes as ll
-                    INNER JOIN forum_threads as ft
-                    ON ft.id = ll.likable_id
-                    INNER JOIN user_profiles as up
-                    ON ft.author_id = up.user_id
-                    INNER JOIN year_groups as yg
-                    ON yg.id = up.year_group_id
-                    WHERE ll.likable_type = ?
-                ) t
-                GROUP BY t.id
+            return \DB::select("SELECT yg.name, count(yg.id) AS likes_received
+                FROM likes as l
+                INNER JOIN forum_replies as fr
+                ON fr.id = l.reply_id
+                INNER JOIN user_profiles as up
+                ON fr.author_id = up.user_id
+                INNER JOIN year_groups as yg
+                ON yg.id = up.year_group_id
+                GROUP BY yg.id
                 HAVING likes_received > 30
-                ORDER BY t.year DESC",
-                [
-                    Reply::class,
-                    Thread::class
-                ]
+                ORDER BY yg.year DESC"
             );
         });
     }
