@@ -13,13 +13,30 @@ use Illuminate\Support\Facades\Gate;
 
 class ThreadRepository extends EloquentRepository
 {
-    public function __construct(
-        public Thread $model
-    ) {}
+    public function __construct(Thread $model) 
+    {
+        $this->model = $model;
+    }
 
-    public function getIdBySlug($slug)
+    public function getIdBySlug(string $slug): Collection
     {
         return $this->model->where('slug', '=', $slug)->pluck('id');
+    }
+
+    /**
+     * Set the threads' visibility level according to the user's permissions.
+     * 
+     * @param Builder $query
+     * @return Builder
+     */
+    private function restrictAccess(Builder $query): Builder
+    {
+        if (Gate::denies('threads.show-internal'))
+            $query = $query->where('visibility', VisibilityLevel::PUBLIC);
+        elseif (Gate::denies('threads.show-private')) // Allows internal, but not private
+            $query = $query->whereNot('visibility', VisibilityLevel::PRIVATE);
+
+        return $query;
     }
 
     /**
@@ -56,7 +73,16 @@ class ThreadRepository extends EloquentRepository
         return $query;
     }
 
-    public function getByTagsPaginated(Collection $tags, $perPage = 20)
+    /**
+     * Get threads that have the specified tags.
+     * 
+     * `$tags` is a Collection of `Tag`s. If the authenticated user has visited the thread, the user will be provided in the `visitations` attribute.
+     * 
+     * @param Collection $tags
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function getByTagsPaginated(Collection $tags, int $perPage = 20): LengthAwarePaginator
     {
         $query = $this->model->with(['mostRecentReply', 'mostRecentReply.author', 'tags']);
 
@@ -65,10 +91,7 @@ class ThreadRepository extends EloquentRepository
                 ->whereIn('tagged_items.tag_id', $tags->pluck('id'));
         }
 
-        if (Gate::denies('threads.show-internal'))
-            $query = $query->where('visibility', VisibilityLevel::PUBLIC);
-        elseif (Gate::denies('threads.show-private')) // Allows internal, but not private
-            $query = $query->whereNot('visibility', VisibilityLevel::PRIVATE);
+        $query = $this->restrictAccess($query);
 
         $query = $this->addUserIfVisited($query);
 
@@ -97,7 +120,16 @@ class ThreadRepository extends EloquentRepository
         return $query->paginate($perPage);
     }
 
-    public function requireBySlug($slug)
+    /**
+     * Returns thread specified by slug. 
+     * 
+     * Same behavior as `getBySlug` but throws an exception if no thread is found.
+     * 
+     * @param string $slug
+     * @return Thread
+     * @throws EntityNotFoundException
+     */
+    public function requireBySlug(string $slug): Thread
     {
         $model = $this->getBySlug($slug);
 
@@ -108,7 +140,13 @@ class ThreadRepository extends EloquentRepository
         return $model;
     }
 
-    public function getBySlug($slug)
+    /**
+     * Returns thread specified by slug or null if it does not exist.
+     * 
+     * @param string $slug
+     * @return Thread|null
+     */
+    public function getBySlug($slug): Thread|null
     {
         $query = $this->model->where('slug', '=', $slug);
         
@@ -116,22 +154,26 @@ class ThreadRepository extends EloquentRepository
         if (Gate::allows('thread.manage'))
             $query->withTrashed();
 
+        $query = $this->restrictAccess($query);
+
         $query = $this->addUserIfLiked($query);
 
         return $query->first();
     }
 
-    public function getTrashedPaginated($perPage = 20)
+    /**
+     * Get trashed threads.
+     * 
+     * If the authenticated user has visited the thread, the user will be provided in the `visitations` attribute.
+     * 
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function getTrashedPaginated(int $perPage = 20): LengthAwarePaginator
     {
         $query = $this->model->onlyTrashed()->with(['mostRecentReply', 'mostRecentReply.author', 'tags']);
 
-        if ( Gate::denies('threads.show-internal'))
-        {
-            $query = $query->public();
-        }
-
-        if (Gate::denies('threads.show-private'))
-            $query = $query->where('private', '=', 0);
+        $query = $this->restrictAccess($query);
 
         $query = $this->addUserIfVisited($query);
 
