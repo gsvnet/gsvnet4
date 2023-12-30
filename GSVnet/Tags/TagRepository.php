@@ -37,9 +37,16 @@ class TagRepository extends EloquentRepository
         return $this->model->whereIn('id', $ids)->get();
     }
 
+    /**
+     * Same as `Tag::all()`.
+     * 
+     * The GSVnet 3 database allowed forum- and article-specific tags, which is now deprecated. This function is kept for legacy reasons.
+     * 
+     * @return Collection
+     */
     public function getAllForForum()
     {
-        return $this->model->where('forum', '=', 1)->get();
+        return $this->model->all();
     }
 
     public function getAllForArticles()

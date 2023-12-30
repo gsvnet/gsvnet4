@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StartThreadRequest;
+use App\Http\Requests\UpdateThreadRequest;
+use App\Jobs\DeleteThread;
 use App\Jobs\StartThread;
+use App\Jobs\UpdateThread;
 use App\Jobs\VisitThread;
+use App\Models\Thread;
 use GSVnet\Events\EventsRepository;
 use GSVnet\Forum\Replies\ReplyRepository;
 use GSVnet\Forum\Threads\ThreadRepository;
+use GSVnet\Forum\Threads\ThreadSearch;
 use GSVnet\Forum\Threads\ThreadSlug;
 use GSVnet\Forum\VisibilityLevel;
 use GSVnet\Permissions\NoPermissionException;
@@ -28,6 +33,7 @@ class ThreadController extends Controller
         private ReplyRepository $replies,
         private TagRepository $tags,
         private UsersRepository $users,
+        private ThreadSearch $threadSearch,
         EventsRepository $events
     ) {
         // Make upcoming events available to all views returned by this controller.
@@ -58,12 +64,26 @@ class ThreadController extends Controller
     {
         $tags = $this->tags->getAllForForum();
 
-        if( Auth::check() ) {
-           if (Auth::user()->approved)
-               $author = Auth::user();
-        }
+        if( Auth::check() && Auth::user()->approved ) 
+            $author = Auth::user();
 
         return view('forum.threads.create', compact('tags', 'author'));
+    }
+
+    /**
+     * Return the visibility level unaltered if the user can view it, or the most restrictive alternative.
+     */
+    private function getAllowedVisibility(VisibilityLevel $visibility): VisibilityLevel
+    {
+        // No access to private? Bump visibility to internal.
+        if ($visibility == VisibilityLevel::PRIVATE && Gate::denies('threads.show-private'))
+            $visibility = VisibilityLevel::INTERNAL;
+
+        // No access to internal? Bump visibility to public.
+        if ($visibility == VisibilityLevel::INTERNAL && Gate::denies('threads.show-internal'))
+            $visibility = VisibilityLevel::PUBLIC;
+
+        return $visibility;
     }
 
     /**
@@ -75,10 +95,7 @@ class ThreadController extends Controller
         $slug = ThreadSlug::generate($subject);
         $visibility = $request->enum('visibility', VisibilityLevel::class);
 
-        if ($visibility != VisibilityLevel::PUBLIC && Gate::denies('threads.show-internal'))
-            $visibility = VisibilityLevel::PUBLIC;
-        elseif ($visibility == VisibilityLevel::PRIVATE && Gate::denies('threads.show-private'))
-            $visibility = VisibilityLevel::INTERNAL;
+        $visibility = $this->getAllowedVisibility($visibility);
 
         // Create thread and save the body as its first reply
         StartThread::dispatch(
@@ -103,10 +120,10 @@ class ThreadController extends Controller
         if ( ! $thread)
             return redirect()->action([ThreadController::class, 'getIndex']);
 
-        if ( ! $thread->visibility == VisibilityLevel::PUBLIC && Gate::denies('threads.show-internal'))
+        if ($thread->visibility == VisibilityLevel::PRIVATE && Gate::denies('threads.show-private'))
             throw new NoPermissionException;
 
-        if ($thread->visibility == VisibilityLevel::PRIVATE && Gate::denies('threads.show-private'))
+        if ($thread->visibility == VisibilityLevel::INTERNAL && Gate::denies('threads.show-internal'))
             throw new NoPermissionException;
 
         $replies = $this->threads->getThreadRepliesPaginated($thread, $this->repliesPerPage);
@@ -130,24 +147,100 @@ class ThreadController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Thread $thread)
     {
-        //
+        $this->authorize('thread.manage', $thread);
+
+        $author = $thread->author;
+
+        $tags = $this->tags->getAllForForum();
+
+        $visibility = $thread->visibility;
+
+        return view('forum.threads.edit', compact('thread', 'tags', 'author', 'visibility'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateThreadRequest $request, Thread $thread)
     {
-        //
+        $visibility = $request->enum('visibility', VisibilityLevel::class);
+
+        $visibility = $this->getAllowedVisibility($visibility);
+
+        UpdateThread::dispatch(
+            $thread,
+            $request->get('subject'),
+            $this->tags->getTagsByIds($request->get('tags')),
+            $visibility
+        );
+
+        return redirect()->action([ThreadController::class, 'show'], [$thread->slug]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Thread $thread)
     {
-        //
+        $this->authorize('thread.manage', $thread);
+
+        DeleteThread::dispatch($thread);
+
+        return redirect()->action([ThreadController::class, 'index']);
+    }
+
+    /**
+     * Show all threads that match a search query.
+     */
+    public function getSearch(Request $request)
+    {
+        // Search string
+        $query = $request->input('query');
+
+        // Include replies? Boolean
+        $replies = $request->input('replies');
+        
+        $results = $this->threadSearch->searchPaginated($query, $replies, $this->threadsPerPage);
+        $results->appends(['query' => $query]);
+
+        return view('forum.search', compact('query', 'results'));
+    }
+
+    /**
+     * Get forum user statistics.
+     */
+    public function statistics()
+    {
+        $perMonthUsers = $this->users->mostPostsPreviousMonth();
+        $perWeekUsers = $this->users->mostPostsPreviousWeek();
+        $allTimeUsers = $this->users->mostPostsAllTime();
+        $allTimeUser = $this->users->postsAllTimeUser(Auth::user()->id);
+        $allTimeUserRank = $this->users->postsAllTimeUserRank($allTimeUser);
+        $likesGiven = $this->threads->totalLikesGivenPerYearGroup();
+        $likesReceived = $this->threads->totalLikesReceivedPerYearGroup();
+
+        return view('forum.stats', compact(
+            'perMonthUsers',
+            'perWeekUsers',
+            'allTimeUsers',
+            'likesGiven',
+            'likesReceived',
+            'allTimeUser',
+            'allTimeUserRank'
+        ));
+    }
+
+    /**
+     * Display a listing of soft-deleted threads.
+     */
+    public function indexTrashed()
+    {
+        $this->authorize('thread.manage');
+
+        $threads = $this->threads->getTrashedPaginated();
+
+        return view('forum.threads.thrashed', compact('threads'));
     }
 }
