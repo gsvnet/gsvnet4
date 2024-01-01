@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Forum;
 
 use App\Models\Reply;
 use App\Models\Thread;

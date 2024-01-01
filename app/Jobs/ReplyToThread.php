@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Events\ThreadWasRepliedTo;
+use App\Events\Forum\ThreadWasRepliedTo;
 use GSVnet\Forum\Replies\ReplyRepository;
 use GSVnet\Forum\Threads\ThreadRepository;
 use Illuminate\Bus\Queueable;
