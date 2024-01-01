@@ -19,6 +19,24 @@ class ReplyRepository extends EloquentRepository
         $reply->likers()->save($user);
     }
 
+    /**
+     * Remove `$user` as a liker of `$reply`.
+     */
+    public function dislike(User $user, Reply $reply) 
+    {
+        $reply->likers()->where('user_id', $user->id)->delete();
+    }
+
+    /**
+     * Check whether the user likes the reply.
+     */
+    public function userLikesReply(User $user, Reply $reply): bool {
+        // 0 or 1
+        $count = $reply->likers()->where('user_id', $user->id)->count();
+        
+        return $count == 1;
+    }
+
     public function incrementLikeCount($replyId)
     {
         $this->model->where('id', $replyId)->increment('like_count');

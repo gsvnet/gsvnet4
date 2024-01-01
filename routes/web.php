@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\MemberController;
+use App\Http\Controllers\ForumApiController;
+use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\ThreadController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -126,11 +129,55 @@ Route::prefix('admin')->group(function() {
         });
 });
 
+// Forum routes that require authentication
 Route::prefix('forum')
     ->middleware(['auth', 'approved'])
     ->group(function() {
-        // TODO: Add all forum routes
+        Route::controller(ThreadController::class)
+            ->group(function() {
+                // Create
+                Route::get('nieuw-onderwerp',  'create');
+                Route::post('nieuw-onderwerp', 'store');
+
+                // Edit
+                Route::get('bewerk-onderwerp/{thread}',  'edit');
+                Route::post('bewerk-onderwerp/{thread}', 'update');
+
+                // Destroy
+                Route::delete('verwijder-onderwerp/{thread}', 'destroy');
+                
+                Route::get('prullenbak', 'indexTrashed');
+
+                Route::get('stats', 'statistics');
+            });
+        
+        Route::controller(ReplyController::class)
+            ->group(function() {
+                // Create
+                Route::post('{slug}', 'store');
+
+                // Edit
+                Route::get('bewerk-reactie/{reply}',  'edit');
+                Route::post('bewerk-reactie/{reply}', 'update');
+
+                // Destroy
+                Route::delete('verwijder-reactie/{reply}', 'destroy');
+            });
+
+        // Quotes
+        Route::get('quote/{reply}', [ForumApiController::class, 'quoteReply']);
+
+        // Likes
+        Route::post('replies/{reply}/like', [ForumApiController::class, 'likeReply']);
+        Route::delete('replies/{reply}/like', [ForumApiController::class, 'dislikeReply']);
     });
 
+// Preview of converted markdown 
+Route::get('preview', ['middleware' => 'auth', 'uses' => 'ForumApiController@preview']);
+
+// Forum index, search, show comment, show thread
+Route::get('forum',      [ThreadController::class, 'index']);
+Route::get('forum/zoek', [ThreadController::class, 'getSearch']);
+Route::get('forum/{slug}', [ThreadController::class, 'show']);
 
 require __DIR__.'/auth.php';

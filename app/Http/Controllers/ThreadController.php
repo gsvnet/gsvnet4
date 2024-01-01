@@ -120,11 +120,7 @@ class ThreadController extends Controller
         if ( ! $thread)
             return redirect()->action([ThreadController::class, 'getIndex']);
 
-        if ($thread->visibility == VisibilityLevel::PRIVATE && Gate::denies('threads.show-private'))
-            throw new NoPermissionException;
-
-        if ($thread->visibility == VisibilityLevel::INTERNAL && Gate::denies('threads.show-internal'))
-            throw new NoPermissionException;
+        $thread->requireAccess();
 
         $replies = $this->threads->getThreadRepliesPaginated($thread, $this->repliesPerPage);
 
