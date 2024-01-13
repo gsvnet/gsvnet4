@@ -2,20 +2,24 @@
 
 namespace App\Models;
 
+use GSVnet\Files\FilePresenter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File as F;
+use Laracasts\Presenter\PresentableTrait;
 
 // TODO: Make event listener that deletes associated file on disk when model instance is deleted
 
 class File extends Model
 {
-    use HasFactory;
+    use HasFactory, PresentableTrait;
 
     protected $fillable = ['name', 'file_path', 'published'];
+
+    protected $presenter = FilePresenter::class;
 
     protected $appends = ['size', 'type'];
 

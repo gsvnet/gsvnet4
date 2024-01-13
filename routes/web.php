@@ -73,61 +73,86 @@ Route::middleware('auth')->group(function () {
     Route::get('senaten/{id}', [AboutController::class, 'showSenate']);
 });
 
+/**
+ * TODO:
+ * - EventController
+ * - FilesController
+ * - MemberController (not to be confused with Admin\MemberController)
+ * - ApiController
+ * - PublicFilesController
+ * - Admin\EventController
+ * - Admin\FilesController
+ * - Admin\CommitteeController
+ * - Admin\FamilyController
+ * - Admin\SenateController
+ * - Admin\Committees\MembersController
+ * - Admin\Senates\MembersController
+ * - Perhaps move forum controller to their own subdirectory
+ */
 
-Route::prefix('admin')->group(function() {
-    Route::get('/', [AdminController::class, 'index']);
-    Route::get('/ik', [AdminController::class, 'redirectToMyProfile']);
+Route::prefix('admin')
+    ->middleware(['auth', 'can:member-or-reunist'])
+    ->group(function() {
+        Route::get('/', [AdminController::class, 'index']);
+        Route::get('/ik', [AdminController::class, 'redirectToMyProfile']);
 
-    // Users
-    Route::resource('users', UsersController::class);
+        // Users
+        Route::resource('users', UsersController::class);
 
-    // Exporting data to Excel
-    Route::get('leden/leden.csv', [UsersController::class, 'exportMembers']);
+        Route::prefix('leden')->group(function() {
+            // Exporting data to Excel
+            Route::get('leden.csv', [UsersController::class, 'exportMembers']);
+            Route::get('sic-ontvangers.xlsx', [MemberController::class, 'exportNewspaperRecipients']);
 
-    Route::prefix('leden/{user}')
-        ->controller(MemberController::class)
-        ->group(function() {
-            // Each part of the profile
-            Route::get('contact',       'editContactDetails');
-            Route::put('contact',       'updateContactDetails');
-            Route::get('email',         'editEmail');
-            Route::put('email',         'updateEmail');
-            Route::get('wachtwoord',    'editPassword');
-            Route::put('wachtwoord',    'updatePassword');
-            Route::get('geboortedatum', 'editBirthDay');
-            Route::put('geboortedatum', 'updateBirthDay');
-            Route::get('geslacht',      'editGender');
-            Route::put('geslacht',      'updateGender');
-            Route::get('jaarverband',   'editYearGroup');
-            Route::put('jaarverband',   'updateYearGroup');
-            Route::get('naam',          'editName');
-            Route::put('naam',          'updateName');
-            Route::get('gebruikersnaam','editUsername');
-            Route::put('gebruikersnaam','updateUsername');
-            Route::get('werk',          'editBusiness');
-            Route::put('werk',          'updateBusiness');
-            Route::get('foto',          'editPhoto');
-            Route::put('foto',          'updatePhoto');
-            Route::get('ouders',        'editParentContactDetails');
-            Route::put('ouders',        'updateParentContactDetails');
-            Route::get('studie',        'editStudy');
-            Route::put('studie',        'updateStudy');
-            Route::get('regio',         'editRegion');
-            Route::put('regio',         'updateRegion');
-            Route::get('tijd-van-lidmaatschap', 'editMembershipPeriod');
-            Route::put('tijd-van-lidmaatschap', 'updateMembershipPeriod');
-            Route::get('in-leven',      'editAlive');
-            Route::put('in-leven',      'updateAlive');
-            Route::get('sic-ontvangen', 'editNewspaper');
-            Route::put('sic-ontvangen', 'updateNewspaper');
+            Route::prefix('{user}')
+                ->controller(MemberController::class)
+                ->group(function() {
+                    // Each part of the profile
+                    Route::get('contact',       'editContactDetails');
+                    Route::put('contact',       'updateContactDetails');
+                    Route::get('email',         'editEmail');
+                    Route::put('email',         'updateEmail');
+                    Route::get('wachtwoord',    'editPassword');
+                    Route::put('wachtwoord',    'updatePassword');
+                    Route::get('geboortedatum', 'editBirthDay');
+                    Route::put('geboortedatum', 'updateBirthDay');
+                    Route::get('geslacht',      'editGender');
+                    Route::put('geslacht',      'updateGender');
+                    Route::get('jaarverband',   'editYearGroup');
+                    Route::put('jaarverband',   'updateYearGroup');
+                    Route::get('naam',          'editName');
+                    Route::put('naam',          'updateName');
+                    Route::get('gebruikersnaam','editUsername');
+                    Route::put('gebruikersnaam','updateUsername');
+                    Route::get('werk',          'editBusiness');
+                    Route::put('werk',          'updateBusiness');
+                    Route::get('foto',          'editPhoto');
+                    Route::put('foto',          'updatePhoto');
+                    Route::get('ouders',        'editParentContactDetails');
+                    Route::put('ouders',        'updateParentContactDetails');
+                    Route::get('studie',        'editStudy');
+                    Route::put('studie',        'updateStudy');
+                    Route::get('regio',         'editRegion');
+                    Route::put('regio',         'updateRegion');
+                    Route::get('tijd-van-lidmaatschap', 'editMembershipPeriod');
+                    Route::put('tijd-van-lidmaatschap', 'updateMembershipPeriod');
+                    Route::get('in-leven',      'editAlive');
+                    Route::put('in-leven',      'updateAlive');
+                    Route::get('sic-ontvangen', 'editNewspaper');
+                    Route::put('sic-ontvangen', 'updateNewspaper');
+
+                    // Change membership status
+                    Route::get('lidmaatschap',               'editMembershipStatus');
+                    Route::post('lidmaatschap/maak-reunist', 'makeReunist');
+                    Route::post('lidmaatschap/maak-oud-lid', 'makeExMember');
+                    Route::post('lidmaatschap/maak-lid',     'makeMember');
+
+                    // Deleting user data according to GDPR rules
+                    Route::get('forget',  'setForget');
+                    Route::post('forget', 'forget');
+                });
         });
-
-    Route::prefix('leden')
-        ->controller(MemberController::class)
-        ->group(function() {
-            Route::get('sic-ontvangers.xlsx', 'exportNewspaperRecipients');
-        });
-});
+    });
 
 // Forum routes that require authentication
 Route::prefix('forum')
