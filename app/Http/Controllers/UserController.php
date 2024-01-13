@@ -13,7 +13,7 @@ use GSVnet\Users\UsersRepository;
 use GSVnet\Committees\CommitteesRepository;
 use GSVnet\Regions\RegionsRepository;
 use GSVnet\Users\YearGroupRepository;
-use GSVnet\Users\ProfilesRepository;
+use GSVnet\Users\Profiles\ProfilesRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
 
