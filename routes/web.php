@@ -75,19 +75,21 @@ Route::middleware('auth')->group(function () {
 
 /**
  * TODO:
- * - EventController
- * - FilesController
  * - MemberController (not to be confused with Admin\MemberController)
  * - ApiController
  * - PublicFilesController
  * - Admin\EventController
- * - Admin\FilesController
  * - Admin\CommitteeController
  * - Admin\FamilyController
  * - Admin\SenateController
  * - Admin\Committees\MembersController
  * - Admin\Senates\MembersController
- * - Perhaps move forum controller to their own subdirectory
+ * - Perhaps move forum controllers to their own subdirectory
+ * 
+ * DONE:
+ * - EventController
+ * - FilesController
+ * - Admin\FilesController
  */
 
 Route::prefix('admin')

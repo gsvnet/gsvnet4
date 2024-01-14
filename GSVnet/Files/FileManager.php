@@ -35,17 +35,16 @@ class FileManager
     /**
      * Update File model and optionally update file on disk.
      *
-     * @param mixed $id
+     * @param File $file
      * @param array $input
      * @return File
      */
-    public function update($id, array $input)
+    public function update(File $file, array $input)
     {
         // Optionally update the file's file
         if (isset($input['file']))
         {
             // Delete the old file file and store the new one
-            $file = $this->files->byId($id);
             $this->fileHandler->destroy($file->file_path);
             // Store the file file and get its new path
             $this->uploadFile($input);
@@ -53,17 +52,17 @@ class FileManager
             $this->nameFile($input);
         }
         // Save the file to the database
-        return $this->files->update($id, $input);
+        return $this->files->update($file->id, $input);
     }
 
     /**
-     * Delete File model from database and destroy file from disk.
+     * Delete File model from database and destroy file on disk.
      * 
-     * @param mixed $id
+     * @param File $file
      */
-    public function destroy(mixed $id)
+    public function destroy(File $file)
     {
-        $file = $this->files->delete($id);
+        $this->files->delete($file->id);
         // Delete file files
         $this->fileHandler->destroy($file->file_path);
 

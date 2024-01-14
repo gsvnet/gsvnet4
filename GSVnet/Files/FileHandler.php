@@ -100,8 +100,23 @@ class FileHandler
         return $this->disk->size($this->prependBasePath($path));
     }
 
+    /**
+     * Get extension of file at `$path`. May fail if file is not on local disk.
+     */
     public function extension(string $path)
     {
         return F::extension($this->prependBasePath($path));
+    }
+
+    /**
+     * Download file at `$path`.
+     * 
+     * @param string $path Path to file on disk, including disk file name. Does not need to have `$this->basePath` prepended to it.
+     * @param string $name File name as seen by the user.
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function download(string $path, string $name)
+    {
+        return $this->disk->download($this->prependBasePath($path), $name);
     }
 }
