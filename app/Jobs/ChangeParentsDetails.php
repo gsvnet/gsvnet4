@@ -21,20 +21,30 @@ class ChangeParentsDetails extends ChangeProfileDetail
         private Email $email
     ) {}
 
-    static function dispatchFromForm(User $member, Request $request): PendingDispatch 
+    static function dispatchFromArray(User $member, User $manager, array $data): PendingDispatch 
     {
         $address = new Address(
-            $request->input("parent_address"),
-            $request->input("parent_zip_code"),
-            $request->input("parent_town")
+            $data["parent_address"],
+            $data["parent_zip_code"],
+            $data["parent_town"]
         );
 
-        $phone = new PhoneNumber($request->input("parent_phone"));
+        $phone = new PhoneNumber($data["parent_phone"]);
 
-        $email = new Email($request->input("email"));
+        $email = new Email($data["parent_email"]);
 
         return new PendingDispatch(
-            new static($member, $request->user(), $address, $phone, $email));
+            new static($member, $manager, $address, $phone, $email));
+    }
+
+    static function dispatchFromForm(User $member, Request $request): PendingDispatch 
+    {
+        $data = $request->only([
+            "parent_address", "parent_zip_code", "parent_town",
+            "parent_phone", "parent_email"
+        ]);
+
+        return self::dispatchFromArray($member, $request->user(), $data);
     }
 
     /**

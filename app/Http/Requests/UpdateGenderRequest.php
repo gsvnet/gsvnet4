@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use GSVnet\Core\Enums\GenderEnum;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rule;
 
 class UpdateGenderRequest extends FormRequest
 {
@@ -26,7 +26,7 @@ class UpdateGenderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'gender' => [new Enum(GenderEnum::class)]
+            'gender' => [Rule::enum(GenderEnum::class)]
         ];
     }
 }

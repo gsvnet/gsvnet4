@@ -84,6 +84,8 @@ class UserEventSubscriber
     ];
 
     // TODO: Test all of these couplings
+    // TODO: Double check that the stray events like 'user.registered' in GSVnet3 
+    // were not fired from outside the application
 
     public function subscribe(Dispatcher $events)
     {
