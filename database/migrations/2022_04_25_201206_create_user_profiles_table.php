@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
             $table->unsignedBigInteger('year_group_id')->nullable();
-            $table->string('initials');
+            $table->string('initials')->nullable();
             $table->string('photo_path')->nullable();
 
             $table->string('phone');
