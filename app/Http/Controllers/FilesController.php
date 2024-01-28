@@ -38,8 +38,7 @@ class FilesController extends Controller
         $labels = $this->labels->all();
 
         return view('files.index')
-            ->withFiles($files)
-            ->withLabels($labels);
+            ->with(compact('files', 'labels'));
     }
 
     /**

@@ -58,7 +58,7 @@ class UsersRepository extends BaseRepository
             ->get();
     }
 
-    public function byType($type)
+    public function byType(UserTypeEnum $type): Collection
     {
         return User::where('type', $type)
             ->orderBy('lastname', 'ASC')
