@@ -11,7 +11,13 @@ class ShowPhotoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        // Whether request profile equals user profile
+        $isUserProfile = $user->profile->id == $this->profile->id;
+        
+        return $user->can('photos.show-private') 
+            && ($isUserProfile || $user->can('users.show'));
     }
 
     /**
