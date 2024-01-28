@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePotentialRequest;
 use App\Jobs\StorePotential;
+use App\Models\UserProfile;
 use GSVnet\Core\ImageHandler;
 use GSVnet\Users\Profiles\ProfilesRepository;
 use Illuminate\Http\Request;
@@ -86,31 +87,10 @@ class MemberController extends Controller
     }
 
     // Show original (resized) photo
-    public function showPhoto(Request $request, $profile_id, $type = '')
+    public function showPhoto(Request $request, UserProfile $profile, string $type = '')
     {
-        $this->authorize('photos.show-private');
+        $path = $this->imageHandler->getAbsolutePath($profile->photo_path, $type);
 
-        // Guests and Potentials are not allowed to see private photos
-        // but a potential can see his / her own photo
-        if ($request->user()->profile->id != $profile_id && Gate::denies('users.show')) {
-            throw new NoPermissionException;
-        }
-        return $this->photoResponse($profile_id, $type);
-    }
-
-    /**
-     *
-     *   Returns an image response
-     *
-     * @param int $id
-     * @param string $type
-     */
-    private function photoResponse($id, $type = '')
-    {
-        $profile = $this->profiles->byId($id);
-        $path = $this->imageHandler->getStoragePath($profile->photo_path, $type);
-        $name = $profile->user->present()->fullName;
-
-        return response()->inlinePhoto($path, $name);
+        return response()->file($path);
     }
 }
