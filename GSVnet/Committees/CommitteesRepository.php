@@ -86,7 +86,7 @@ class CommitteesRepository
     * Delete committee.
     *
     * @param int $id
-    * @return Committee
+    * @return void
     */
     public function delete($id)
     {
@@ -96,7 +96,5 @@ class CommitteesRepository
         $committee->members()->detach();
 
         $committee->delete();
-
-        return $committee;
     }
 }
