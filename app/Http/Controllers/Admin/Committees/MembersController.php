@@ -10,7 +10,7 @@ use App\Models\Committee;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class MemberController extends Controller
+class MembersController extends Controller
 {
     public function __construct() {
         $this->authorize('committees.manage');

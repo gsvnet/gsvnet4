@@ -18,7 +18,8 @@ class Committee extends Model
 
     public function members(): BelongsToMany {
         return $this->belongsToMany(User::class)
-            ->withPivot('id', 'start_date', 'end_date');
+            ->withPivot('id', 'start_date', 'end_date')
+            ->using(CommitteeMembership::class);
     }
 
     public function users(): BelongsToMany {

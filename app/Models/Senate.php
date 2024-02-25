@@ -14,6 +14,9 @@ class Senate extends Model
 
     public function members(): BelongsToMany {
         return $this->belongsToMany(User::class)
-            ->withPivot('function')->orderBy('function', 'ASC');
+            ->withPivot('function')
+            ->orderBy('function', 'ASC')
+            ->withTimestamps()
+            ->using(SenateMembership::class);
     }
 }
