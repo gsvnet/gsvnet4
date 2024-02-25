@@ -1,6 +1,13 @@
 <?php
 
+use Admin\FilesController;
+use App\Http\Controllers\Admin\CommitteeController;
+use App\Http\Controllers\Admin\Committees\MembersController as CommitteeMembersController;
+use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\FamilyController;
 use App\Http\Controllers\Admin\MemberController;
+use App\Http\Controllers\Admin\SenateController;
+use App\Http\Controllers\Admin\Senates\MembersController as SenateMembersController;
 use App\Http\Controllers\ForumApiController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
@@ -75,7 +82,6 @@ Route::middleware('auth')->group(function () {
 
 /**
  * TODO:
- * - Admin\Senates\MembersController
  * - Perhaps move forum controllers to their own subdirectory
  * 
  * DONE:
@@ -90,6 +96,7 @@ Route::middleware('auth')->group(function () {
  * - Admin\FamilyController
  * - Admin\SenateController
  * - Admin\Committees\MembersController
+ * - Admin\Senates\MembersController
  */
 
 Route::prefix('admin')
@@ -98,13 +105,53 @@ Route::prefix('admin')
         Route::get('/', [AdminController::class, 'index']);
         Route::get('/ik', [AdminController::class, 'redirectToMyProfile']);
 
+        // Events
+        Route::resource('events', EventController::class);
+
+        // Files
+        Route::resource('files', FilesController::class)->except(['create']);
+
+        // Committees
+        Route::resource('committees', CommitteeController::class)->except(['create']);
+        // Manages memberships
+        Route::resource('committees.members', CommitteeMembersController::class)
+            ->except(['index', 'create', 'show']);
+
+        // Senates
+        Route::resource('senates', SenateController::class)->except(['create']);
+        // Manages memberships
+        Route::resource('senates.members', SenateMembersController::class)
+            ->only(['store', 'destroy']);
+
+        // Family
+        Route::get('family/{user}', [FamilyController::class, 'show']);
+        Route::post('family/{user}', [FamilyController::class, 'store']);
+
         // Users
         Route::resource('users', UsersController::class);
+
+        Route::prefix('gebruikers')
+            ->controller(UsersController::class)
+            ->group(function() {
+                Route::post('{user}/activeren',      'activate');
+                Route::post('{user}/accepteer-lid',  'accept');
+                Route::post('{user}/profiel/create', 'storeProfile');
+                Route::put('{user}/profiel',         'updateProfile');
+                Route::delete('{user}/profiel',      'destroyProfile');
+        
+                Route::get('gasten',     'showGuests');
+                Route::get('novieten',   'showPotentials');
+                Route::get('leden',      'showMembers');
+                Route::get('oud-leden',  'showFormerMembers');
+            });
 
         Route::prefix('leden')->group(function() {
             // Exporting data to Excel
             Route::get('leden.csv', [UsersController::class, 'exportMembers']);
             Route::get('sic-ontvangers.xlsx', [MemberController::class, 'exportNewspaperRecipients']);
+
+            // List of profile modifications
+            Route::get('updates', [MemberController::class, 'latestUpdates']);
 
             Route::prefix('{user}')
                 ->controller(MemberController::class)

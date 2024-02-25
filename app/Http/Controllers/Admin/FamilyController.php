@@ -14,12 +14,17 @@ class FamilyController extends Controller
         $this->authorize('users.manage');
     }
 
-    public function index(User $user)
+    /**
+     * Show family of `$user`. 
+     * 
+     * This method was called `index` in GSVnet 3.
+     */
+    public function show(User $user)
     {
         $children = $user->children;
         $parent = $user->parents->first();
 
-        return view('admin.family.index')->with('user', $user)
+        return view('admin.family.show')->with('user', $user)
             ->with('children', $children)
             ->with('parent', $parent);
     }
