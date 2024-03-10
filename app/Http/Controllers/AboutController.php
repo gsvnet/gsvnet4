@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Senate;
 use GSVnet\Committees\CommitteesRepository;
 use GSVnet\Senates\SenatesRepository;
 
@@ -11,7 +12,7 @@ class AboutController extends Controller
     public function __construct(
         CommitteesRepository $committees,
         SenatesRepository $senates
-        ) {
+    ) {
         $this->committees = $committees;
         $this->senates = $senates;
     }
@@ -28,9 +29,8 @@ class AboutController extends Controller
     public function showCommittee($slug)
     {
         $committee = $this->committees->bySlug($slug);
-        $activeMembers = $committee->activeMembers()->get();
-        $previousMembers = $committee->previousMembersTwoYear()->get();
-
+        $activeMembers = $committee->activeMembers;
+        $previousMembers = $committee->previousMembersTwoYear;
 
         return view('committees.show', [
             'committee' => $committee,
@@ -48,10 +48,9 @@ class AboutController extends Controller
         ]);
     }
 
-    public function showSenate($id)
+    public function showSenate(Senate $senate)
     {
-        $senate = $this->senates->byId($id);
-        $members = $senate->members()->get();
+        $members = $senate->members;
         $allSenates = $this->senates->all();
 
         return view('senates.show', [
@@ -59,5 +58,30 @@ class AboutController extends Controller
             'senates' => $allSenates,
             'members' => $members
         ]);
+    }
+
+    public function showFormerMembers()
+    {
+        return view('de-gsv.former-members');
+    }
+
+    public function showConfidants()
+    {
+        return view('de-gsv.confidants');
+    }
+
+    public function showContact()
+    {
+        return view('de-gsv.contact');
+    }
+
+    public function showPillars()
+    {
+        return view('de-gsv.pillars');
+    }
+
+    public function showHistory()
+    {
+        return view('de-gsv.history');
     }
 }

@@ -22,12 +22,12 @@ class CommitteesRepository
      * @param int $id
      * @return Committee
      */
-    public function byId($id)
+    public function byId($id): Committee
     {
         return Committee::findOrFail($id);
     }
 
-    public function bySlug($slug)
+    public function bySlug($slug): Committee
     {
         return Committee::where('unique_name', '=', $slug)->firstOrFail();
     }

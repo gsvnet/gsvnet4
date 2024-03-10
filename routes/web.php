@@ -1,14 +1,18 @@
 <?php
 
-use Admin\FilesController;
+use Admin\FilesController as AdminFilesController;
 use App\Http\Controllers\Admin\CommitteeController;
 use App\Http\Controllers\Admin\Committees\MembersController as CommitteeMembersController;
-use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\FamilyController;
-use App\Http\Controllers\Admin\MemberController;
+use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\Admin\SenateController;
 use App\Http\Controllers\Admin\Senates\MembersController as SenateMembersController;
+use App\Http\Controllers\ApiController;
+use App\Http\Controllers\FilesController;
 use App\Http\Controllers\ForumApiController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\PublicFilesController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
 use App\Models\User;
@@ -25,79 +29,60 @@ use App\Http\Controllers\Admin\UsersController;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| By and large, there are five route groups:
+| - Auth: Allows access to things like GSVdocs and the jaarbundel.
+| - Word-lid: Handles potential sign-ups.
+| - Admin: Manage files, senates, user profiles, and more.
+| - Forum: Manage threads and replies.
+| - Miscellaneous: Some loose stuff.
 |
 */
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('dashboard');
     });
 
-        Route::get('/default-topic', function () {
-            return view('forum.index');
-        });
+    Route::get('/default-topic', function () {
+        return view('forum.index');
+    });
 
-        Route::prefix('intern')->group(function () {
-            Route::get('profiel', [UserController::class, 'showProfile'])
-                ->name('showProfile');
-            Route::get('profiel/bewerken', [UserController::class, 'editProfile']);
-            Route::post('profiel/bewerken', [UserController::class, 'updateProfile'])
-                ->name('updateProfile');
-    
-            Route::get('sponsorprogramma', [HomeController::class, 'sponsorProgram']);
-        });        
-
-        Route::get('jaarbundel', [UserController::class, 'showUsers']);
-        
-        Route::get('commissies', [AboutController::class, 'showCommittees']);
-        Route::get('commissies/{id}', [AboutController::class, 'showCommittee']);
-    
-        Route::get('senaten', [AboutController::class, 'showSenates']);
-        Route::get('senaten/{id}', [AboutController::class, 'showSenate']);
-  
     Route::prefix('intern')->group(function () {
+        // Profiles
         Route::get('profiel', [UserController::class, 'showProfile'])
             ->name('showProfile');
         Route::get('profiel/bewerken', [UserController::class, 'editProfile']);
         Route::post('profiel/bewerken', [UserController::class, 'updateProfile'])
             ->name('updateProfile');
 
+        // GSVdocs
+        Route::get('bestanden', [FilesController::class, 'index']);
+        Route::get('bestanden/{file}', [FilesController::class, 'show']);
+
+        // Ads
         Route::get('sponsorprogramma', [HomeController::class, 'sponsorProgram']);
     });
 
-
-
+    // TODO: Decide whether all this should be locked by auth or public
     Route::get('jaarbundel', [UserController::class, 'showUsers']);
+    Route::get('jaarbundel/{user}', [UserController::class, 'showUser']);
     
     Route::get('commissies', [AboutController::class, 'showCommittees']);
     Route::get('commissies/{id}', [AboutController::class, 'showCommittee']);
 
     Route::get('senaten', [AboutController::class, 'showSenates']);
-    Route::get('senaten/{id}', [AboutController::class, 'showSenate']);
+    Route::get('senaten/{senate}', [AboutController::class, 'showSenate']);
+
+    Route::get('gebruikers/{profile}/{type?}', [MemberController::class, 'showPhoto']);
 });
 
-/**
- * TODO:
- * - Perhaps move forum controllers to their own subdirectory
- * 
- * DONE:
- * - MemberController (not to be confused with Admin\MemberController)
- * - ApiController
- * - EventController
- * - PublicFilesController
- * - FilesController
- * - Admin\FilesController
- * - Admin\EventController
- * - Admin\CommitteeController
- * - Admin\FamilyController
- * - Admin\SenateController
- * - Admin\Committees\MembersController
- * - Admin\Senates\MembersController
- */
+Route::prefix('word-lid')
+    ->controller(MemberController::class)
+    ->group(function() {
+        Route::get('/',             'index');
+        Route::get('inschrijven',   'becomeMember');
+        Route::post('inschrijven',  'store');
+    });
 
 Route::prefix('admin')
     ->middleware(['auth', 'can:member-or-reunist'])
@@ -106,10 +91,10 @@ Route::prefix('admin')
         Route::get('/ik', [AdminController::class, 'redirectToMyProfile']);
 
         // Events
-        Route::resource('events', EventController::class);
+        Route::resource('events', AdminEventController::class);
 
         // Files
-        Route::resource('files', FilesController::class)->except(['create']);
+        Route::resource('files', AdminFilesController::class)->except(['create']);
 
         // Committees
         Route::resource('committees', CommitteeController::class)->except(['create']);
@@ -253,5 +238,14 @@ Route::get('preview', ['middleware' => 'auth', 'uses' => 'ForumApiController@pre
 Route::get('forum',      [ThreadController::class, 'index']);
 Route::get('forum/zoek', [ThreadController::class, 'getSearch']);
 Route::get('forum/{slug}', [ThreadController::class, 'show']);
+
+// Public API, for instance for gsvgroningen.nl
+Route::prefix('api')
+    ->middleware('cors')
+    ->group(function() {
+        Route::get('events', [ApiController::class, 'events']);
+    });
+
+Route::get('privacy-statement', [PublicFilesController::class, 'showPrivacyStatement']);
 
 require __DIR__.'/auth.php';

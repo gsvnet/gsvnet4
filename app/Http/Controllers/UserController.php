@@ -1,21 +1,16 @@
 <?php namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdatePartialProfileRequest;
+use GSVnet\Core\Enums\UserTypeEnum;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Auth;
-use App\Commands\Users\ChangeEmail;
-use App\Handlers\Users\ChangeEmailHandler;
-use App\Commands\Users\ChangePassword;
-use App\Handlers\Users\ChangePasswordHandler;
-
-
+use App\Jobs\ChangeEmail;
+use App\Jobs\ChangePassword;
 use GSVnet\Users\UsersRepository;
 use GSVnet\Committees\CommitteesRepository;
 use GSVnet\Regions\RegionsRepository;
 use GSVnet\Users\YearGroupRepository;
 use GSVnet\Users\Profiles\ProfilesRepository;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -40,20 +35,18 @@ class UserController extends Controller
     }
 
 
-    public function showProfile(Request $request)
+    public function showProfile(Request $request, User $user)
     {
-        $id = $request->user()->id;
-        $member = $this->users->byId($id);
-        $committees = $this->committees->byUserOrderByRecent($member);
-        $senates = $member->senates;
+        $committees = $this->committees->byUserOrderByRecent($user);
+        $senates = $user->senates;
 
         $formerRegions = [];
-        if($member->profile && $member->profile->regions) {
-            $formerRegions =  $member->profile->regions->intersect($this->regions->former());
+        if($user->profile && $user->profile->regions) {
+            $formerRegions =  $user->profile->regions->intersect($this->regions->former());
         }
 
         return view('users.user-profile', [
-            'user' => $member,
+            'user' => $user,
             'committees' => $committees,
             'senates' => $senates,
             'formerRegions' => $formerRegions
@@ -67,35 +60,22 @@ class UserController extends Controller
         ]);
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdatePartialProfileRequest $request)
     {
         $user = $request->user();
 
-        $data = $request->validate([
-            'email' => 'required|email:rfc,dns|unique:users,email,' . $user->id,
-            'password' => ['nullable', 'confirmed', Password::defaults()]
-        ], [
-            'password.confirmed' => 'Verschillende wachtwoorden ingevuld',
-            'email.required' => 'Email moet ingevuld zijn',
-            'email.email' => 'Email is geen geldig adres',
-            'email.unique' => 'Email is al in gebruik'
-        ]);
-        $data = $request->only('email', 'password', 'password_confirmation');
+        if ($user->email != $request->input('email'))
+            ChangeEmail::dispatchFromForm($user, $request);
 
-        if ($user->email != $data['email']) {
-            ChangeEmailHandler::dispatch($request->input('email'), $user, $user);
-        }
-
-        if (!empty($data['password'])) {
-            ChangePasswordHandler::dispatch($request->input('password'), $user);
-        }
+        if ($request->has('password'))
+            ChangePassword::dispatchFromForm($user, $request);
 
         return redirect()->route('showProfile');    
     }
 
     public function showUsers(Request $request) 
     {
-        $this->authorize('usersShow', User::class);
+        $this->authorize('users.show');
         $search = $request->input('naam', '');
         $regions = $this->regions->all();
         $oudLeden = $request->input('oudleden');
@@ -107,7 +87,7 @@ class UserController extends Controller
             $yearGroup = null;
 
         $perPage = 50;
-        $types = $oudLeden == '1' ? [User::MEMBER, User::REUNIST, User::EXMEMBER] : User::MEMBER;
+        $types = $oudLeden == '1' ? [UserTypeEnum::MEMBER, UserTypeEnum::REUNIST, UserTypeEnum::EXMEMBER] : UserTypeEnum::MEMBER;
         $members = $this->profiles->searchAndPaginate($search, $region, $yearGroup, $types, $perPage);
 
         $yearGroups = $this->yearGroups->all();
