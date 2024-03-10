@@ -15,13 +15,12 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PublicFilesController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
-use App\Models\User;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
+use Illuminate\Support\Facades\Route;
 
 
 /*
@@ -133,13 +132,13 @@ Route::prefix('admin')
         Route::prefix('leden')->group(function() {
             // Exporting data to Excel
             Route::get('leden.csv', [UsersController::class, 'exportMembers']);
-            Route::get('sic-ontvangers.xlsx', [MemberController::class, 'exportNewspaperRecipients']);
+            Route::get('sic-ontvangers.xlsx', [AdminMemberController::class, 'exportNewspaperRecipients']);
 
             // List of profile modifications
-            Route::get('updates', [MemberController::class, 'latestUpdates']);
+            Route::get('updates', [AdminMemberController::class, 'latestUpdates']);
 
             Route::prefix('{user}')
-                ->controller(MemberController::class)
+                ->controller(AdminMemberController::class)
                 ->group(function() {
                     // Each part of the profile
                     Route::get('contact',       'editContactDetails');
