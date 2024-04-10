@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\File;
 
 class UpdatePhotoRequest extends FormRequest
 {
@@ -11,7 +12,9 @@ class UpdatePhotoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // Note that $this->user and $this->user() are different.
+        $member = $this->user;
+        return $this->user()->can('user.manage.photo', $member);
     }
 
     /**
@@ -22,7 +25,7 @@ class UpdatePhotoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'photo_path' => ['required', File::image()]
         ];
     }
 }

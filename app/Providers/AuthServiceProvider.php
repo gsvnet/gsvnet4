@@ -19,7 +19,7 @@ class AuthServiceProvider extends ServiceProvider
         // User::class => UserPolicy::class // Disabled for now
     ];
 
-    protected $permissions;
+    protected array $permissions;
 
     /**
      * @var PermissionCache $cache

@@ -48,6 +48,17 @@ class UserFactory extends Factory
         });
     }
 
+    public function memberReunistType(): UserFactory {
+        return $this->state(function (array $attributes) {
+            return [
+                'type' => $this->faker->randomElement([
+                    UserTypeEnum::MEMBER,
+                    UserTypeEnum::REUNIST
+                ])
+            ];
+        });
+    }
+
     public function profileType(): UserFactory {
         return $this->state(function (array $attributes) {
             return [

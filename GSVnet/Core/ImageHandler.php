@@ -24,7 +24,8 @@ class ImageHandler
         string $basePath = '',
         FilesystemAdapter $disk = null
     ) {
-        $this->basePath = $basePath;
+        // Don't need leading forward slashes
+        $this->basePath = preg_replace('#^/#', '', $basePath);
         // Can't set this statically, that's why it's not a default argument
         $this->disk = is_null($disk) ? Storage::disk('local') : $disk;
     }
@@ -223,26 +224,25 @@ class ImageHandler
 
     /**
      * Destroy image specified by `$path` if it exists, along with all its derivatives.
-     * @param string $path
+     * @param string|null $path
      * @return void
      */
-    public function destroy(string $path): bool
+    public function destroy(string|null $path): void
     {
-        // Whether something has been deleted
-        $delFlag = false;
+        if (is_null($path))
+            return;
 
         foreach (config('images.dimensions') as $dimName => $dims) {
             $derivedPath = $this->getDerivedPath($path, $dimName);
 
             if ($this->disk->exists($derivedPath))
-                $delFlag = $this->disk->delete($derivedPath) || $delFlag;
+                $this->disk->delete($derivedPath);
         }
 
         $originalPath = $this->prependBasePath($path);
-        if (! $this->disk->exists($originalPath))
-            return $delFlag;
 
-        return $this->disk->delete($originalPath) || $delFlag;
+        if ($this->disk->exists($originalPath))
+            $this->disk->delete($originalPath);
     }
 
     /**

@@ -22,9 +22,9 @@ class MemberTest extends TestCase
             $mock->shouldReceive("subscribeTo")->zeroOrMoreTimes();
         });
 
-        // Might be a member, might be a potential
+        // Only members and reunists can access the admin
         $user = User::factory()
-            ->profileType()
+            ->memberReunistType()
             ->hasProfile(1, function (array $attributes, User $user) {
                 return ['year_group_id' => 1];
             })
