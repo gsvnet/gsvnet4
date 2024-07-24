@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace GSVnet\Core;
 use GdImage;
@@ -32,7 +32,7 @@ class ImageHandler
 
     /**
      * Intelligently join path components.
-     * 
+     *
      * See https://stackoverflow.com/questions/1091107/how-to-join-filesystem-path-strings-in-php.
      * @param string ...$args
      * @return string
@@ -40,17 +40,17 @@ class ImageHandler
     private function join_paths(...$args): string
     {
         $paths = array();
-    
+
         foreach ($args as $arg) {
             if ($arg !== '') { $paths[] = $arg; }
         }
-    
+
         return preg_replace('#/+#', '/', join('/', $paths));
     }
 
     /**
      * Prepend `$this->basePath` to `$path` if it is not already there.
-     * 
+     *
      * Will not modify path if it is absolute.
      * @param string $path
      * @return string
@@ -77,13 +77,13 @@ class ImageHandler
         // An empty dimension is handled as the original image and considered valid.
         if ($dimension !== '' && ! array_key_exists($dimension, $dimensions))
             return false;
-        
+
         return true;
     }
 
     /**
      * Add `$dimension` to filename in `$path`.
-     * 
+     *
      * For instance, if `$path` is `"images/cat.png"` and `$dimension` is `"small"`, will return `"images/cat-small.png"`.
      * @param mixed $path
      * @param mixed $dimension
@@ -100,7 +100,7 @@ class ImageHandler
 
     /**
      * Merge `$dimension` into `$path` and prepend with the base path.
-     * 
+     *
      * Throws an error if `$dimension` does not match the array keys of the `'dimensions'` array in `config/images.php`.
      * @param string $path
      * @param string $dimension
@@ -117,7 +117,7 @@ class ImageHandler
 
     /**
      * Creates derivative from image if it does not exist.
-     * 
+     *
      * Returns path to derivative.
      * @param string $path
      * @param string $dimension
@@ -139,7 +139,7 @@ class ImageHandler
             return $derivedPath;
 
         // Scale such that image at least completely fills the dimension frame.
-        // Crop everything that falls outside of the frame.
+        // Crop everything that falls outside the frame.
         $dimensions = config('images.dimensions');
         [$frameWidth, $frameHeight] = $dimensions[$dimension];
 
@@ -147,7 +147,7 @@ class ImageHandler
         $imgString = $this->disk->get($originalPath);
         [$width, $height] = getimagesizefromstring($imgString);
 
-        // Step 1: Fill. 
+        // Step 1: Fill.
         // If the image is smaller than the frame, you want the largest scaling factor.
         // If the image is larger than the frame, you want the scaling factor that
         // downscales the least, i.e., the largest scaling factor.
@@ -157,8 +157,8 @@ class ImageHandler
         $originalImg = imagecreatefromstring($imgString);
 
         $scaledImg = imagescale(
-            $originalImg, 
-            $scaleFactor * $width, 
+            $originalImg,
+            $scaleFactor * $width,
             $scaleFactor * $height,
             IMG_BICUBIC
         );
@@ -182,7 +182,7 @@ class ImageHandler
 
     /**
      * Apply corrections to image specified by `$path`.
-     * 
+     *
      * `$path` does not need to be prepended by `$this->basePath`.
      * @param string $path
      * @return void
@@ -201,9 +201,9 @@ class ImageHandler
     public function store(File|UploadedFile $image): string
     {
         $path = $this->disk->putFile($this->basePath, $image);
-        
+
         $this->correct($path);
-        
+
         return $path;
     }
 
@@ -259,7 +259,7 @@ class ImageHandler
 
     /**
      * Get contents of file specified by `$path` as a string.
-     * 
+     *
      * `$dimension` can be any of the keys of the `'dimensions'` array in `config/images.php`.
      * @param string $path
      * @param string $dimension
@@ -272,7 +272,7 @@ class ImageHandler
 
     /**
      * Get URL to file specified by `$path`.
-     * 
+     *
      * `$dimension` can be any of the keys of the `'dimensions'` array in `config/images.php`.
      * @param string $path
      * @param string $dimension
@@ -285,7 +285,7 @@ class ImageHandler
 
     /**
      * Get absolute path to `$path`, after prepending `$this->basePath`.
-     * 
+     *
      * `$dimension` can be any of the keys of the `'dimensions'` array in `config/images.php`.
      * @param string $path
      * @param string $dimension
@@ -298,7 +298,7 @@ class ImageHandler
 
     /**
      * Write `$image` to `$path`.
-     * 
+     *
      * Actual write location determined by `$this->getAbsolutePath`. Currently supports GIF, JPEG, and PNG. Will throw an error if anything else is supplied.
      * @param \GdImage $image
      * @param string $path
@@ -330,7 +330,7 @@ class ImageHandler
      * @param string $path
      * @return void
      */
-    private function restrictSize(string $path) 
+    private function restrictSize(string $path)
     {
         [$maxWidth, $maxHeight] = config('images.dimensions.max');
 
@@ -347,8 +347,8 @@ class ImageHandler
             $originalImg = imagecreatefromstring($imgString);
 
             $scaledImg = imagescale(
-                $originalImg, 
-                $scaleFactor * $width, 
+                $originalImg,
+                $scaleFactor * $width,
                 $scaleFactor * $height,
                 IMG_BICUBIC
             );
@@ -363,24 +363,24 @@ class ImageHandler
      * @param string $path
      * @return void
      */
-    private function fixImageOrientation(string $path) 
+    private function fixImageOrientation(string $path)
     {
         $absPath = $this->getAbsolutePath($path);
         $exif = exif_read_data($absPath);
-        
+
         // Create image object in memory
         $image = imagecreatefromstring($this->get($path));
-        
+
         if (!empty($exif['Orientation'])) {
             switch ($exif['Orientation']) {
                 case 3:
                     $image = imagerotate($image, 180, 0);
                     break;
-                
+
                 case 6:
                     $image = imagerotate($image, 90, 0);
                     break;
-                
+
                 case 8:
                     $image = imagerotate($image, -90, 0);
                     break;

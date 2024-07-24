@@ -14,11 +14,11 @@ use GSVnet\Users\Profiles\ProfilesRepository;
 
 class UserController extends Controller
 {
-    protected $users;
-    protected $committees;
-    protected $regions;
-    protected $yearGroups;
-    protected $profiles;
+    protected UsersRepository $users;
+    protected CommitteesRepository $committees;
+    protected RegionsRepository $regions;
+    protected YearGroupRepository $yearGroups;
+    protected ProfilesRepository $profiles;
 
     public function __construct(
         UsersRepository $users,
@@ -70,10 +70,10 @@ class UserController extends Controller
         if ($request->has('password'))
             ChangePassword::dispatchFromForm($user, $request);
 
-        return redirect()->route('showProfile');    
+        return redirect()->route('showProfile');
     }
 
-    public function showUsers(Request $request) 
+    public function showUsers(Request $request)
     {
         $this->authorize('users.show');
         $search = $request->input('naam', '');

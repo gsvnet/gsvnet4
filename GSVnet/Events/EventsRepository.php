@@ -133,12 +133,13 @@ class EventsRepository {
     }
 
     /**
-    * Update event
-    *
-    * @param int $id
-    * @param array $input
-    * @return Event
-    */
+     * Update event
+     *
+     * @param int $id
+     * @param array $input
+     * @return Event
+     * @throws NoPermissionException
+     */
     public function update($id, array $input)
     {
         $event = $this->byId($id);
@@ -149,12 +150,12 @@ class EventsRepository {
     }
 
     /**
-    * Delete event
-    *
-    * @param int $id
-    * @param array $input
-    * @return Event
-    */
+     * Delete event
+     *
+     * @param int $id
+     * @return Event
+     * @throws NoPermissionException
+     */
     public function delete($id)
     {
         $event = $this->byId($id);
