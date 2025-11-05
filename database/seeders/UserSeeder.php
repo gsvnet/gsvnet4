@@ -29,19 +29,20 @@ class UserSeeder extends Seeder
 
         // echo "Seeding admin user...\n";
         // Admin user
-        $loran = User::factory()
+        $testUser = User::factory()
             ->hasProfile(1, ['year_group_id' => $faker->randomElement($yearGroupIds)])
             ->create([
-                'firstname' => 'Loran',
+                'firstname' => 'Wilko',
                 'middlename' => '',
-                'lastname' => 'Knol',
-                'username' => 'Valkje',
-                'email' => 'loran.knol@gmail.com',
+                'lastname' => 'Rodenboog',
+                'username' => 'WillieBoog',
+                'email' => 'wilkorodenboog@gmail.com',
                 'type' => UserTypeEnum::MEMBER,
-                'approved' => true
+                'approved' => true,
+                'password' => bcrypt('wilkotest'),
             ]);
         $webcie = Committee::where('unique_name', 'webcie')->first();
-        $loran->committees()->save($webcie, ['start_date' => Carbon::now()]);
+        $testUser->committees()->save($webcie, ['start_date' => Carbon::now()]);
 
         // Fake users with profile
         // echo "Seeding users with profile...\n";

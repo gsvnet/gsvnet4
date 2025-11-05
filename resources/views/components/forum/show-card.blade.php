@@ -31,12 +31,12 @@
         <div class="rounded-2xl px-4 py-4 dark:bg-[#0b8f58] bg-[#16be16c7]">
             <p class="text-white text-sm font-light">
                 5000
-            </p>        
+            </p>
         </div>
         <div class="rounded-2xl ml-4 px-4 py-4 dark:bg-[#0b8f58] bg-[#16be16c7]">
             <p class="text-white text-sm font-light">
                 500
-            </p>        
+            </p>
         </div>
-    </div>    
+    </div>
 </a>

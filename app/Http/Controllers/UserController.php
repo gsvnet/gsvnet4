@@ -11,6 +11,7 @@ use GSVnet\Committees\CommitteesRepository;
 use GSVnet\Regions\RegionsRepository;
 use GSVnet\Users\YearGroupRepository;
 use GSVnet\Users\Profiles\ProfilesRepository;
+use Spatie\Html\Elements\Form;
 
 class UserController extends Controller
 {

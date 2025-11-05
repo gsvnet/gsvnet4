@@ -1,6 +1,6 @@
 <div class="text-black dark:text-white pt-6 mt-6 dark:bg-[#202124] bg-[#d0d5d6] rounded-2xl ml-3 mr-3 pl-3 pr-3 pb-6">
     <div class="rounded-full aspect-square mx-auto h-24 w-24 overflow-hidden border-2 border-gsv-purple">
-        <img src="{{ asset('/images/JorisInfoA.jpg') }}" alt="Profielfoto" class="object-cover h-full aspect-square" />
+{{--        <img src="{{ asset('/images/JorisInfoA.jpg') }}" alt="Profielfoto" class="object-cover h-full aspect-square" />--}}
     </div>
 
     <p class="mx-auto text-center pt-6 font-semibold">
@@ -17,9 +17,10 @@
         <p class="text-gsv-purple ml-2">
             @auth
                 • {{ $user->present()->membershipType }}
-            @endauth 
+            @endauth
         </p>
     </div>
+
 
     <div class="grid grid-cols-2 pt-6 text-center">
         <div class="border-r-2 border-white group">
