@@ -699,23 +699,23 @@ select {
 .mt-2 {
   margin-top: 0.5rem;
 }
-.mb-4 {
-  margin-bottom: 1rem;
-}
-.mt-1 {
-  margin-top: 0.25rem;
-}
-.mt-4 {
-  margin-top: 1rem;
-}
 .mb-2 {
   margin-bottom: 0.5rem;
 }
 .ml-4 {
   margin-left: 1rem;
 }
+.mt-4 {
+  margin-top: 1rem;
+}
 .ml-2 {
   margin-left: 0.5rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+.mt-1 {
+  margin-top: 0.25rem;
 }
 .ml-2\.5 {
   margin-left: 0.625rem;
@@ -789,9 +789,6 @@ select {
 .h-6 {
   height: 1.5rem;
 }
-.h-20 {
-  height: 5rem;
-}
 .h-full {
   height: 100%;
 }
@@ -822,6 +819,9 @@ select {
 .h-24 {
   height: 6rem;
 }
+.h-20 {
+  height: 5rem;
+}
 .max-h-screen {
   max-height: 100vh;
 }
@@ -842,9 +842,6 @@ select {
 }
 .w-6 {
   width: 1.5rem;
-}
-.w-20 {
-  width: 5rem;
 }
 .w-\[100\%\] {
   width: 100%;
@@ -899,6 +896,9 @@ select {
 }
 .w-5\/6 {
   width: 83.333333%;
+}
+.w-20 {
+  width: 5rem;
 }
 .w-48 {
   width: 12rem;
@@ -1461,10 +1461,6 @@ select {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
-.text-gray-600 {
-  --tw-text-opacity: 1;
-  color: rgb(75 85 99 / var(--tw-text-opacity));
-}
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -1479,6 +1475,10 @@ select {
 .text-gray-400 {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 .text-black\/80 {
   color: rgb(0 0 0 / 0.8);
@@ -1882,6 +1882,13 @@ select {
 .group:hover .group-hover\:opacity-100 {
   opacity: 1;
 }
+[dir="rtl"] .rtl\:flex-row-reverse {
+  flex-direction: row-reverse;
+}
+.dark .dark\:border-gray-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(75 85 99 / var(--tw-border-opacity));
+}
 .dark .dark\:border-\[\#2021249c\] {
   border-color: #2021249c;
 }
@@ -1904,6 +1911,10 @@ select {
 .dark .dark\:border-r-\[\#4e5158\] {
   --tw-border-opacity: 1;
   border-right-color: rgb(78 81 88 / var(--tw-border-opacity));
+}
+.dark .dark\:bg-gray-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 }
 .dark .dark\:bg-black {
   --tw-bg-opacity: 1;
@@ -1939,6 +1950,18 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(62 0 20 / var(--tw-bg-opacity));
 }
+.dark .dark\:text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+.dark .dark\:text-gray-300 {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+}
+.dark .dark\:text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
+}
 .dark .dark\:text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -1949,10 +1972,6 @@ select {
 .dark .dark\:text-gsv-purple-dark {
   --tw-text-opacity: 1;
   color: rgb(62 0 20 / var(--tw-text-opacity));
-}
-.dark .dark\:text-gray-400 {
-  --tw-text-opacity: 1;
-  color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 .dark .dark\:text-white\/80 {
   color: rgb(255 255 255 / 0.8);
@@ -1990,11 +2009,23 @@ select {
 .dark .dark\:hover\:bg-gsv-purple-dark\/60:hover {
   background-color: rgb(62 0 20 / 0.6);
 }
+.dark .dark\:hover\:text-gray-300:hover {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+}
 .dark .dark\:hover\:text-white\/70:hover {
   color: rgb(255 255 255 / 0.7);
 }
 .dark .dark\:hover\:text-white\/60:hover {
   color: rgb(255 255 255 / 0.6);
+}
+.dark .dark\:focus\:border-blue-700:focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(29 78 216 / var(--tw-border-opacity));
+}
+.dark .dark\:focus\:border-blue-800:focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(30 64 175 / var(--tw-border-opacity));
 }
 .dark .dark\:focus\:border-gsv-purple-dark:focus {
   --tw-border-opacity: 1;
@@ -2008,8 +2039,16 @@ select {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(62 0 20 / var(--tw-ring-opacity));
 }
+.dark .dark\:active\:bg-gray-700:active {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+}
 .dark .dark\:active\:bg-gsv-purple-dark\/90:active {
   background-color: rgb(62 0 20 / 0.9);
+}
+.dark .dark\:active\:text-gray-300:active {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
 }
 @media (min-width: 640px) {
 
